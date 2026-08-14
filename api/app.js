@@ -4,6 +4,9 @@
 
 const crypto = require('crypto');
 const { createClient } = require('redis');
+const { put, get } = require('@vercel/blob');
+
+const MAX_ARQ = 3 * 1024 * 1024;
 
 const URL_DB = process.env.REDIS_URL || process.env.KV_URL || '';
 
@@ -125,6 +128,21 @@ function diferencas(antes, depois) {
   });
   return out;
 }
+async function subirArquivo(pasta, arq) {
+  if (!arq || !arq.dados) return null;
+  if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error('Armazenamento de anexos ainda não configurado no projeto.');
+  const buf = Buffer.from(String(arq.dados), 'base64');
+  if (!buf.length) throw new Error('Arquivo vazio.');
+  if (buf.length > MAX_ARQ) throw new Error('Arquivo maior que 3 MB.');
+  const nome = (limpar(arq.nome, 120).replace(/[^\w.\- ]/g, '_') || 'arquivo').slice(0, 120);
+  const caminho = `${pasta}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}-${nome}`;
+  const r = await put(caminho, buf, {
+    access: 'private',
+    contentType: limpar(arq.tipo, 80) || 'application/octet-stream',
+    addRandomSuffix: false
+  });
+  return { pathname: r.pathname || caminho, nome, tipo: arq.tipo || '', tamanho: buf.length, em: new Date().toISOString() };
+}
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 function novoId() { return Date.now().toString(36) + crypto.randomBytes(4).toString('hex'); }
 function limpar(s, max) { return String(s ?? '').trim().slice(0, max || 300); }
@@ -210,7 +228,8 @@ module.exports = async (req, res) => {
         visto: false,
         excecional: false,
         tram: {},
-        repact: []
+        repact: [],
+        anexos: {}
       });
       regs.push(novo);
       await gravar(K.regs, regs);
@@ -220,9 +239,51 @@ module.exports = async (req, res) => {
       return;
     }
 
+    /* --- anexo enviado pelo docente logo após a manifestação --- */
+    if (acao === 'anexar') {
+      const campo = limpar(corpo.campo, 10);
+      if (campo !== 'plano' && campo !== 'carta') { res.status(400).json({ erro: 'Anexo inválido.' }); return; }
+      const regs = await ler(K.regs, []);
+      const r = regs.find(x => x.id === corpo.id);
+      if (!r) { res.status(404).json({ erro: 'Registro não encontrado.' }); return; }
+      const eu2 = await autenticar(req);
+      const donoConfere = limpar(corpo.email, 120).toLowerCase() === String(r.email || '').toLowerCase();
+      if (!eu2 && !donoConfere) { res.status(403).json({ erro: 'Sem permissão para anexar neste registro.' }); return; }
+      r.anexos = r.anexos || {};
+      if (r.anexos[campo] && !eu2) { res.status(409).json({ erro: 'Este anexo já foi enviado. Peça à comissão para substituir.' }); return; }
+      const salvo = await subirArquivo(campo === 'plano' ? 'planos' : 'cartas', corpo.arquivo);
+      if (!salvo) { res.status(400).json({ erro: 'Arquivo não recebido.' }); return; }
+      r.anexos[campo] = salvo;
+      r.docs = r.docs || {};
+      r.docs[campo] = true;
+      if (campo === 'plano') r.plano = 'sim'; else r.carta = 'sim';
+      await gravar(K.regs, regs);
+      await registrarAuditoria((eu2 ? eu2.nome : r.nome + ' (docente)'), 'anexou documento', r.nome,
+        (campo === 'plano' ? 'plano de trabalho' : 'carta-convite') + ': ' + salvo.nome);
+      res.json({ ok: true, anexo: salvo });
+      return;
+    }
+
     /* --- daqui em diante exige autenticação --- */
     const eu = await autenticar(req);
     if (!eu) { res.status(401).json({ erro: 'Sessão expirada ou inválida. Entre novamente.' }); return; }
+
+    /* --- download de anexo, só para quem está autenticado --- */
+    if (acao === 'baixar') {
+      const campo = limpar(corpo.campo, 10);
+      const regs = await ler(K.regs, []);
+      const r = regs.find(x => x.id === corpo.id);
+      const anx = r && r.anexos && r.anexos[campo];
+      if (!anx || !anx.pathname) { res.status(404).json({ erro: 'Anexo não encontrado.' }); return; }
+      const resultado = await get(anx.pathname, { access: 'private' });
+      if (!resultado || resultado.statusCode !== 200) { res.status(404).json({ erro: 'Arquivo indisponível no armazenamento.' }); return; }
+      const buf = Buffer.from(await new Response(resultado.stream).arrayBuffer());
+      res.setHeader('Content-Type', (resultado.blob && resultado.blob.contentType) || anx.tipo || 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'inline; filename="' + anx.nome.replace(/"/g, '') + '"');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.status(200).send(buf);
+      return;
+    }
 
     if (acao === 'dados') {
       const [regs, conf, audit, usuarios] = await Promise.all([ler(K.regs, []), ler(K.conf, {}), ler(K.audit, []), ler(K.users, [])]);
