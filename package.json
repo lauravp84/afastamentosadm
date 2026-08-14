@@ -4,6 +4,7 @@
   "private": true,
   "description": "Sistema da Comissao de Afastamentos do Departamento de Administracao",
   "dependencies": {
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "@vercel/blob": "^2.8.0"
   }
 }

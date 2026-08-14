@@ -11,8 +11,9 @@ Base normativa: minuta **29/04/2026 — Regras de afastamento, nova versão com 
 - `comissao_afastamentos.html` — aplicação inteira em HTML, CSS e JS puro, sem dependências.
 - `api/app.js` — função serverless única no Vercel. Todas as operações chegam por `POST /api/app` com `{ acao }`.
 - `vercel.json` — faz a raiz do site abrir o HTML.
-- `package.json` — única dependência: `redis` (node-redis).
+- `package.json` — dependências: `redis` (node-redis) e `@vercel/blob`.
 - Banco: Redis Cloud, plano gratuito, conectado ao projeto no Vercel pela variável `REDIS_URL`.
+- Anexos: Vercel Blob em modo **privado** (`BLOB_READ_WRITE_TOKEN`). Os arquivos não têm URL pública; só são servidos pela API a quem está autenticado.
 
 Chaves no banco: `af:usuarios`, `af:secret`, `af:registros`, `af:config`, `af:auditoria`.
 
@@ -34,6 +35,15 @@ O histórico aparece no painel, é filtrável e exportável em CSV. Cada registr
 ## Privacidade
 A fila pública não expõe e-mail, SIAPE, justificativa, destino nem parecer. Esses campos só aparecem para quem está autenticado. A tela pública mostra nome, área, tipo, período, início e situação.
 
+Os anexos ficam em armazenamento privado. Abrir um documento exige sessão ativa da comissão, e o download passa pela API, que confere a autenticação antes de servir o arquivo.
+
+## Telas
+1. **Início**: capa com o objetivo da comissão, contexto do documento, o fluxo em quatro passos e os prazos.
+2. **Manifestar interesse**: formulário do docente, com anexo de plano de trabalho e carta-convite (até 3 MB cada).
+3. **Fila pública**: ordenação cronológica por fila e período, com busca.
+4. **Painel da comissão**: dividido em Visão geral, Fila e pareceres, Organizar período, Histórico e Configurações.
+5. **Regras e fluxo**: conteúdo integral da minuta por seção, com selo indicando se cada regra é verificada pelo sistema, apenas acompanhada, ou cumprida fora dele.
+
 ## Regras implementadas
 - Fila cronológica e soberana, manifestação formal de intenção para planejamento, sem configurar solicitação formal nem gerar direito adquirido.
 - Desempate hierárquico: menor número de afastamentos, maior tempo de casa, classe e nível mais avançados.
@@ -41,7 +51,7 @@ A fila pública não expõe e-mail, SIAPE, justificativa, destino nem parecer. E
 - O afastamento que atravessa dois períodos **ocupa vaga nos dois**.
 - Dois docentes da mesma área não se afastam juntos, salvo cobertura indicada.
 - Prazos: manifestação com 1 ano de antecedência; solicitação válida com documentação entregue com no mínimo 6 meses.
-- Tipos: Pós-doutorado, Doutorado, Capacitação/estudos e Evento/simpósio/missão.
+- Tipos de licença: apenas **Pós-doutorado** e **Capacitação**. Eventos e simpósios seguem as regras da universidade e não entram nesta fila.
 - Pós-doutorado de 6 a 12 meses; período limitado a 2 períodos.
 - Checklist da documentação exigida: período, duração, tipo de licença, plano de trabalho e carta-convite.
 - Acompanhamento do trâmite: parecer, colegiado, SEI, Congregação, portaria e pedido de substituto, com a próxima ação e o responsável.
