@@ -77,10 +77,28 @@ async function autenticar(req) {
   const secret = await texto_bruto(K.secret);
   if (!secret) return null;
   const id = conferirToken(tok, secret);
-  if (!id) return null;
+  if (!id || id.startsWith('dep:')) return null;
   const usuarios = await ler(K.users, []);
   const u = usuarios.find(x => x.id === id && x.ativo !== false);
   return u ? { id: u.id, login: u.login, nome: u.nome } : null;
+}
+// Acesso do departamento: código único que libera a fila e o formulário.
+const DIAS_DEP = 30;
+function assinarDep(secret) {
+  const exp = Date.now() + DIAS_DEP * 24 * 3600 * 1000;
+  const corpo = 'dep:x.' + exp;
+  return corpo + '.' + crypto.createHmac('sha256', secret).update(corpo).digest('hex');
+}
+async function liberado(req) {
+  if (await autenticar(req)) return true;
+  const conf = await ler(K.conf, {});
+  if (!conf.codHash) return false;
+  const secret = await texto_bruto(K.secret);
+  if (!secret) return false;
+  const cab = (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
+  const dep = (req.headers['x-acesso'] || '') || cab;
+  const id = conferirToken(dep, secret);
+  return id === 'dep:x';
 }
 
 /* ---------- auditoria ---------- */
@@ -161,7 +179,24 @@ module.exports = async (req, res) => {
     if (acao === 'estado') {
       const usuarios = await ler(K.users, []);
       const conf = await ler(K.conf, {});
-      res.json({ configurado: usuarios.length > 0, areas: conf.areas || null, emailComissao: conf.emailComissao || '' });
+      res.json({
+        configurado: usuarios.length > 0,
+        protegido: !!conf.codHash,
+        liberado: await liberado(req),
+        areas: conf.areas || null,
+        emailComissao: conf.emailComissao || ''
+      });
+      return;
+    }
+
+    /* --- código de acesso do departamento --- */
+    if (acao === 'acessoDepartamento') {
+      const conf = await ler(K.conf, {});
+      if (!conf.codHash) { res.status(409).json({ erro: 'A comissão ainda não definiu o código de acesso do departamento.' }); return; }
+      const teste = hashSenha(String(corpo.codigo || ''), conf.codSalt || 'x');
+      if (!conferemHash(teste, conf.codHash)) { res.status(401).json({ erro: 'Código de acesso incorreto.' }); return; }
+      const secret = await texto_bruto(K.secret);
+      res.json({ acesso: assinarDep(secret) });
       return;
     }
 
@@ -210,6 +245,7 @@ module.exports = async (req, res) => {
 
     /* --- fila pública, sem autenticação e sem dados sensíveis --- */
     if (acao === 'fila') {
+      if (!(await liberado(req))) { res.status(403).json({ erro: 'Acesso restrito ao departamento. Informe o código de acesso.' }); return; }
       const regs = await ler(K.regs, []);
       res.json({ registros: regs.map(versaoPublica) });
       return;
@@ -217,6 +253,8 @@ module.exports = async (req, res) => {
 
     /* --- manifestação do docente, aberta --- */
     if (acao === 'manifestar') {
+      const confA = await ler(K.conf, {});
+      if (confA.codHash && !(await liberado(req))) { res.status(403).json({ erro: 'Acesso restrito ao departamento. Informe o código de acesso.' }); return; }
       const r = corpo.registro || {};
       if (!limpar(r.nome, 90) || !limpar(r.email, 120)) { res.status(400).json({ erro: 'Nome e e-mail são obrigatórios.' }); return; }
       const regs = await ler(K.regs, []);
@@ -287,8 +325,10 @@ module.exports = async (req, res) => {
 
     if (acao === 'dados') {
       const [regs, conf, audit, usuarios] = await Promise.all([ler(K.regs, []), ler(K.conf, {}), ler(K.audit, []), ler(K.users, [])]);
+      const confSemSegredo = Object.assign({}, conf, { protegido: !!conf.codHash });
+      delete confSemSegredo.codHash; delete confSemSegredo.codSalt;
       res.json({
-        registros: regs, config: conf, auditoria: audit,
+        registros: regs, config: confSemSegredo, auditoria: audit,
         usuarios: usuarios.filter(u => u.ativo !== false).map(u => ({ login: u.login, nome: u.nome, criado: u.criado })),
         eu
       });
@@ -369,6 +409,25 @@ module.exports = async (req, res) => {
       return;
     }
 
+    if (acao === 'definirCodigo') {
+      const cod = String(corpo.codigo || '');
+      const conf = await ler(K.conf, {});
+      if (cod === '') {
+        delete conf.codHash; delete conf.codSalt;
+        await gravar(K.conf, conf);
+        await registrarAuditoria(eu.nome, 'removeu o código de acesso do departamento', '', 'a fila voltou a ficar aberta');
+        res.json({ ok: true, protegido: false });
+        return;
+      }
+      if (cod.length < 6) { res.status(400).json({ erro: 'O código precisa de pelo menos 6 caracteres.' }); return; }
+      conf.codSalt = novoSalt();
+      conf.codHash = hashSenha(cod, conf.codSalt);
+      await gravar(K.conf, conf);
+      await registrarAuditoria(eu.nome, 'definiu o código de acesso do departamento', '', 'acessos anteriores continuam válidos até expirarem');
+      res.json({ ok: true, protegido: true });
+      return;
+    }
+
     if (acao === 'trocarSenha') {
       const usuarios = await ler(K.users, []);
       const u = usuarios.find(x => x.id === eu.id);
@@ -417,7 +476,13 @@ module.exports = async (req, res) => {
       if (!Array.isArray(corpo.registros)) { res.status(400).json({ erro: 'Backup inválido.' }); return; }
       const antes = (await ler(K.regs, [])).length;
       await gravar(K.regs, corpo.registros);
-      if (corpo.config) await gravar(K.conf, corpo.config);
+      if (corpo.config) {
+        const atual = await ler(K.conf, {});
+        const novo = Object.assign({}, corpo.config);
+        delete novo.protegido;
+        if (atual.codHash) { novo.codHash = atual.codHash; novo.codSalt = atual.codSalt; }
+        await gravar(K.conf, novo);
+      }
       await registrarAuditoria(eu.nome, 'restaurou backup', '', `${antes} registro(s) substituídos por ${corpo.registros.length}`);
       res.json({ ok: true });
       return;
