@@ -4,6 +4,9 @@ Sistema de fila de manifestação de interesse em afastamento docente, com paine
 
 Base normativa: minuta **29/04/2026 — Regras de afastamento, nova versão com sugestões do departamento**.
 
+- Aplicação: https://afastamentos-adm-ufrj.vercel.app
+- Repositório: https://github.com/lauravp84/afastamentos-adm-ufrj
+
 ## O que é
 Aplicação web (HTML + CSS + JS puro) sem dependências externas. Persistência local com fallback automático: usa `window.storage` quando disponível (ambiente de artifacts) e `localStorage` quando o arquivo é aberto direto no navegador, gravando nos dois. Perfis de uso:
 
