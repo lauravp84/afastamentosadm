@@ -1,0 +1,9 @@
+{
+  "name": "afastamentosadm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema da Comissao de Afastamentos do Departamento de Administracao",
+  "dependencies": {
+    "redis": "^4.7.0"
+  }
+}
