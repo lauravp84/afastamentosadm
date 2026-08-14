@@ -145,6 +145,7 @@
   <button id="tab-reg" onclick="go('reg')">Regras e fluxo</button>
 </nav>
 <main>
+<div id="gate-dep" style="display:none"></div>
 
 <!-- CAPA -->
 <section id="v-capa">
@@ -357,6 +358,7 @@
       <div class="confbox"><div><b>E-mail da comissão</b><p id="cf_email">—</p></div><button class="btn sec sm" onclick="setEmailComissao()">Alterar</button></div>
       <div class="confbox"><div><b>Áreas do departamento</b><p id="cf_areas">—</p></div><button class="btn sec sm" onclick="setAreas()">Alterar</button></div>
       <div class="confbox"><div><b>Quadro efetivo e teto percentual</b><p id="cf_quadro">—</p></div><button class="btn sec sm" onclick="setQuadro()">Alterar</button></div>
+      <div class="confbox" style="border-color:var(--gold-soft);background:#fff8ef"><div><b>Acesso do departamento</b><p id="cf_codigo">—</p></div><button class="btn sec sm" onclick="setCodigo()">Definir código</button></div>
     </div>
     <div class="card">
       <h2>Acessos</h2>
@@ -484,9 +486,16 @@
 /* ================= API ================= */
 const ENDPOINT='/api/app';
 let TOKEN=localStorage.getItem('af:token')||'';
+let DEP=localStorage.getItem('af:dep')||'';
 let EU=null; try{EU=JSON.parse(localStorage.getItem('af:usuario')||'null');}catch(e){}
+function cabecalhos(){
+  const h={'Content-Type':'application/json'};
+  if(TOKEN)h.Authorization='Bearer '+TOKEN;
+  if(DEP)h['X-Acesso']=DEP;
+  return h;
+}
 async function api(acao,dados){
-  const r=await fetch(ENDPOINT,{method:'POST',headers:Object.assign({'Content-Type':'application/json'},TOKEN?{Authorization:'Bearer '+TOKEN}:{}),body:JSON.stringify(Object.assign({acao},dados||{}))});
+  const r=await fetch(ENDPOINT,{method:'POST',headers:cabecalhos(),body:JSON.stringify(Object.assign({acao},dados||{}))});
   let j={};try{j=await r.json();}catch(e){}
   if(r.status===401&&acao!=='login'){sessaoExpirou();throw new Error(j.erro||'Sessão expirada.');}
   if(!r.ok)throw new Error(j.erro||('Erro '+r.status));
@@ -503,14 +512,43 @@ const DOCITENS=[['periodo','período'],['duracao','duração'],['licenca','tipo 
 const TRAMS=[['colegiado','Colegiado'],['sei','SEI'],['congregacao','Congregação'],['portaria','Portaria'],['substituto','Substituto']];
 const COB={adefinir:'A definir com a chefia',substituto:'Substituto previsto',remanejamento:'Remanejamento (área aderente)',redistribuicao:'Redistribuição interna',sem:'Sem cobertura prevista'};
 const SUGESTOES=[{nome:'Laura Valencia',login:'laura.valencia@facc.ufrj.br'},{nome:'Vanessa Brulon',login:'vanessabrulon@facc.ufrj.br'},{nome:'Camila Avosani',login:'camila.avosani@facc.ufrj.br'}];
-let ESTADO={configurado:false,areas:null,emailComissao:''};
+let ESTADO={configurado:false,protegido:false,liberado:false,areas:null,emailComissao:''};
 let PUB=[];                                            // fila pública (dados reduzidos)
 let DADOS={registros:[],config:{},auditoria:[],usuarios:[]};  // painel da comissão (dados completos)
 
 const $=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function closeModal(id){$(id).classList.remove('on');}
-function go(t){['capa','form','fila','com','reg'].forEach(x=>{$('v-'+x).style.display=x===t?'block':'none';$('tab-'+x).classList.toggle('active',x===t);});window.scrollTo(0,0);if(t==='fila')carregarFila();if(t==='com')openCom();}
+function go(t){
+  ['capa','form','fila','com','reg'].forEach(x=>{$('v-'+x).style.display=x===t?'block':'none';$('tab-'+x).classList.toggle('active',x===t);});
+  window.scrollTo(0,0);
+  if((t==='fila'||t==='form')&&precisaCodigo()){pedirCodigo(t);return;}
+  $('gate-dep').style.display='none';
+  if(t==='fila')carregarFila();
+  if(t==='com')openCom();
+}
+function precisaCodigo(){return !TOKEN && !ESTADO.liberado;}
+function pedirCodigo(destino){
+  $('v-'+destino).style.display='none';
+  const g=$('gate-dep');g.style.display='block';
+  g.innerHTML=ESTADO.protegido
+    ? `<div class="card" style="max-width:460px;margin:0 auto"><h2>Acesso restrito ao departamento</h2>
+       <p class="sub">Esta área é reservada aos docentes do departamento. Informe o código de acesso fornecido pela comissão. O acesso fica válido por 30 dias neste navegador.</p>
+       <label>Código de acesso</label><input id="dep_cod" type="password" onkeydown="if(event.key==='Enter')entrarDep('${destino}')">
+       <div class="row" style="margin-top:14px"><button class="btn" id="btDep" onclick="entrarDep('${destino}')">Entrar</button></div>
+       <div id="dep_err" style="color:var(--bad);font-size:13px;margin-top:8px"></div></div>`
+    : `<div class="card" style="max-width:560px;margin:0 auto"><h2>Acesso ainda não liberado</h2>
+       <p class="sub">A comissão ainda não definiu o código de acesso do departamento. Enquanto isso, a fila fica fechada para proteger os dados dos docentes.</p>
+       <p class="crit">Integrantes da comissão: entrem no <b>Painel da comissão</b>, seção <b>Configurações</b>, e definam o código em <b>Acesso do departamento</b>.</p></div>`;
+}
+async function entrarDep(destino){
+  const bt=$('btDep');bt.disabled=true;bt.textContent='Entrando…';
+  try{
+    const j=await api('acessoDepartamento',{codigo:$('dep_cod').value});
+    DEP=j.acesso;localStorage.setItem('af:dep',DEP);ESTADO.liberado=true;
+    $('gate-dep').style.display='none';go(destino);
+  }catch(e){$('dep_err').textContent=e.message;}finally{bt.disabled=false;bt.textContent='Entrar';}
+}
 function goCom(s){['visao','fila','org','hist','conf'].forEach(x=>{$('cs-'+x).style.display=x===s?'block':'none';$('sc-'+x).classList.toggle('active',x===s);});window.scrollTo(0,0);}
 /* ---- Regras: conteúdo da minuta de 29/04/2026, renderizado a partir dos dados ---- */
 const SELOS={
@@ -899,6 +937,9 @@ function renderConfig(){
   $('cf_areas').textContent=areasAtuais().join(' · ');
   const{quadro,pct,teto}=tetoConfig();
   $('cf_quadro').textContent=pct>0?(quadro+' docentes, teto de '+pct+'% igual a '+teto+' afastamentos simultâneos'):(quadro+' docentes, teto percentual desativado. Vale apenas o limite de 2 por período.');
+  $('cf_codigo').textContent=c.protegido
+    ? 'Código definido. A fila e o formulário só abrem para quem tem o código. Repasse-o apenas aos docentes do departamento.'
+    : 'Nenhum código definido. A fila está fechada para todos até que a comissão defina um.';
   $('cf_usuarios').innerHTML=(DADOS.usuarios||[]).map(u=>
     `<div class="confbox" style="margin-bottom:8px"><div><b>${esc(u.nome)}</b><p>${esc(u.login)}</p></div>${u.login===(EU&&EU.login)?'<span class="pill">você</span>':''}</div>`).join('')||'<p class="mini">nenhum acesso cadastrado</p>';
 }
@@ -1014,7 +1055,7 @@ async function excluir(){
 async function marcarVistos(){try{await api('marcarVistos');await recarregar();}catch(e){erro(e);}}
 async function baixarAnexo(id,campo){
   try{
-    const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+TOKEN},body:JSON.stringify({acao:'baixar',id,campo})});
+    const r=await fetch(ENDPOINT,{method:'POST',headers:cabecalhos(),body:JSON.stringify({acao:'baixar',id,campo})});
     if(!r.ok){let j={};try{j=await r.json();}catch(e){}throw new Error(j.erro||('Erro '+r.status));}
     const b=await r.blob(),u=URL.createObjectURL(b);
     window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);
@@ -1030,6 +1071,19 @@ async function setQuadro(){
   const q=prompt('Total de professores do quadro efetivo:',c.quadro||30);if(q===null)return;
   const p=prompt('Percentual máximo de afastamentos simultâneos. Use 0 para desativar este parâmetro, que não consta da minuta:',c.pct||0);if(p===null)return;
   if(await salvarConfig({quadro:+q,pct:+p})){const{teto,pct}=tetoConfig();alert('Quadro: '+DADOS.config.quadro+(pct>0?(' · teto: '+teto+' ('+pct+'%)'):' · teto percentual desativado, vale apenas o limite de 2 por período'));}
+}
+
+async function setCodigo(){
+  const c=prompt('Código de acesso do departamento (mínimo 6 caracteres).\nDeixe em branco e confirme para remover a proteção, o que reabre a fila para qualquer pessoa.','');
+  if(c===null)return;
+  if(c!==''&&c.length<6){alert('O código precisa de pelo menos 6 caracteres.');return;}
+  if(c===''&&!confirm('Remover o código deixa a fila aberta na internet para qualquer pessoa. Confirma?'))return;
+  try{
+    const j=await api('definirCodigo',{codigo:c});
+    ESTADO.protegido=j.protegido;
+    await recarregar();
+    alert(j.protegido?'Código definido. Repasse-o apenas aos docentes do departamento.':'Proteção removida.');
+  }catch(e){erro(e);}
 }
 
 /* ================= Usuários e senha ================= */
@@ -1129,7 +1183,7 @@ async function entrar(){
   const bt=$('btLogin');bt.disabled=true;bt.textContent='Entrando…';
   try{
     const j=await api('login',{login:$('g_login').value.trim(),senha:$('g_senha').value});
-    TOKEN=j.token;EU=j.usuario;
+    TOKEN=j.token;EU=j.usuario;ESTADO.liberado=true;
     localStorage.setItem('af:token',TOKEN);localStorage.setItem('af:usuario',JSON.stringify(EU));
     openCom();
   }catch(e){$('g_err').textContent=e.message;}finally{bt.disabled=false;bt.textContent='Entrar';}
