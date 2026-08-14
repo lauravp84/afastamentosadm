@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comissão de Afastamentos Docentes — FACC/UFRJ</title>
+<style>
+  :root{
+    --navy:#0f2747;--navy2:#16365e;--gold:#c9a227;--gold-soft:#e9d8a0;
+    --bg:#f5f6f8;--card:#fff;--line:#dfe3ea;--ink:#1c2733;--muted:#6b7682;
+    --ok:#1f8a4c;--warn:#c98a17;--bad:#c0392b;--info:#2a6fb0;--radius:12px;--sh:0 2px 10px rgba(15,39,71,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:20px 24px;border-bottom:4px solid var(--gold)}
+  header h1{margin:0;font-size:20px;font-weight:700}
+  header p{margin:4px 0 0;font-size:13px;color:var(--gold-soft)}
+  .brand{display:flex;gap:16px;align-items:center}
+  .seal{width:56px;height:56px;flex:none}
+  .gate-wrap{max-width:380px}
+  .info{display:inline-flex;width:15px;height:15px;border-radius:50%;background:var(--navy);color:#fff;font-size:10px;font-weight:700;font-style:normal;align-items:center;justify-content:center;cursor:help;margin-left:5px;position:relative;vertical-align:middle}
+  .info:hover::after,.info:focus::after{content:attr(data-tip);position:absolute;left:21px;top:-6px;width:245px;background:var(--navy);color:#fff;font-weight:400;font-size:11.5px;line-height:1.45;padding:9px 11px;border-radius:9px;z-index:40;box-shadow:0 6px 18px rgba(0,0,0,.28);white-space:normal;text-align:left}
+  .info:hover::before,.info:focus::before{content:'';position:absolute;left:15px;top:3px;border:6px solid transparent;border-right-color:var(--navy);z-index:40}
+  nav{display:flex;gap:4px;background:var(--navy);padding:0 16px;flex-wrap:wrap}
+  nav button{background:transparent;border:0;color:#cfd8e3;padding:13px 18px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent}
+  nav button.active{color:#fff;border-bottom-color:var(--gold)}
+  nav button:hover{color:#fff}
+  main{max-width:1220px;margin:0 auto;padding:22px 18px 60px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--sh);padding:20px;margin-bottom:18px}
+  h2{font-size:17px;margin:0 0 4px;color:var(--navy)}
+  h3.sec{font-size:14px;margin:20px 0 6px;color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:4px}
+  .sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--navy);margin:0 0 5px}
+  .req::after{content:" *";color:var(--bad)}
+  input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;background:#fff}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--gold)}
+  textarea{resize:vertical;min-height:60px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .grid .full{grid-column:1/-1}
+  .btn{background:var(--gold);color:var(--navy);border:0;padding:11px 22px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer}
+  .btn:hover{filter:brightness(.96)}
+  .btn.sec{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+  .btn.sm{padding:6px 12px;font-size:12.5px}
+  .btn.ghost{background:transparent;color:var(--info);border:0;text-decoration:underline;padding:4px;cursor:pointer;font-size:13px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f0f3f7;color:var(--navy);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  tr:hover td{background:#fafbfd}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .t-manifestado{background:#e6effa;color:var(--info)}
+  .t-em_analise{background:#fdf2dc;color:var(--warn)}
+  .t-doc_pendente{background:#eceef1;color:var(--muted)}
+  .t-favoravel{background:#e2f4ea;color:var(--ok)}
+  .t-desfavoravel{background:#fae3e0;color:var(--bad)}
+  .t-concluido{background:#e7e3f3;color:#5b4b9a}
+  .pos{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;background:var(--navy);color:#fff;border-radius:50%;font-weight:700;font-size:13px}
+  .pos.p1{background:var(--gold);color:var(--navy)}
+  .periodo-h{display:flex;justify-content:space-between;align-items:center;background:var(--navy);color:#fff;padding:9px 14px;border-radius:9px 9px 0 0;margin-top:18px;flex-wrap:wrap;gap:6px}
+  .periodo-h b{font-size:15px}.periodo-h span{font-size:12px;color:var(--gold-soft)}
+  .fila-h{font-size:13px;font-weight:800;color:var(--navy);margin:22px 0 0;padding:6px 0;border-bottom:2px solid var(--gold)}
+  .empty{text-align:center;color:var(--muted);padding:34px;font-size:14px}
+  .pill{font-size:10.5px;background:#eef1f5;color:var(--muted);padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;margin:1px 0}
+  .notice{border-radius:9px;padding:11px 14px;font-size:13px;margin-bottom:12px}
+  .n-info{background:#fff8e6;border:1px solid var(--gold-soft);color:#7a5c0a}
+  .n-bad{background:#fae3e0;border:1px solid #e3a99f;color:var(--bad)}
+  .n-ok{background:#e2f4ea;border:1px solid #9ad3b1;color:var(--ok)}
+  .n-plain{background:#eef2f7;border:1px solid var(--line);color:var(--navy)}
+  .alertbox{margin:0 0 4px;font-size:12px;font-weight:700}
+  .ok-msg{background:#e2f4ea;border:1px solid #9ad3b1;color:var(--ok);padding:12px 14px;border-radius:9px;font-size:14px;margin-bottom:14px;display:none}
+  .modal-bg{position:fixed;inset:0;background:rgba(15,39,71,.5);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
+  .modal-bg.on{display:flex}
+  .modal{background:#fff;border-radius:14px;max-width:620px;width:100%;padding:22px}
+  .modal h3{margin:0 0 12px;color:var(--navy)}
+  .mini{font-size:11.5px;color:var(--muted)}
+  details{margin-top:10px}summary{cursor:pointer;font-size:13px;color:var(--info);font-weight:600}
+  .crit{font-size:12.5px;color:var(--muted);line-height:1.75}.crit b{color:var(--navy)}
+  .crit ul{margin:6px 0 0;padding-left:20px}.crit li{margin-bottom:5px}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;margin-top:8px}.chk input{width:auto}
+  .anted{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;display:inline-block}
+  .a-ok{background:#e2f4ea;color:var(--ok)}.a-warn{background:#fdf2dc;color:var(--warn)}.a-bad{background:#fae3e0;color:var(--bad)}
+  .trilha{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+  .step{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:#eceef1;color:var(--muted);white-space:nowrap}
+  .step.done{background:#e2f4ea;color:var(--ok)}
+  .step.next{background:#fdf2dc;color:var(--warn);outline:1.5px solid var(--gold-soft)}
+  .kpi{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:12px}
+  .kpi div{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .kpi b{display:block;font-size:21px;color:var(--navy);line-height:1.2}
+  .kpi span{font-size:11.5px;color:var(--muted)}
+  @media(max-width:680px){.hide-m{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <svg class="seal" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Emblema do Departamento de Administração">
+      <circle cx="32" cy="32" r="30" fill="#0f2747" stroke="#c9a227" stroke-width="2.5"/>
+      <circle cx="32" cy="32" r="23.5" fill="none" stroke="#c9a227" stroke-width="1" opacity=".55"/>
+      <text x="32" y="31" text-anchor="middle" font-size="16" font-weight="800" fill="#c9a227" font-family="Georgia,serif">ADM</text>
+      <text x="32" y="44" text-anchor="middle" font-size="8" letter-spacing="2" fill="#e9d8a0" font-family="Georgia,serif">UFRJ</text>
+    </svg>
+    <div>
+      <h1>Comissão de Afastamentos Docentes</h1>
+      <p>Departamento de Administração · FACC · UFRJ · minuta de 29/04/2026</p>
+    </div>
+  </div>
+</header>
+<nav>
+  <button id="tab-form" class="active" onclick="go('form')">Manifestar interesse</button>
+  <button id="tab-fila" onclick="go('fila')">Fila pública</button>
+  <button id="tab-com" onclick="go('com')">Painel da comissão</button>
+  <button id="tab-reg" onclick="go('reg')">Regras e fluxo</button>
+</nav>
+<main>
+
+<!-- FORMULÁRIO -->
+<section id="v-form">
+  <div class="ok-msg" id="okMsg"></div>
+  <div class="card">
+    <h2>Manifestação de interesse em afastamento</h2>
+    <p class="sub">A fila constitui manifestação formal de intenção, com finalidade exclusiva de planejamento acadêmico e administrativo. Não configura solicitação formal nem gera direito adquirido. A manifestação deve ser feita com <b>1 ano</b> de antecedência; a solicitação só passa a ter validade com o envio da documentação por e-mail à comissão, com pelo menos <b>6 meses</b> de antecedência.</p>
+    <div class="grid">
+      <div><label class="req">Nome do docente</label><input id="f_nome"></div>
+      <div><label class="req">E-mail institucional</label><input id="f_email" type="email" placeholder="nome@facc.ufrj.br"></div>
+      <div><label>SIAPE / Matrícula</label><input id="f_siape"></div>
+      <div><label class="req">Área / disciplina específica<i class="info" data-tip="Selecione a área padronizada. A regra que impede dois docentes da mesma área de se afastarem juntos depende desta escolha; texto livre causaria falhas na verificação.">i</i></label><select id="f_area" onchange="onArea()"></select></div>
+      <div id="box_areaOutra" style="display:none"><label>Especifique a área</label><input id="f_areaOutra"></div>
+      <div><label class="req">Classe na carreira<i class="info" data-tip="Terceiro critério de desempate: em caso de mesmo tempo de casa, tem prioridade quem está em nível mais avançado (Titular, Associado, Adjunto, Assistente, Auxiliar).">i</i></label><select id="f_classe"><option>Auxiliar</option><option>Assistente</option><option selected>Adjunto</option><option>Associado</option><option>Titular</option></select></div>
+      <div><label>Nível</label><select id="f_nivel"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+      <div><label class="req">Ano de ingresso no departamento<i class="info" data-tip="Segundo critério de desempate: tem prioridade quem está há mais tempo no departamento.">i</i></label><input id="f_ingresso" type="number" placeholder="Ex.: 2014"></div>
+      <div><label class="req">Nº de afastamentos já usufruídos no departamento<i class="info" data-tip="Conte os afastamentos já usufruídos enquanto docente deste departamento. Primeiro critério de desempate: a prioridade é de quem não teve nenhum ou teve menos afastamentos.">i</i></label><input id="f_numaf" type="number" min="0" value="0"></div>
+      <div><label class="req">Tipo de afastamento<i class="info" data-tip="Doutorado e pós-doutorado compartilham a mesma fila. Capacitação tem fila separada. Eventos e simpósios seguem as regras da universidade e ficam fora do limite do departamento.">i</i></label><select id="f_tipo" onchange="onTipo()">
+        <option>Pós-doutorado</option><option>Doutorado</option><option>Capacitação / estudos</option><option>Evento / simpósio / missão</option></select></div>
+      <div id="box_recesso" style="display:none"><label>Capacitação no recesso universitário?<i class="info" data-tip="A capacitação realizada no recesso universitário não fica restrita ao limite de 2 docentes por período.">i</i></label><select id="f_recesso" onchange="avisoTipo()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div class="full" id="avisoTipo"></div>
+      <div><label>Já realizou pós-doutorado antes?<i class="info" data-tip="Informação considerada pela comissão ao priorizar novos pedidos: quem nunca realizou tende a ter prioridade, em linha com o critério de menor número de afastamentos.">i</i></label><select id="f_japd" onchange="onJapd()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div id="box_japd" style="display:none"><label>Ano(s) do(s) pós-doc anterior(es)</label><input id="f_anopd" placeholder="Ex.: 2018; 2022"></div>
+      <div class="full"><label class="req">Período acadêmico pretendido, do início ao fim<i class="info" data-tip="Selecione o período inicial e o final. Um afastamento que atravessa dois períodos ocupa vaga nos dois para efeito do limite de 2 docentes. Máximo de 2 períodos.">i</i></label>
+        <div class="row" style="gap:6px;align-items:center"><select id="f_ano" style="flex:1" onchange="coerencia()"></select><select id="f_sem" style="width:76px" onchange="coerencia()"><option value="1">.1</option><option value="2">.2</option></select><span class="mini">até</span><select id="f_anoF" style="flex:1" onchange="coerencia()"></select><select id="f_semF" style="width:76px" onchange="coerencia()"><option value="1">.1</option><option value="2">.2</option></select></div></div>
+      <div><label class="req">Data de início pretendida</label><input id="f_inicio" type="date" onchange="prazo();coerencia()"></div>
+      <div><label class="req">Duração (meses)</label><input id="f_dur" type="number" min="1" placeholder="Pós-doc: 6 a 12" oninput="coerencia()"></div>
+      <div class="full" id="prazoInfo"></div>
+      <div class="full" id="coerInfo"></div>
+      <div><label>Tipo de licença<i class="info" data-tip="Padronizado para evitar variação. Desde 1/11/24, Licença para Capacitação e Incentivo à Qualificação tramitam pela PR4/CDDP/SAC, e não pela DVDE.">i</i></label><select id="f_lic">
+        <option value="">— selecione —</option><option>Licença para capacitação</option><option>Afastamento para pós-doutorado</option><option>Afastamento para doutorado</option><option>Incentivo à qualificação</option><option>Missão / estágio no exterior</option><option>Participação em evento</option><option>Outra</option></select></div>
+      <div><label>Carta-convite disponível?</label><select id="f_carta"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div><label>Plano de trabalho pronto?</label><select id="f_plano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+      <div><label>Orientações em andamento</label><input id="f_orient" placeholder="Ex.: 3 TCC, 1 mestrado"></div>
+      <div class="full"><label>Disciplinas lecionadas no período</label><input id="f_disc" placeholder="Ex.: ACA360, ACAK01"></div>
+      <div class="full"><label>Sugestão de cobertura / remanejamento<i class="info" data-tip="Como suas disciplinas serão cobertas. Indicar substituto, remanejamento com área aderente ou redistribuição é o que permite que dois docentes da mesma área concorram no mesmo período.">i</i></label><select id="f_cob">
+        <option value="adefinir">A definir com a chefia</option><option value="substituto">Substituto já previsto</option><option value="remanejamento">Remanejamento com área aderente</option><option value="redistribuicao">Redistribuição interna entre docentes</option><option value="sem">Sem cobertura prevista</option></select></div>
+      <div class="full"><label>Instituição / destino</label><input id="f_destino"></div>
+      <div class="full"><label>Justificativa / plano de trabalho (resumo)</label><textarea id="f_just"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:18px">
+      <button class="btn" onclick="enviar()">Registrar manifestação</button>
+      <button class="btn sec" onclick="limpar()">Limpar</button>
+    </div>
+  </div>
+</section>
+
+<!-- FILA PÚBLICA -->
+<section id="v-fila" style="display:none">
+  <div class="card">
+    <h2>Fila pública de intenção</h2>
+    <p class="sub">Fila pública para o departamento e soberana, com ordenação cronológica. A posição é indicativa de planejamento; a comissão aplica os critérios de desempate ao organizar cada período.</p>
+    <div class="row" style="margin-bottom:8px">
+      <input id="fq" placeholder="buscar por nome, área ou período" style="max-width:320px" oninput="renderFila()">
+      <label class="chk" style="margin:0"><input type="checkbox" id="fq_ativos" checked onchange="renderFila()"> <span style="font-weight:600;font-size:12.5px">ocultar concluídos e desfavoráveis</span></label>
+    </div>
+    <div id="filaWrap"></div>
+  </div>
+</section>
+
+<!-- COMISSÃO -->
+<section id="v-com" style="display:none">
+  <div id="comGate" class="card"></div>
+  <div id="comPanel" style="display:none">
+  <div id="notifBox"></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div><h2>Painel da Comissão</h2><p class="sub" style="margin:0">Dados completos, critérios de desempate, alertas de regra, trâmite e parecer.</p></div>
+      <div class="row">
+        <label style="margin:0;font-weight:600;font-size:12px">Ordenar:</label>
+        <select id="ordCom" style="width:auto" onchange="renderCom()"><option value="crono">Cronológica (fila oficial)</option><option value="desemp">Critérios de desempate</option></select>
+        <button class="btn sec sm" onclick="exportCSV()">Exportar CSV</button>
+        <button class="btn sec sm" onclick="backup()">Backup</button>
+        <button class="btn sec sm" onclick="restaurar()">Restaurar</button>
+        <button class="btn sec sm" onclick="setEmailComissao()">E-mail</button>
+        <button class="btn sec sm" onclick="setQuadro()">Quadro/teto</button>
+        <button class="btn sec sm" onclick="setAreas()">Áreas</button>
+        <button class="btn sec sm" onclick="trocarSenha()">Senha</button>
+        <button class="btn sec sm" onclick="logout()">Sair</button>
+      </div>
+    </div>
+    <div id="kpiBox" class="kpi" style="margin-top:14px"></div>
+    <details>
+      <summary>Critérios de desempate e regras verificadas pelo sistema</summary>
+      <p class="crit">Fila ordenada por <b>data de manifestação</b> (cronológica, soberana). Desempate hierárquico: <b>1)</b> menor número de afastamentos anteriores; <b>2)</b> maior tempo de departamento; <b>3)</b> classe e nível mais avançados.<br>
+      Verificações automáticas: limite de <b>2 docentes afastados por período</b>, contando pós-doutorado, doutorado e capacitação fora do recesso, e contando o docente em <b>todos os períodos que o afastamento atravessa</b>; <b>dois docentes da mesma área</b> não se afastam juntos, salvo substituição dos dois ou remanejamento com aderência; capacitação no recesso e eventos ficam fora do limite; antecedência de 1 ano para a manifestação e de 6 meses para a documentação; duração de 6 a 12 meses no pós-doutorado.</p>
+    </details>
+    <div id="filtros" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:14px 0;padding:12px;background:#f7f9fc;border:1px solid var(--line);border-radius:10px">
+      <div><label>Período</label><select id="ft_periodo" style="width:auto" onchange="renderCom()"></select></div>
+      <div><label>Fila</label><select id="ft_fila" style="width:auto" onchange="renderCom()"><option value="">Todas</option><option value="dout_pos">Doutorado / pós-doc</option><option value="capac">Capacitação</option><option value="evento">Eventos e missões</option></select></div>
+      <div><label>Status</label><select id="ft_status" style="width:auto" onchange="renderCom()"><option value="">Todos</option><option value="manifestado">Manifestado</option><option value="em_analise">Em análise</option><option value="doc_pendente">Doc. pendente</option><option value="favoravel">Parecer favorável</option><option value="desfavoravel">Parecer desfavorável</option><option value="concluido">Concluído</option></select></div>
+      <div><label>Antecedência</label><select id="ft_antec" style="width:auto" onchange="renderCom()"><option value="">Todas</option><option value="ok">&ge;6 meses</option><option value="fora">&lt;6 meses</option></select></div>
+      <div><label>Trâmite</label><select id="ft_tram" style="width:auto" onchange="renderCom()"><option value="">Todos</option><option value="pend">Com pendência</option><option value="portaria">Sem portaria publicada</option><option value="compl">Trâmite completo</option></select></div>
+      <div><label>Área</label><input id="ft_area" style="width:150px" oninput="renderCom()" placeholder="filtrar área"></div>
+      <div><label>Docente</label><input id="ft_nome" style="width:150px" oninput="renderCom()" placeholder="nome"></div>
+      <div class="chk" style="margin:0"><input type="checkbox" id="ft_doc" onchange="renderCom()"><label style="margin:0">Só doc. completa</label></div>
+      <button class="btn sec sm" onclick="limparFiltros()">Limpar filtros</button>
+    </div>
+    <div id="tetoBanner"></div>
+    <div id="acoesBox"></div>
+    <div id="assistente" class="card" style="background:#fff8ef;border-color:var(--gold-soft);margin-bottom:0"></div>
+    <div id="comWrap" style="margin-top:8px"></div>
+  </div>
+  </div>
+</section>
+
+<!-- REGRAS -->
+<section id="v-reg" style="display:none">
+  <div class="card">
+    <h2>Regras e fluxo — minuta do departamento de 29/04/2026</h2>
+    <p class="sub">Resumo do documento com as sugestões do departamento, indicando o que o sistema aplica automaticamente.</p>
+
+    <h3 class="sec">Por que existe a comissão</h3>
+    <p class="crit">O afastamento afeta interesses de públicos diferentes: o docente que se afasta, os que ficam, a chefia, a coordenação do curso e os alunos. O afastamento é um direito e a universidade prevê a <b>possibilidade</b> de substituição, mas não a garante. As regras existem para aproximar o departamento de conseguir um substituto no tempo necessário, ou reduzir danos quando isso não for possível. O papel principal da comissão é a <b>mediação entre a chefia e o docente</b>, para que as demandas do curso quanto ao quantitativo de docentes nas áreas e disciplinas específicas sejam atendidas.</p>
+
+    <h3 class="sec">Tempo é a palavra-chave</h3>
+    <p class="crit">A chefia solicita substitutos de duas formas: no <b>pedido anual de vagas</b>, cujo calendário depende de instâncias superiores, e no <b>pedido de vaga emergencial</b>, que pode ocorrer a qualquer momento. Nos dois casos é preciso justificar o pedido com a <b>portaria de afastamento já publicada</b>, e a portaria depende de passagem prévia pela Congregação. Por isso o sistema acompanha cada etapa do trâmite e sinaliza o que está travando a publicação da portaria.</p>
+
+    <h3 class="sec">Regras gerais</h3>
+    <p class="crit"><ul>
+      <li>Não se afastarão mais de <b>2 professores por período</b>, para o bom funcionamento do curso.</li>
+      <li><b>Dois professores da mesma área</b> não podem se afastar simultaneamente, salvo se houver possibilidade de substituição dos dois ou de remanejamento de professores com aderência às áreas.</li>
+      <li>Todos os afastamentos passam <b>primeiro pela comissão</b>, que confere se seguem as regras do departamento e se têm a antecedência necessária.</li>
+      <li>Antes de abrir o processo no SEI, o docente envia por e-mail à comissão a documentação: <b>período, duração, tipo de licença, plano de trabalho e carta-convite</b>.</li>
+      <li>Após o parecer da comissão, o afastamento vai à aprovação do <b>colegiado</b>. Aprovado, o docente se compromete a abrir o processo no SEI o mais rápido possível.</li>
+      <li>A chefia <b>não aprova</b> pedido que não passou pela comissão, e o afastamento só vai à <b>Congregação</b> depois da aprovação no colegiado.</li>
+      <li>Casos que não respeitarem as regras <b>não são assinados</b> pela chefia.</li>
+    </ul></p>
+
+    <h3 class="sec">Prazos</h3>
+    <p class="crit">A manifestação de interesse ao departamento deve ser feita com <b>1 ano</b> de antecedência. A solicitação de afastamento só tem validade com a submissão do e-mail com a documentação à comissão, com pelo menos <b>6 meses</b> de antecedência.</p>
+
+    <h3 class="sec">Fila</h3>
+    <p class="crit">Fila pública para o departamento e <b>soberana</b>. Constitui manifestação formal de intenção, com finalidade exclusiva de planejamento acadêmico e administrativo, <b>não configurando solicitação formal nem gerando direito adquirido</b>. Critérios de desempate, nesta ordem: quem não teve nenhum ou teve menos afastamentos; quem está há mais tempo no departamento; quem está em nível mais avançado na carreira.</p>
+
+    <h3 class="sec">Modalidades</h3>
+    <p class="crit"><ul>
+      <li><b>Capacitação:</b> fila separada da de doutorado e pós-doc. Não fica restrita a 2 docentes quando realizada no <b>recesso universitário</b>. Fora do recesso, entra no limite de 2 por período.</li>
+      <li><b>Pós-doutorado:</b> duração de <b>6 meses a 1 ano</b>, respeitadas as demais regras.</li>
+      <li><b>Doutorado:</b> prevalecem as regras da UFRJ, respeitados os trâmites de solicitação deste documento. Compartilha a fila do pós-doutorado.</li>
+      <li><b>Eventos:</b> simpósios, seminários e congêneres seguem as regras da universidade e ficam fora do limite do departamento.</li>
+    </ul></p>
+
+    <h3 class="sec">Observações</h3>
+    <p class="crit">Casos excepcionais não previstos são avaliados pela comissão e podem ser marcados como tal no parecer. Segundo comunicado da PR4 de 24/10/24, a partir de 1/11/24 os processos de Licença para Capacitação, Incentivo à Qualificação e outros vão para <b>PR4/CDDP/SAC</b>, e não para a DVDE. Dúvidas: seac@pr4.ufrj.br</p>
+
+    <h3 class="sec">Repactuação de período</h3>
+    <p class="crit">Quem não se afasta no período manifestado mas deseja permanecer na fila é realocado conforme o motivo. Por <b>impedimento institucional</b> (limite de 2, conflito de área, substituto não liberado) ou por <b>perda de prazo ou documentação</b>, a data de manifestação é preservada e a prioridade se mantém. Por <b>desistência ou adiamento voluntário</b>, recebe nova data e vai para o fim da fila. O histórico fica registrado para auditoria. Esta regra é procedimento interno da comissão, não constando expressamente da minuta.</p>
+
+    <h3 class="sec">Parâmetro interno de gestão</h3>
+    <p class="crit">O <b>teto percentual do quadro efetivo</b> afastado simultaneamente é um parâmetro auxiliar de planejamento configurado pela comissão, <b>não previsto na minuta</b>. Vem desativado por padrão e, quando ativado, coexiste com o limite de 2 por período, valendo sempre o menor dos dois.</p>
+  </div>
+</section>
+</main>
+
+<!-- MODAL DECISÃO -->
+<div class="modal-bg" id="mDec">
+  <div class="modal">
+    <h3 id="decTit">Parecer</h3>
+    <input type="hidden" id="dec_id">
+    <div id="decResumo" class="notice n-plain" style="font-size:12.5px"></div>
+    <label>Status na comissão</label>
+    <select id="dec_status">
+      <option value="manifestado">Manifestado</option><option value="em_analise">Em análise</option>
+      <option value="doc_pendente">Documentação pendente</option>
+      <option value="favoravel">Parecer favorável</option><option value="desfavoravel">Parecer desfavorável</option>
+      <option value="concluido">Afastamento concluído</option>
+    </select>
+
+    <label style="margin-top:14px">Documentação recebida por e-mail<i class="info" data-tip="Itens exigidos pela minuta antes da abertura do processo no SEI. A solicitação só é válida com todos entregues e com pelo menos 6 meses de antecedência.">i</i></label>
+    <div class="row" style="gap:14px">
+      <label class="chk" style="margin:0"><input type="checkbox" id="d_periodo"> período</label>
+      <label class="chk" style="margin:0"><input type="checkbox" id="d_duracao"> duração</label>
+      <label class="chk" style="margin:0"><input type="checkbox" id="d_licenca"> tipo de licença</label>
+      <label class="chk" style="margin:0"><input type="checkbox" id="d_plano"> plano de trabalho</label>
+      <label class="chk" style="margin:0"><input type="checkbox" id="d_carta"> carta-convite</label>
+    </div>
+
+    <label style="margin-top:14px">Trâmite<i class="info" data-tip="Sequência prevista: parecer da comissão, aprovação no colegiado, abertura do processo no SEI, Congregação, publicação da portaria e, só então, pedido de substituto.">i</i></label>
+    <div class="grid" style="gap:10px">
+      <div><label class="mini" style="font-weight:400">Aprovação no colegiado</label><input type="date" id="t_colegiado"></div>
+      <div><label class="mini" style="font-weight:400">Processo aberto no SEI</label><input type="date" id="t_sei"></div>
+      <div><label class="mini" style="font-weight:400">Congregação</label><input type="date" id="t_congregacao"></div>
+      <div><label class="mini" style="font-weight:400">Portaria publicada</label><input type="date" id="t_portaria"></div>
+      <div><label class="mini" style="font-weight:400">Substituto solicitado</label><input type="date" id="t_substituto"></div>
+      <div><label class="mini" style="font-weight:400">Via do pedido de substituto</label><select id="t_via"><option value="">— não se aplica —</option><option value="anual">Pedido anual de vagas</option><option value="emergencial">Vaga emergencial</option><option value="sem">Sem pedido de substituto</option></select></div>
+    </div>
+
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="dec_exc"> <span>Caso excepcional não previsto, avaliado pela comissão</span></label>
+
+    <label style="margin-top:12px">Parecer da comissão</label>
+    <textarea id="dec_parecer"></textarea>
+
+    <div style="border-top:1px solid var(--line);margin:14px 0 10px"></div>
+    <label>Repactuar para outro período<i class="info" data-tip="Quando o docente não se afasta no período mas quer permanecer na fila. Impedimento institucional ou perda de prazo preservam a data de manifestação; desistência voluntária reinicia e vai para o fim.">i</i></label>
+    <div class="row" style="gap:6px;margin-top:4px">
+      <select id="dec_rep_ano" style="flex:1"></select>
+      <select id="dec_rep_sem" style="width:80px"><option value="1">.1</option><option value="2">.2</option></select>
+      <select id="dec_rep_motivo" style="flex:2"><option value="">— motivo —</option><option value="inst">Impedimento institucional (mantém prioridade)</option><option value="prazo">Perda de prazo / documentação (mantém prioridade)</option><option value="voluntaria">Desistência / adiamento voluntário (vai para o fim)</option></select>
+      <button class="btn sec sm" onclick="repactuar()">Repactuar</button>
+    </div>
+    <div class="row" style="margin-top:18px;justify-content:space-between">
+      <button class="btn ghost" style="color:var(--bad)" onclick="excluir()">Excluir registro</button>
+      <div class="row">
+        <button class="btn sec sm" onclick="closeModal('mDec')">Cancelar</button>
+        <button class="btn sm" onclick="saveDecisao()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DB_KEY='afastamentos:db';
+const FILAS={dout_pos:'Doutorado e pós-doutorado',capac:'Capacitação',evento:'Eventos e missões (regras UFRJ)'};
+const CLASSES={'Auxiliar':1,'Assistente':2,'Adjunto':3,'Associado':4,'Titular':5};
+const STAT={manifestado:'Manifestado',em_analise:'Em análise',doc_pendente:'Documentação pendente',favoravel:'Parecer favorável',desfavoravel:'Parecer desfavorável',concluido:'Concluído'};
+const DOCITENS=[['periodo','período'],['duracao','duração'],['licenca','tipo de licença'],['plano','plano de trabalho'],['carta','carta-convite']];
+const TRAMS=[['colegiado','Colegiado'],['sei','SEI'],['congregacao','Congregação'],['portaria','Portaria'],['substituto','Substituto']];
+const COB={adefinir:'A definir com a chefia',substituto:'Substituto previsto',remanejamento:'Remanejamento (área aderente)',redistribuicao:'Redistribuição interna',sem:'Sem cobertura prevista'};
+let DB={registros:[],config:{emailComissao:'',quadro:30,pct:0,areas:null}};
+let STORAGE_MODE='local';
+
+/* ---------- Persistência com fallback ---------- */
+async function storeGet(k){
+  if(window.storage&&window.storage.get){try{const r=await window.storage.get(k,true);if(r&&r.value){STORAGE_MODE='artifact';return r.value;}}catch(e){}}
+  try{const v=localStorage.getItem(k);if(v){STORAGE_MODE='local';return v;}}catch(e){}
+  return null;
+}
+async function storeSet(k,v){
+  let ok=false;
+  if(window.storage&&window.storage.set){try{await window.storage.set(k,v,true);ok=true;STORAGE_MODE='artifact';}catch(e){}}
+  try{localStorage.setItem(k,v);ok=true;}catch(e){}
+  return ok;
+}
+async function loadDB(){
+  const v=await storeGet(DB_KEY);
+  if(v){try{const d=JSON.parse(v);DB.registros=(d.registros||[]).map(migrar);DB.config=Object.assign({emailComissao:'',quadro:30,pct:0,areas:null},d.config||{});}catch(e){console.error('Falha ao ler os dados salvos',e);}}
+}
+async function saveDB(){const ok=await storeSet(DB_KEY,JSON.stringify(DB));if(!ok)alert('Não foi possível salvar. Verifique se o navegador permite armazenamento local e faça um backup manual.');}
+
+function migrar(r){
+  r.fila=r.fila||filaDe(r.tipo||'');
+  r.periodoFim=r.periodoFim||r.periodo;
+  r.tram=r.tram||{};
+  if(!r.docs){r.docs={periodo:!!r.periodo,duracao:!!r.dur,licenca:!!r.lic,plano:r.plano==='sim',carta:r.carta==='sim'};
+    if(r.docRecebida)DOCITENS.forEach(([k])=>r.docs[k]=true);}
+  r.excecional=!!r.excecional;
+  return r;
+}
+const $=id=>document.getElementById(id);
+function go(t){['form','fila','com','reg'].forEach(x=>{$('v-'+x).style.display=x===t?'block':'none';$('tab-'+x).classList.toggle('active',x===t);});if(t==='fila')renderFila();if(t==='com')openCom();}
+function closeModal(id){$(id).classList.remove('on');}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ---------- Domínio ---------- */
+function filaDe(tipo){if(tipo==='Doutorado'||tipo==='Pós-doutorado')return'dout_pos';if(tipo.startsWith('Capacitação'))return'capac';return'evento';}
+function carreiraVal(r){return (CLASSES[r.classe]||0)*10+(+r.nivel||0);}
+function perIdx(p){const a=String(p).split('.');return (+a[0])*2+((+a[1]||1)-1);}
+function perLabelDe(i){return Math.floor(i/2)+'.'+((i%2)+1);}
+function perLabel(r){return (r.periodoFim&&r.periodoFim!==r.periodo)?(r.periodo+' até '+r.periodoFim):r.periodo;}
+// todos os períodos que o afastamento atravessa
+function periodosDe(r){const a=perIdx(r.periodo),b=perIdx(r.periodoFim||r.periodo);const out=[];for(let i=a;i<=Math.max(a,b);i++)out.push(perLabelDe(i));return out;}
+function ocupa(r,p){return periodosDe(r).includes(p);}
+// conta para o limite de 2? capacitação no recesso e eventos ficam de fora
+function contaLimite(r){if(r.fila==='evento')return false;if(r.fila==='capac'&&r.recesso==='sim')return false;return true;}
+function docsFaltando(r){return DOCITENS.filter(([k])=>!(r.docs&&r.docs[k])).map(([,n])=>n);}
+function docCompleta(r){return docsFaltando(r).length===0;}
+function mesesAte(d){if(!d)return null;const h=new Date(),i=new Date(d+'T00:00');return (i.getFullYear()-h.getFullYear())*12+(i.getMonth()-h.getMonth());}
+
+// próxima pendência do trâmite
+function proximaAcao(r){
+  if(r.status==='desfavoravel')return null;
+  if(r.status==='concluido')return null;
+  if(!docCompleta(r))return{k:'doc',t:'documentação pendente: '+docsFaltando(r).join(', '),quem:'docente'};
+  if(r.status!=='favoravel')return{k:'parecer',t:'aguardando parecer da comissão',quem:'comissão'};
+  if(!r.tram.colegiado)return{k:'colegiado',t:'levar à aprovação do colegiado',quem:'comissão/chefia'};
+  if(!r.tram.sei)return{k:'sei',t:'docente deve abrir o processo no SEI',quem:'docente'};
+  if(!r.tram.congregacao)return{k:'congregacao',t:'submeter à Congregação',quem:'chefia'};
+  if(!r.tram.portaria)return{k:'portaria',t:'aguardando publicação da portaria',quem:'instâncias superiores'};
+  if(!r.tram.substituto&&r.tram.via!=='sem')return{k:'substituto',t:'solicitar substituto (vaga anual ou emergencial)',quem:'chefia'};
+  return null;
+}
+function trilha(r){
+  const prox=proximaAcao(r);
+  let h='<div class="trilha">';
+  const doc=docCompleta(r);
+  h+=`<span class="step ${doc?'done':(prox&&prox.k==='doc'?'next':'')}">Doc.</span>`;
+  h+=`<span class="step ${r.status==='favoravel'||r.status==='concluido'?'done':(prox&&prox.k==='parecer'?'next':'')}">Parecer</span>`;
+  TRAMS.forEach(([k,n])=>{h+=`<span class="step ${r.tram[k]?'done':(prox&&prox.k===k?'next':'')}" title="${r.tram[k]||''}">${n}</span>`;});
+  h+='</div>';
+  return h;
+}
+
+function defAreas(){return['Operações e Logística','Finanças','Marketing','Gestão de Pessoas','Estratégia e Organizações','Métodos Quantitativos','Sistemas de Informação','Contabilidade','Economia','Administração Pública','Outra'];}
+function areasAtuais(){return (DB.config.areas&&DB.config.areas.length)?DB.config.areas:defAreas();}
+function onArea(){$('box_areaOutra').style.display=$('f_area').value==='Outra'?'block':'none';}
+function onJapd(){$('box_japd').style.display=$('f_japd').value==='sim'?'block':'none';}
+function onTipo(){$('box_recesso').style.display=$('f_tipo').value.startsWith('Capacitação')?'block':'none';avisoTipo();prazo();coerencia();}
+function avisoTipo(){
+  const t=$('f_tipo').value,b=$('avisoTipo');let m='';
+  if(t==='Doutorado')m='Para doutorado prevalecem as regras da UFRJ, respeitados os trâmites deste documento. Compartilha a fila do pós-doutorado e entra no limite de 2 por período.';
+  else if(t==='Pós-doutorado')m='O afastamento para pós-doutorado tem duração de 6 meses a 1 ano e entra no limite de 2 docentes por período.';
+  else if(t.startsWith('Capacitação'))m=$('f_recesso').value==='sim'?'Capacitação no recesso universitário: fila separada e fora do limite de 2 docentes por período.':'Capacitação fora do recesso: fila separada, mas conta no limite de 2 docentes por período.';
+  else m='Simpósios, seminários e eventos congêneres seguem as regras da universidade e ficam fora do limite do departamento. O registro serve para conhecimento e planejamento da comissão.';
+  b.innerHTML='<div class="notice n-plain" style="margin:0">'+m+'</div>';
+}
+function buildAnos(){const y=new Date().getFullYear();let o='';for(let i=0;i<6;i++)o+=`<option>${y+i}</option>`;['f_ano','f_anoF'].forEach(id=>{if($(id))$(id).innerHTML=o;});}
+function buildAreaOpts(){const areas=areasAtuais(),sel=$('f_area'),cur=sel.value;sel.innerHTML='<option value="">— selecione —</option>'+areas.map(a=>`<option ${a===cur?'selected':''}>${esc(a)}</option>`).join('');}
+async function setAreas(){const v=prompt('Áreas do departamento (separadas por ; ):',areasAtuais().join('; '));if(v===null)return;DB.config.areas=v.split(';').map(s=>s.trim()).filter(Boolean);await saveDB();buildAreaOpts();alert('Áreas atualizadas.');}
+
+function prazo(){const m=mesesAte($('f_inicio').value),b=$('prazoInfo');if(m==null){b.innerHTML='';return;}
+  let c='a-ok',t='dentro do prazo de manifestação (1 ano ou mais).';
+  if(m<6){c='a-bad';t='menos de 6 meses. A solicitação não terá validade; a comissão precisa da documentação com no mínimo 6 meses de antecedência.';}
+  else if(m<12){c='a-warn';t='entre 6 e 12 meses. Válido para a solicitação, mas abaixo do prazo de 1 ano previsto para a manifestação.';}
+  b.innerHTML='<span class="anted '+c+'">Antecedência: '+m+' meses — '+t+'</span>';}
+
+function perDeData(d){if(!d)return null;const dt=new Date(d+'T00:00');return dt.getFullYear()+'.'+(dt.getMonth()+1<=7?'1':'2');}
+function coerencia(){
+  const b=$('coerInfo');if(!b)return;const msgs=[];
+  const ini=$('f_inicio').value,pi=$('f_ano').value+'.'+$('f_sem').value,pf=$('f_anoF').value+'.'+$('f_semF').value,dur=+$('f_dur').value;
+  const sug=perDeData(ini);
+  if(sug&&sug!==pi)msgs.push('A data de início indica o período <b>'+sug+'</b>, diferente do período inicial informado ('+pi+'). Confirme qual está correto.');
+  const span=perIdx(pf)-perIdx(pi);
+  if(span<0)msgs.push('O período final é anterior ao inicial.');
+  else if(span>1)msgs.push('O afastamento não pode passar de dois períodos.');
+  else if(span===1&&dur&&dur<=6)msgs.push('Duração de '+dur+' meses declarada para dois períodos. Verifique se o período final está correto, pois o docente ocupará vaga nos dois.');
+  else if(span===0&&dur&&dur>7)msgs.push('Duração de '+dur+' meses em um único período. Verifique se o afastamento não atravessa o período seguinte.');
+  if($('f_tipo').value==='Pós-doutorado'&&dur&&(dur<6||dur>12))msgs.push('O pós-doutorado deve ter de 6 a 12 meses.');
+  b.innerHTML=msgs.length?'<div class="notice n-info" style="margin:0">'+msgs.join('<br>')+'</div>':'';
+}
+
+function ordenar(arr,modo){const a=[...arr];
+  if(modo==='desemp')a.sort((x,y)=>{const af=(+x.numaf||0)-(+y.numaf||0);if(af)return af;const ig=(+x.ingresso||9999)-(+y.ingresso||9999);if(ig)return ig;return carreiraVal(y)-carreiraVal(x);});
+  else a.sort((x,y)=>String(x.tsFila||x.ts).localeCompare(String(y.tsFila||y.ts)));
+  return a;}
+
+/* ---------- Registro ---------- */
+async function enviar(){
+  const req={f_nome:'Nome',f_email:'E-mail',f_area:'Área',f_ingresso:'Ano de ingresso',f_numaf:'Nº de afastamentos',f_inicio:'Data de início',f_dur:'Duração'};
+  for(const k in req){if(!$(k).value.toString().trim()){alert('Preencha: '+req[k]);$(k).focus();return;}}
+  if($('f_area').value==='Outra'&&!$('f_areaOutra').value.trim()){alert('Especifique a área.');$('f_areaOutra').focus();return;}
+  const email=$('f_email').value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){alert('E-mail inválido.');$('f_email').focus();return;}
+  if(!/ufrj\.br$/i.test(email)&&!confirm('O e-mail informado não é institucional (ufrj.br). Registrar mesmo assim?'))return;
+  const areaVal=$('f_area').value==='Outra'?$('f_areaOutra').value.trim():$('f_area').value;
+  const periodoVal=$('f_ano').value+'.'+$('f_sem').value, periodoFimVal=$('f_anoF').value+'.'+$('f_semF').value;
+  const span=perIdx(periodoFimVal)-perIdx(periodoVal);
+  if(span<0){alert('O período final não pode ser anterior ao inicial.');return;}
+  if(span>1){alert('O afastamento não pode passar de dois períodos (ex.: 2026.2 até 2027.1 é o máximo).');return;}
+  const tipo=$('f_tipo').value, dur=+$('f_dur').value, m=mesesAte($('f_inicio').value);
+  if(tipo==='Pós-doutorado'&&(dur<6||dur>12)&&!confirm('O pós-doutorado deve durar de 6 a 12 meses. Registrar mesmo assim?'))return;
+  if(m!=null&&m<6&&!confirm('Antecedência menor que 6 meses. A solicitação não terá validade sem a documentação no prazo. Registrar a manifestação mesmo assim?'))return;
+  const dup=DB.registros.find(r=>r.email.toLowerCase()===email.toLowerCase()&&r.periodo===periodoVal&&r.status!=='desfavoravel'&&r.status!=='concluido');
+  if(dup&&!confirm('Já existe manifestação deste e-mail para o período '+periodoVal+'. Registrar outra?'))return;
+  const r={id:Date.now()+''+Math.floor(Math.random()*999),ts:new Date().toISOString(),
+    nome:$('f_nome').value.trim(),email:email,siape:$('f_siape').value.trim(),area:areaVal,
+    classe:$('f_classe').value,nivel:$('f_nivel').value,ingresso:$('f_ingresso').value,numaf:$('f_numaf').value,
+    tipo:tipo,fila:filaDe(tipo),recesso:$('f_recesso').value,periodo:periodoVal,periodoFim:periodoFimVal,inicio:$('f_inicio').value,dur:$('f_dur').value,
+    lic:$('f_lic').value.trim(),carta:$('f_carta').value,plano:$('f_plano').value,orient:$('f_orient').value.trim(),
+    disc:$('f_disc').value.trim(),cob:$('f_cob').value,destino:$('f_destino').value.trim(),just:$('f_just').value.trim(),
+    jaPosdoc:$('f_japd').value,anoPosdoc:$('f_anopd').value.trim(),
+    status:'manifestado',parecer:'',visto:false,excecional:false,tram:{},
+    docs:{periodo:true,duracao:true,licenca:!!$('f_lic').value,plano:$('f_plano').value==='sim',carta:$('f_carta').value==='sim'}};
+  DB.registros.push(r);await saveDB();
+  const falta=docsFaltando(r);
+  $('okMsg').innerHTML='Manifestação registrada na fila <b>'+FILAS[r.fila]+'</b>, período '+esc(perLabel(r))+'. '+
+    (falta.length?'Ainda falta entregar à comissão: <b>'+esc(falta.join(', '))+'</b>. ':'')+
+    'A solicitação só passa a valer com o envio da documentação à comissão. '+
+    '<a class="btn ghost" onclick="mailtoComissao(\''+r.id+'\')">Enviar documentação por e-mail à comissão</a>';
+  $('okMsg').style.display='block';limpar();window.scrollTo(0,0);
+}
+function limpar(){['f_nome','f_email','f_siape','f_ingresso','f_inicio','f_dur','f_orient','f_disc','f_destino','f_just','f_anopd','f_areaOutra'].forEach(i=>{const e=$(i);if(e)e.value='';});$('f_numaf').value='0';$('f_area').selectedIndex=0;$('f_cob').selectedIndex=0;$('f_japd').value='nao';$('f_lic').selectedIndex=0;$('box_japd').style.display='none';$('box_areaOutra').style.display='none';$('prazoInfo').innerHTML='';$('coerInfo').innerHTML='';}
+
+function mailtoComissao(id){const r=DB.registros.find(x=>x.id===id);if(!r)return;const to=DB.config.emailComissao||'';
+  if(!to&&!confirm('O e-mail da comissão ainda não foi configurado no painel. Abrir o rascunho sem destinatário?'))return;
+  const corpo=`Documentação para análise da Comissão de Afastamentos\n\n`+
+   `Docente: ${r.nome} (${r.email})  SIAPE: ${r.siape}\nÁrea: ${r.area}  Classe: ${r.classe} ${r.nivel}\n`+
+   `Fila: ${FILAS[r.fila]}\nTipo: ${r.tipo}\nPeríodo: ${perLabel(r)}  Início: ${r.inicio}  Duração: ${r.dur} meses\n`+
+   `Tipo de licença: ${r.lic||'não informado'}\nCarta-convite: ${r.carta}  Plano de trabalho: ${r.plano}\n`+
+   `Ingresso no departamento: ${r.ingresso}  Afastamentos anteriores: ${r.numaf}\n`+
+   `Pós-doc anterior: ${r.jaPosdoc==='sim'?('sim ('+(r.anoPosdoc||'ano não informado')+')'):'não'}\n`+
+   `Disciplinas: ${r.disc}\nSugestão de cobertura: ${COB[r.cob]||r.cob||'—'}\nDestino: ${r.destino}\n\n`+
+   `Itens ainda pendentes: ${docsFaltando(r).join(', ')||'nenhum'}\n\nJustificativa / plano de trabalho:\n${r.just}\n\n`+
+   `Anexar: plano de trabalho e carta-convite.`;
+  location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent('[Afastamento] '+r.nome+' — '+perLabel(r)+' ('+FILAS[r.fila]+')')}&body=${encodeURIComponent(corpo)}`;
+}
+
+function antedTag(r){const m=mesesAte(r.inicio);if(m==null)return'';let c='a-ok';if(m<6)c='a-bad';else if(m<12)c='a-warn';return'<span class="anted '+c+'">'+m+' m</span>';}
+function repTag(r){if(!r.repact||!r.repact.length)return'';const u=r.repact[r.repact.length-1];const m={inst:'institucional',prazo:'prazo',voluntaria:'voluntária'}[u.motivo]||'';return`<div class="mini" style="color:var(--info)">repactuado de ${esc(u.de)} (${m})${u.motivo!=='voluntaria'?', prioridade mantida':', fim da fila'}</div>`;}
+
+/* ---------- Fila pública ---------- */
+function renderFila(){
+  const q=($('fq').value||'').toLowerCase().trim(),ativos=$('fq_ativos').checked;
+  let regs=DB.registros.filter(r=>{
+    if(ativos&&(r.status==='desfavoravel'||r.status==='concluido'))return false;
+    if(!q)return true;
+    return [r.nome,r.area,r.periodo,r.periodoFim,r.tipo].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+  const g={};regs.forEach(r=>{(g[r.periodo]=g[r.periodo]||{});(g[r.periodo][r.fila]=g[r.periodo][r.fila]||[]).push(r);});
+  const per=Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)),w=$('filaWrap');
+  if(!per.length){w.innerHTML='<div class="empty">Nenhuma manifestação registrada.</div>';return;}
+  w.innerHTML=per.map(p=>{
+    const filas=Object.keys(g[p]).sort();
+    const blocos=filas.map(fk=>{const list=ordenar(g[p][fk],'crono');
+      const rows=list.map((r,i)=>`<tr><td><span class="pos ${i===0?'p1':''}">${i+1}</span></td>
+        <td><b>${esc(r.nome)}</b><div class="mini">${esc(r.area||'')}</div>${repTag(r)}</td>
+        <td>${esc(r.tipo)}${r.fila==='capac'?'<div class="mini">'+(r.recesso==='sim'?'no recesso, fora do limite':'fora do recesso, conta no limite')+'</div>':''}
+          <div class="mini">${esc(perLabel(r))}</div></td>
+        <td>${esc(r.inicio||'')} · ${esc(r.dur)}m ${antedTag(r)}</td>
+        <td><span class="tag t-${r.status}">${STAT[r.status]}</span>${docCompleta(r)?'':'<div class="mini">documentação pendente</div>'}</td></tr>`).join('');
+      const extra=fk==='dout_pos'?' · limite de 2 por período':(fk==='capac'?' · fila separada':' · fora do limite');
+      return `<div class="fila-h">${FILAS[fk]} — ${list.length} docente(s)${extra}</div>
+        <div style="overflow:auto"><table><thead><tr><th>Pos.</th><th>Docente</th><th>Tipo</th><th>Início e antecedência</th><th>Situação</th></tr></thead><tbody>${rows}</tbody></table></div>`;}).join('');
+    const ocup=DB.registros.filter(r=>contaLimite(r)&&ocupa(r,p)&&r.periodo!==p&&(r.status==='favoravel'||r.status==='concluido'));
+    const nota=ocup.length?`<div class="mini" style="padding:6px 2px">Ocupam também este período, por afastamento iniciado antes: ${ocup.map(r=>esc(r.nome)).join(', ')}.</div>`:'';
+    return `<div class="periodo-h"><b>Período ${esc(p)}</b></div>${nota}${blocos}`;
+  }).join('');
+}
+
+/* ---------- Limites por período ---------- */
+function tetoConfig(){const q=+DB.config.quadro||30,p=+DB.config.pct||0;return{quadro:q,pct:p,teto:p>0?Math.floor(q*p/100):Infinity};}
+function ocupantesConfirmados(p){return DB.registros.filter(r=>contaLimite(r)&&ocupa(r,p)&&(r.status==='favoravel'||r.status==='concluido'));}
+function limiteEfetivo(p){const{teto}=tetoConfig();return Math.min(2,teto);}
+
+function alertasPeriodo(p,filaMap){
+  const out=[];
+  const conc=[];Object.keys(filaMap).forEach(fk=>filaMap[fk].forEach(r=>{if(contaLimite(r))conc.push(r);}));
+  const conf=ocupantesConfirmados(p);
+  const lim=limiteEfetivo(p);
+  if(conf.length>lim)out.push(['bad',`Limite excedido no período ${p}: ${conf.length} afastamentos confirmados, máximo de ${lim}.`]);
+  else if(conc.length>lim)out.push(['info',`${conc.length} manifestações concorrem ao período ${p}; apenas ${lim} podem se afastar.`]);
+  const atravessa=conf.filter(r=>r.periodo!==p);
+  if(atravessa.length)out.push(['info',`Ocupam o período por afastamento iniciado antes: ${atravessa.map(r=>r.nome).join(', ')}.`]);
+  const byArea={};conc.forEach(r=>{const a=(r.area||'(sem área)').toLowerCase();(byArea[a]=byArea[a]||[]).push(r);});
+  Object.keys(byArea).forEach(a=>{if(byArea[a].length>1){
+    const cobertos=byArea[a].filter(r=>['substituto','remanejamento','redistribuicao'].includes(r.cob)).length;
+    out.push([cobertos>=byArea[a].length?'info':'warnv',`Mesma área concorrendo em ${p}: "${byArea[a][0].area}" (${byArea[a].length} docentes). Dois da mesma área não se afastam juntos sem substituição dos dois ou remanejamento aderente. Cobertura indicada por ${cobertos} deles.`]);}});
+  return out;
+}
+
+/* ---------- Filtros ---------- */
+function filtros(){return{periodo:$('ft_periodo').value,fila:$('ft_fila').value,status:$('ft_status').value,antec:$('ft_antec').value,tram:$('ft_tram').value,area:$('ft_area').value.toLowerCase().trim(),nome:$('ft_nome').value.toLowerCase().trim(),doc:$('ft_doc').checked};}
+function passa(r,F){
+  if(F.periodo&&!ocupa(r,F.periodo))return false;
+  if(F.fila&&r.fila!==F.fila)return false;
+  if(F.status&&r.status!==F.status)return false;
+  if(F.area&&!(r.area||'').toLowerCase().includes(F.area))return false;
+  if(F.nome&&!(r.nome||'').toLowerCase().includes(F.nome))return false;
+  if(F.doc&&!docCompleta(r))return false;
+  if(F.antec){const m=mesesAte(r.inicio);if(F.antec==='ok'&&!(m!=null&&m>=6))return false;if(F.antec==='fora'&&!(m!=null&&m<6))return false;}
+  if(F.tram){const pa=proximaAcao(r);
+    if(F.tram==='pend'&&!pa)return false;
+    if(F.tram==='compl'&&pa)return false;
+    if(F.tram==='portaria'&&r.tram.portaria)return false;}
+  return true;
+}
+function agruparF(F){const g={};DB.registros.filter(r=>passa(r,F)).forEach(r=>{(g[r.periodo]=g[r.periodo]||{});(g[r.periodo][r.fila]=g[r.periodo][r.fila]||[]).push(r);});return g;}
+function buildPeriodOpts(){const s=new Set();DB.registros.forEach(r=>periodosDe(r).forEach(p=>s.add(p)));const pers=[...s].sort((a,b)=>perIdx(a)-perIdx(b));const sel=$('ft_periodo'),cur=sel.value;sel.innerHTML='<option value="">Todos os períodos</option>'+pers.map(p=>`<option ${p===cur?'selected':''}>${esc(p)}</option>`).join('');}
+function limparFiltros(){['ft_periodo','ft_fila','ft_status','ft_antec','ft_tram','ft_area','ft_nome'].forEach(i=>$(i).value='');$('ft_doc').checked=false;renderCom();}
+
+/* ---------- Assistente de organização ---------- */
+function renderAssistente(periodo,modo){
+  const box=$('assistente');
+  if(!periodo){box.innerHTML='<h2>Assistente de organização da fila</h2><p class="sub" style="margin:0">Selecione um <b>período</b> no filtro acima para o sistema sugerir a organização respeitando o limite de 2, o conflito de área, a antecedência e os critérios de desempate.</p>';return;}
+  const regs=DB.registros.filter(r=>ocupa(r,periodo)&&r.status!=='concluido');
+  if(!regs.length){box.innerHTML='<h2>Assistente de organização — Período '+esc(periodo)+'</h2><p class="sub" style="margin:0">Nenhuma manifestação para este período.</p>';return;}
+  const fora=regs.filter(r=>!contaLimite(r));
+  const dentro=regs.filter(r=>contaLimite(r));
+  const {quadro,pct,teto}=tetoConfig();
+  const lim=limiteEfetivo(periodo);
+  // já confirmados ocupam vaga primeiro
+  const jaConf=ordenar(dentro.filter(r=>r.status==='favoravel'),modo);
+  const disputa=ordenar(dentro.filter(r=>r.status!=='favoravel'&&r.status!=='desfavoravel'),modo);
+  const desfav=dentro.filter(r=>r.status==='desfavoravel');
+  const contempl=[],espera=[],areas={};
+  jaConf.forEach(r=>{const a=(r.area||'').toLowerCase();
+    const obs=['parecer já favorável'];if(r.periodo!==periodo)obs.push('afastamento iniciado em '+r.periodo);
+    contempl.push([r,obs]);areas[a]=(areas[a]||0)+1;});
+  disputa.forEach(r=>{
+    if(contempl.length>=lim){espera.push([r,contempl.length>=2?'limite de 2 afastamentos do período já preenchido':('teto de '+pct+'% do quadro ('+teto+') já comprometido')]);return;}
+    const a=(r.area||'').toLowerCase(),conf=areas[a],cob=['substituto','remanejamento','redistribuicao'].includes(r.cob);
+    if(conf&&!cob){espera.push([r,'mesma área já contemplada, sem substituição ou remanejamento indicado']);return;}
+    const obs=[],m=mesesAte(r.inicio);
+    if(conf&&cob)obs.push('mesma área já contemplada, confirmar a cobertura indicada ('+(COB[r.cob]||r.cob)+')');
+    if(m!=null&&m<6)obs.push('antecedência menor que 6 meses');
+    const falta=docsFaltando(r);if(falta.length)obs.push('documentação pendente: '+falta.join(', '));
+    if(r.tipo==='Pós-doutorado'&&r.jaPosdoc==='sim')obs.push('já realizou pós-doc'+(r.anoPosdoc?' ('+r.anoPosdoc+')':''));
+    if(+r.numaf>0)obs.push(r.numaf+' afastamento(s) anterior(es)');
+    if(r.periodoFim!==r.periodo)obs.push('ocupa também '+periodosDe(r).filter(x=>x!==periodo).join(', '));
+    contempl.push([r,obs]);areas[a]=(areas[a]||0)+1;
+  });
+  desfav.forEach(r=>espera.push([r,'parecer desfavorável']));
+  const li=(r,ex)=>`<li><b>${esc(r.nome)}</b> — ${FILAS[r.fila]} · ${esc(r.tipo)} · ${esc(r.dur)}m · ${esc(r.area||'')}${ex?' <span class="mini">('+esc(ex)+')</span>':''}</li>`;
+  let h=`<h2>Assistente de organização — Período ${esc(periodo)}</h2>`;
+  h+=`<p class="sub">Ordenação: <b>${modo==='desemp'?'critérios de desempate':'cronológica (fila oficial)'}</b>. Limite do período: <b>${lim}</b>${pct>0?` (menor entre 2 do departamento e o teto de ${pct}% do quadro, igual a ${teto} sobre ${quadro} docentes)`:' (limite de 2 do departamento; teto percentual desativado)'}. Capacitação no recesso e eventos ficam fora do limite.</p>`;
+  h+=`<div style="font-weight:700;color:var(--ok);margin-top:6px">Recomendados a contemplar (até ${lim})</div><ul>${contempl.length?contempl.map(([r,o])=>li(r,o.join('; '))).join(''):'<li class="mini">nenhum</li>'}</ul>`;
+  h+=`<div style="font-weight:700;color:var(--warn)">Em espera</div><ul>${espera.length?espera.map(([r,m])=>li(r,m)).join(''):'<li class="mini">nenhum</li>'}</ul>`;
+  if(fora.length)h+=`<div style="font-weight:700;color:var(--info)">Fora do limite</div><ul>${fora.map(r=>li(r,r.fila==='capac'?'capacitação no recesso':'evento, regras da universidade')).join('')}</ul>`;
+  const txt=textoParecer(periodo,modo,contempl,espera,fora,lim);
+  h+=`<button class="btn sm" onclick="copiarParecer()">Copiar resumo para o parecer</button><textarea id="parecerTxt" style="margin-top:8px;min-height:110px">${esc(txt)}</textarea>`;
+  box.innerHTML=h;
+}
+function textoParecer(periodo,modo,contempl,espera,fora,lim){
+  let t=`Comissão de Afastamentos do Departamento de Administração — FACC/UFRJ\nOrganização do período ${periodo}\n\n`;
+  t+=`Ordenação aplicada: ${modo==='desemp'?'critérios de desempate (menos afastamentos, mais tempo de casa, nível mais avançado)':'cronológica, conforme a fila oficial'}.\n`;
+  t+=`Limite do período: ${lim} docente(s), nos termos da regra de no máximo 2 professores afastados por período.\n\n`;
+  t+=`Recomendados a contemplar: `+(contempl.length?contempl.map(([r])=>r.nome+' ('+r.tipo+', '+r.area+')').join('; '):'nenhum')+'.\n\n';
+  t+=`Em espera: `+(espera.length?espera.map(([r,m])=>r.nome+' — '+m).join('; '):'nenhum')+'.\n\n';
+  if(fora.length)t+=`Fora do limite: `+fora.map(r=>r.nome+' ('+(r.fila==='capac'?'capacitação no recesso':'evento')+')').join('; ')+'.\n\n';
+  t+=`Observação: a fila é manifestação de intenção para planejamento e não gera direito adquirido. A solicitação só tem validade com a documentação enviada à comissão com pelo menos 6 meses de antecedência.\n`;
+  return t;
+}
+function copiarParecer(){const t=$('parecerTxt');if(!t)return;t.select();if(navigator.clipboard)navigator.clipboard.writeText(t.value);}
+
+/* ---------- Painel ---------- */
+function renderKPI(){
+  const R=DB.registros,ativos=R.filter(r=>r.status!=='concluido'&&r.status!=='desfavoravel');
+  const pend=ativos.filter(r=>proximaAcao(r)).length;
+  const semDoc=ativos.filter(r=>!docCompleta(r)).length;
+  const criticos=ativos.filter(r=>{const m=mesesAte(r.inicio);return m!=null&&m<6&&!docCompleta(r);}).length;
+  const semPort=R.filter(r=>r.status==='favoravel'&&!r.tram.portaria).length;
+  $('kpiBox').innerHTML=
+    `<div><b>${R.length}</b><span>registros na fila</span></div>`+
+    `<div><b>${ativos.length}</b><span>em andamento</span></div>`+
+    `<div><b>${semDoc}</b><span>com documentação incompleta</span></div>`+
+    `<div><b>${criticos}</b><span>fora do prazo de 6 meses e sem documentação</span></div>`+
+    `<div><b>${semPort}</b><span>favoráveis sem portaria publicada</span></div>`+
+    `<div><b>${pend}</b><span>com pendência de trâmite</span></div>`;
+}
+function renderAcoes(){
+  const itens=DB.registros.map(r=>[r,proximaAcao(r)]).filter(([,a])=>a);
+  const ord=itens.map(([r,a])=>{const m=mesesAte(r.inicio);return{r,a,m:m==null?999:m};}).sort((x,y)=>x.m-y.m).slice(0,8);
+  $('acoesBox').innerHTML=ord.length?
+    `<div class="notice n-plain"><b>Próximas ações</b> (ordenadas pela proximidade do início)<ul style="margin:6px 0 0;padding-left:20px;font-size:12.5px">`+
+    ord.map(({r,a,m})=>`<li><b>${esc(r.nome)}</b> · ${esc(perLabel(r))} · ${m===999?'sem data':m+' meses para o início'} — ${esc(a.t)} <span class="mini">[${esc(a.quem)}]</span></li>`).join('')+
+    `</ul></div>`:'<div class="notice n-ok">Nenhuma pendência de trâmite no momento.</div>';
+}
+function renderCom(){
+  const novos=DB.registros.filter(r=>!r.visto).length;
+  $('notifBox').innerHTML=novos?`<div class="notice n-info"><b>${novos}</b> registro(s) novo(s) recebido(s) pela comissão. <button class="btn ghost" onclick="marcarVistos()">Marcar como lidos</button></div>`:'';
+  buildPeriodOpts();renderKPI();renderAcoes();
+  const F=filtros(),modo=$('ordCom').value,g=agruparF(F),per=Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)),w=$('comWrap');
+  renderAssistente(F.periodo,modo);
+  const {quadro,pct,teto}=tetoConfig();
+  if(pct>0){
+    const pers=[...new Set(DB.registros.flatMap(periodosDe))];
+    const piores=pers.map(p=>({p,n:ocupantesConfirmados(p).length})).sort((a,b)=>b.n-a.n)[0]||{p:'—',n:0};
+    $('tetoBanner').innerHTML=`<div class="notice ${piores.n>teto?'n-bad':(piores.n>=teto?'n-info':'n-ok')}">Parâmetro interno: quadro efetivo <b>${quadro}</b>, teto de <b>${pct}%</b> igual a <b>${teto}</b> afastamentos simultâneos<i class="info" data-tip="Parâmetro auxiliar de planejamento definido pela comissão. Não consta da minuta. Coexiste com o limite de 2 por período: vale o menor dos dois. Use Quadro/teto para ajustar ou zerar.">i</i>. Período mais carregado: <b>${esc(piores.p)}</b> com ${piores.n} confirmado(s)${piores.n>teto?' — teto excedido':(piores.n>=teto?' — teto atingido':'')}.</div>`;
+  }else $('tetoBanner').innerHTML='';
+  if(!per.length){w.innerHTML='<div class="empty">Nenhuma manifestação corresponde aos filtros.</div>';return;}
+  w.innerHTML=per.map(p=>{
+    const al=alertasPeriodo(p,g[p]).map(([t,m])=>`<div class="alertbox" style="color:${t==='bad'?'var(--bad)':(t==='warnv'?'var(--warn)':'var(--info)')}">${esc(m)}</div>`).join('');
+    const filas=Object.keys(g[p]).sort();
+    const blocos=filas.map(fk=>{const list=ordenar(g[p][fk],modo);
+      const rows=list.map((r,i)=>{const pa=proximaAcao(r);return `<tr>
+        <td><span class="pos ${i===0?'p1':''}">${i+1}</span></td>
+        <td><b>${esc(r.nome)}</b>${r.excecional?' <span class="pill">caso excepcional</span>':''}<div class="mini">${esc(r.email)} · ${esc(r.area)}</div>${repTag(r)}
+          <div class="mini">${esc(r.classe)} ${esc(r.nivel)} · ${esc(r.disc||'')}</div></td>
+        <td>${esc(r.tipo)}<div class="mini">${esc(perLabel(r))} · ${esc(r.inicio||'')} · ${esc(r.dur)}m ${antedTag(r)}</div>
+          <div class="mini">${contaLimite(r)?'conta no limite':'fora do limite'} · ${esc(COB[r.cob]||r.cob||'')}</div></td>
+        <td class="hide-m"><span class="pill">afast.: ${esc(r.numaf)}</span> <span class="pill">ingr.: ${esc(r.ingresso)}</span> <span class="pill">pós-doc: ${r.jaPosdoc==='sim'?('sim '+esc(r.anoPosdoc||'')):'não'}</span></td>
+        <td class="hide-m">${docCompleta(r)?'<span class="pill" style="background:#e2f4ea;color:var(--ok)">documentação completa</span>':'<span class="pill" style="background:#fae3e0;color:var(--bad)">falta: '+esc(docsFaltando(r).join(', '))+'</span>'}${trilha(r)}</td>
+        <td><span class="tag t-${r.status}">${STAT[r.status]}</span>${pa?'<div class="mini">'+esc(pa.t)+'</div>':'<div class="mini">sem pendência</div>'}${r.parecer?'<div class="mini">'+esc(r.parecer.slice(0,40))+(r.parecer.length>40?'…':'')+'</div>':''}</td>
+        <td><button class="btn sec sm" onclick="openDec('${r.id}')">Abrir</button></td></tr>`;}).join('');
+      const extra=fk==='dout_pos'?' · limite de 2 por período':(fk==='capac'?' · fila separada':' · fora do limite');
+      return `<div class="fila-h">${FILAS[fk]} — ${list.length} docente(s)${extra}</div>
+        <div style="overflow:auto"><table><thead><tr><th>#</th><th>Docente</th><th>Tipo e período</th><th class="hide-m">Desempate</th><th class="hide-m">Documentação e trâmite</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;}).join('');
+    return `<div class="periodo-h"><b>Período ${esc(p)}</b><span>limite de ${limiteEfetivo(p)} · ${ocupantesConfirmados(p).length} confirmado(s)</span></div>${al?'<div style="padding:8px 2px">'+al+'</div>':''}${blocos}`;
+  }).join('');
+}
+async function marcarVistos(){DB.registros.forEach(r=>r.visto=true);await saveDB();renderCom();}
+
+/* ---------- Modal de decisão ---------- */
+function openDec(id){const r=DB.registros.find(x=>x.id===id);if(!r)return;$('dec_id').value=id;$('decTit').textContent='Registro — '+r.nome;
+  const pa=proximaAcao(r),m=mesesAte(r.inicio);
+  $('decResumo').innerHTML=`${esc(r.tipo)} · ${esc(perLabel(r))} · início ${esc(r.inicio||'—')} · ${esc(r.dur)} meses · ${m==null?'':m+' meses de antecedência'}<br>
+    Área: ${esc(r.area)} · cobertura: ${esc(COB[r.cob]||r.cob||'—')} · ${contaLimite(r)?'conta no limite de 2':'fora do limite de 2'}<br>
+    <b>${pa?'Próxima ação: '+esc(pa.t)+' ['+esc(pa.quem)+']':'Sem pendências de trâmite.'}</b>`;
+  $('dec_status').value=r.status;$('dec_parecer').value=r.parecer||'';$('dec_exc').checked=!!r.excecional;
+  DOCITENS.forEach(([k])=>$('d_'+k).checked=!!(r.docs&&r.docs[k]));
+  TRAMS.forEach(([k])=>$('t_'+k).value=r.tram[k]||'');
+  $('t_via').value=r.tram.via||'';
+  const y=new Date().getFullYear();let o='';for(let i=0;i<6;i++)o+=`<option>${y+i}</option>`;$('dec_rep_ano').innerHTML=o;$('dec_rep_motivo').value='';
+  $('mDec').classList.add('on');}
+async function repactuar(){const r=DB.registros.find(x=>x.id===$('dec_id').value);if(!r)return;
+  const mot=$('dec_rep_motivo').value;if(!mot){alert('Selecione o motivo da repactuação.');return;}
+  const novo=$('dec_rep_ano').value+'.'+$('dec_rep_sem').value;
+  const span=perIdx(r.periodoFim||r.periodo)-perIdx(r.periodo);
+  const txt={inst:'impedimento institucional',prazo:'perda de prazo ou documentação',voluntaria:'desistência ou adiamento voluntário'}[mot];
+  if(!confirm(`Repactuar de ${r.periodo} para ${novo}?\nMotivo: ${txt}.\n${mot==='voluntaria'?'Irá para o fim da fila com nova data.':'Mantém a prioridade, a data de manifestação é preservada.'}`))return;
+  r.repact=r.repact||[];r.repact.push({de:r.periodo,para:novo,motivo:mot,data:new Date().toISOString()});
+  r.periodo=novo;r.periodoFim=perLabelDe(perIdx(novo)+span);
+  if(mot==='voluntaria')r.tsFila=new Date().toISOString();
+  r.status='manifestado';r.tram={};r.visto=false;
+  await saveDB();closeModal('mDec');renderCom();}
+async function saveDecisao(){const r=DB.registros.find(x=>x.id===$('dec_id').value);if(!r)return;
+  r.status=$('dec_status').value;r.parecer=$('dec_parecer').value;r.excecional=$('dec_exc').checked;r.visto=true;
+  r.docs=r.docs||{};DOCITENS.forEach(([k])=>r.docs[k]=$('d_'+k).checked);
+  r.docRecebida=docCompleta(r);
+  TRAMS.forEach(([k])=>{const v=$('t_'+k).value;if(v)r.tram[k]=v;else delete r.tram[k];});
+  const via=$('t_via').value;if(via)r.tram.via=via;else delete r.tram.via;
+  if(r.status==='favoravel'&&!docCompleta(r)&&!confirm('A documentação não está completa (falta '+docsFaltando(r).join(', ')+'). Registrar parecer favorável mesmo assim?'))return;
+  await saveDB();closeModal('mDec');renderCom();}
+async function excluir(){if(!confirm('Excluir este registro? A ação não pode ser desfeita.'))return;DB.registros=DB.registros.filter(x=>x.id!==$('dec_id').value);await saveDB();closeModal('mDec');renderCom();}
+async function setEmailComissao(){const e=prompt('E-mail da comissão (destinatário da documentação):',DB.config.emailComissao||'');if(e===null)return;DB.config.emailComissao=e.trim();await saveDB();alert('E-mail salvo.');}
+async function setQuadro(){
+  const q=prompt('Total de professores do quadro efetivo:',DB.config.quadro||30);if(q===null)return;
+  const p=prompt('Percentual máximo de afastamentos simultâneos. Use 0 para desativar este parâmetro, que não consta da minuta:',DB.config.pct||0);if(p===null)return;
+  DB.config.quadro=Math.max(1,+q||30);DB.config.pct=Math.max(0,+p||0);await saveDB();renderCom();
+  const{teto,pct}=tetoConfig();
+  alert('Quadro: '+DB.config.quadro+(pct>0?(' · teto: '+teto+' ('+pct+'%)'):' · teto percentual desativado, vale apenas o limite de 2 por período'));}
+
+/* ---------- Exportação ---------- */
+function baixar(nome,conteudo,tipo){const blob=new Blob([conteudo],{type:tipo});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nome;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+function exportCSV(){
+  const h=['Periodo_inicio','Periodo_fim','Fila','Pos','Nome','Email','SIAPE','Area','Classe','Nivel','Ingresso','NumAfastamentos','Tipo','Recesso','ContaLimite','Inicio','Duracao_m','Antecedencia_m','TipoLicenca','DocCompleta','DocFaltando','Colegiado','SEI','Congregacao','Portaria','Substituto','ViaSubstituto','Disciplinas','Cobertura','Destino','Status','Excepcional','ProximaAcao','Parecer'];
+  const g=agruparF(filtros());let lines=[h.join(';')];const modo=$('ordCom').value;
+  Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)).forEach(p=>Object.keys(g[p]).sort().forEach(fk=>ordenar(g[p][fk],modo).forEach((r,i)=>{
+    const pa=proximaAcao(r);
+    lines.push([p,r.periodoFim,FILAS[fk],i+1,r.nome,r.email,r.siape,r.area,r.classe,r.nivel,r.ingresso,r.numaf,r.tipo,r.recesso,contaLimite(r)?'sim':'nao',r.inicio,r.dur,mesesAte(r.inicio),r.lic,docCompleta(r)?'sim':'nao',docsFaltando(r).join(', '),r.tram.colegiado||'',r.tram.sei||'',r.tram.congregacao||'',r.tram.portaria||'',r.tram.substituto||'',r.tram.via||'',r.disc,(COB[r.cob]||r.cob),r.destino,STAT[r.status],r.excecional?'sim':'nao',pa?pa.t:'',(r.parecer||'').replace(/[\n;]/g,' ')]
+      .map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';'));})));
+  baixar('fila_afastamentos.csv',"﻿"+lines.join('\n'),'text/csv;charset=utf-8');
+}
+function backup(){const d=new Date().toISOString().slice(0,10);baixar('backup_afastamentos_'+d+'.json',JSON.stringify(DB,null,2),'application/json');}
+function restaurar(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
+  inp.onchange=()=>{const f=inp.files[0];if(!f)return;const fr=new FileReader();
+    fr.onload=async()=>{try{const d=JSON.parse(fr.result);
+      if(!d||!Array.isArray(d.registros))throw new Error('formato inválido');
+      if(!confirm('Restaurar '+d.registros.length+' registro(s)? Os dados atuais ('+DB.registros.length+') serão substituídos.'))return;
+      DB.registros=d.registros.map(migrar);DB.config=Object.assign(DB.config,d.config||{});
+      await saveDB();renderCom();alert('Backup restaurado.');
+    }catch(e){alert('Arquivo inválido: '+e.message);}};
+    fr.readAsText(f);};
+  inp.click();
+}
+
+/* ---------- Acesso restrito ---------- */
+let comAuth=false;
+async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}
+function openCom(){if(comAuth){$('comGate').style.display='none';$('comPanel').style.display='block';renderCom();}else renderGate();}
+function renderGate(){$('comPanel').style.display='none';$('comGate').style.display='block';
+  if(!DB.config.comHash){
+    $('comGate').innerHTML=`<h2>Configurar acesso da comissão</h2><p class="sub">Primeiro acesso. Defina a senha que os membros da comissão usarão para entrar.</p>
+      <div class="gate-wrap"><label>Nova senha (mín. 6)</label><input id="g_p1" type="password">
+      <label style="margin-top:10px">Repetir senha</label><input id="g_p2" type="password">
+      <div class="row" style="margin-top:14px"><button class="btn" onclick="setupSenha()">Definir senha</button></div>
+      <p class="mini" style="margin-top:12px">A senha protege apenas a visualização neste navegador. Não substitui autenticação de servidor.</p></div>`;
+  }else{
+    $('comGate').innerHTML=`<h2>Acesso restrito — Comissão de Afastamentos</h2><p class="sub">Área exclusiva dos membros da comissão. Docentes consultam a fila na aba Fila pública.</p>
+      <div class="gate-wrap"><label>Senha</label><input id="g_p" type="password" onkeydown="if(event.key==='Enter')login()">
+      <div class="row" style="margin-top:14px"><button class="btn" onclick="login()">Entrar</button></div>
+      <div id="g_err" style="color:var(--bad);font-size:13px;margin-top:8px"></div></div>`;
+  }}
+async function setupSenha(){const a=$('g_p1').value,b=$('g_p2').value;if(a.length<6){alert('Senha muito curta (mínimo de 6 caracteres).');return;}if(a!==b){alert('As senhas não conferem.');return;}DB.config.comHash=await sha(a);await saveDB();comAuth=true;openCom();}
+async function login(){if(await sha($('g_p').value)===DB.config.comHash){comAuth=true;openCom();}else $('g_err').textContent='Senha incorreta.';}
+function logout(){comAuth=false;openCom();}
+async function trocarSenha(){const o=prompt('Senha atual:');if(o===null)return;if(await sha(o)!==DB.config.comHash){alert('Senha atual incorreta.');return;}const n=prompt('Nova senha (mínimo de 6):');if(!n||n.length<6){alert('Senha inválida.');return;}DB.config.comHash=await sha(n);await saveDB();alert('Senha alterada.');}
+
+(async()=>{await loadDB();buildAreaOpts();buildAnos();avisoTipo();go('form');})();
+</script>
+</body>
+</html>
