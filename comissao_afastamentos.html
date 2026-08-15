@@ -6,194 +6,270 @@
 <title>Comissão de Afastamentos - Departamento de Administração</title>
 <style>
   :root{
-    --navy:#0f2747;--navy2:#16365e;--gold:#c9a227;--gold-soft:#e9d8a0;
-    --bg:#f5f6f8;--card:#fff;--line:#dfe3ea;--ink:#1c2733;--muted:#6b7682;
-    --ok:#1f8a4c;--warn:#c98a17;--bad:#c0392b;--info:#2a6fb0;--radius:12px;--sh:0 2px 10px rgba(15,39,71,.07);
+    --paper:#f6f4f0; --surface:#ffffff; --surface2:#fbfaf8;
+    --ink:#1d1c1a; --ink2:#3c3934; --muted:#78736b; --line:#e7e2d9; --line2:#f0ece5;
+    --clay:#bf5a38; --clay-soft:#f5e7e0; --clay-ink:#8f3f24;
+    --deep:#26241f;
+    --ok:#3f7d52; --ok-bg:#e8f1e9; --warn:#9a6a12; --warn-bg:#f8efdd; --bad:#a8392a; --bad-bg:#f7e5e1;
+    --info:#3a5a78; --info-bg:#e8eef4;
+    --r:16px; --r-sm:10px;
+    --sh:0 1px 2px rgba(29,28,26,.04), 0 8px 24px -12px rgba(29,28,26,.10);
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
-  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:20px 24px;border-bottom:4px solid var(--gold)}
-  header h1{margin:0;font-size:20px;font-weight:700}
-  header p{margin:4px 0 0;font-size:13px;color:var(--gold-soft)}
-  .brand{display:flex;gap:16px;align-items:center}
-  .seal{width:56px;height:56px;flex:none}
-  .gate-wrap{max-width:420px}
-  .info{display:inline-flex;width:15px;height:15px;border-radius:50%;background:var(--navy);color:#fff;font-size:10px;font-weight:700;font-style:normal;align-items:center;justify-content:center;cursor:help;margin-left:5px;position:relative;vertical-align:middle}
-  .info:hover::after,.info:focus::after{content:attr(data-tip);position:absolute;left:21px;top:-6px;width:245px;background:var(--navy);color:#fff;font-weight:400;font-size:11.5px;line-height:1.45;padding:9px 11px;border-radius:9px;z-index:40;box-shadow:0 6px 18px rgba(0,0,0,.28);white-space:normal;text-align:left}
-  .info:hover::before,.info:focus::before{content:'';position:absolute;left:15px;top:3px;border:6px solid transparent;border-right-color:var(--navy);z-index:40}
-  nav{display:flex;gap:4px;background:var(--navy);padding:0 16px;flex-wrap:wrap}
-  nav button{background:transparent;border:0;color:#cfd8e3;padding:13px 18px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent}
-  nav button.active{color:#fff;border-bottom-color:var(--gold)}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-size:15.5px;line-height:1.6;
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .serif{font-family:ui-serif,Georgia,"Times New Roman",serif}
+
+  header{background:var(--deep);color:#fff;padding:18px 24px}
+  .brand{display:flex;gap:14px;align-items:center;max-width:1180px;margin:0 auto}
+  .seal{width:42px;height:42px;flex:none}
+  header h1{margin:0;font-size:17px;font-weight:650;letter-spacing:-.2px}
+  header p{margin:2px 0 0;font-size:12.5px;color:#a8a29a}
+
+  nav{background:var(--deep);padding:0 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .navin{display:flex;gap:2px;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+  nav button{background:transparent;border:0;color:#a8a29a;padding:11px 16px;font-size:13.5px;font-weight:550;cursor:pointer;border-bottom:2px solid transparent;font-family:inherit}
   nav button:hover{color:#fff}
-  main{max-width:1220px;margin:0 auto;padding:22px 18px 60px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--sh);padding:20px;margin-bottom:18px}
-  h2{font-size:17px;margin:0 0 4px;color:var(--navy)}
-  h3.sec{font-size:14px;margin:20px 0 6px;color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:4px}
-  .sub{font-size:13px;color:var(--muted);margin:0 0 16px}
-  label{display:block;font-size:12.5px;font-weight:600;color:var(--navy);margin:0 0 5px}
-  .req::after{content:" *";color:var(--bad)}
-  input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;background:#fff}
-  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--gold)}
-  textarea{resize:vertical;min-height:60px}
-  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  nav button.active{color:#fff;border-bottom-color:var(--clay)}
+
+  main{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:26px;margin-bottom:20px}
+  h2{font-size:19px;margin:0 0 4px;color:var(--ink);font-weight:620;letter-spacing:-.3px}
+  h3.sec{font-size:14.5px;margin:24px 0 8px;color:var(--ink);font-weight:620}
+  .sub{font-size:13.5px;color:var(--muted);margin:0 0 20px;max-width:70ch}
+  .crit{font-size:14px;color:var(--ink2);line-height:1.65}
+  .crit b{color:var(--ink);font-weight:600}
+  .crit ul{margin:8px 0 0;padding-left:20px}.crit li{margin-bottom:6px}
+  .mini{font-size:12px;color:var(--muted)}
+
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin:0 0 6px}
+  .req::after{content:" *";color:var(--clay)}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);
+    font-size:14.5px;font-family:inherit;background:var(--surface);color:var(--ink);transition:border-color .12s,box-shadow .12s}
+  input:hover,select:hover,textarea:hover{border-color:#d8d2c7}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--clay);box-shadow:0 0 0 3px var(--clay-soft)}
+  input[type=file]{padding:8px;background:var(--surface2);font-size:13px}
+  textarea{resize:vertical;min-height:76px}
+
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
   .grid .full{grid-column:1/-1}
-  .btn{background:var(--gold);color:var(--navy);border:0;padding:11px 22px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer}
-  .btn:hover{filter:brightness(.96)}
-  .btn:disabled{opacity:.55;cursor:default}
-  .btn.sec{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
-  .btn.sm{padding:6px 12px;font-size:12.5px}
-  .btn.ghost{background:transparent;color:var(--info);border:0;text-decoration:underline;padding:4px;cursor:pointer;font-size:13px}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{background:#f0f3f7;color:var(--navy);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
-  tr:hover td{background:#fafbfd}
-  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
-  .t-manifestado{background:#e6effa;color:var(--info)}
-  .t-em_analise{background:#fdf2dc;color:var(--warn)}
-  .t-doc_pendente{background:#eceef1;color:var(--muted)}
-  .t-favoravel{background:#e2f4ea;color:var(--ok)}
-  .t-desfavoravel{background:#fae3e0;color:var(--bad)}
-  .t-concluido{background:#e7e3f3;color:#5b4b9a}
-  .pos{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;background:var(--navy);color:#fff;border-radius:50%;font-weight:700;font-size:13px}
-  .pos.p1{background:var(--gold);color:var(--navy)}
-  .periodo-h{display:flex;justify-content:space-between;align-items:center;background:var(--navy);color:#fff;padding:9px 14px;border-radius:9px 9px 0 0;margin-top:18px;flex-wrap:wrap;gap:6px}
-  .periodo-h b{font-size:15px}.periodo-h span{font-size:12px;color:var(--gold-soft)}
-  .fila-h{font-size:13px;font-weight:800;color:var(--navy);margin:22px 0 0;padding:6px 0;border-bottom:2px solid var(--gold)}
-  .empty{text-align:center;color:var(--muted);padding:34px;font-size:14px}
-  .pill{font-size:10.5px;background:#eef1f5;color:var(--muted);padding:2px 7px;border-radius:6px;white-space:nowrap;display:inline-block;margin:1px 0}
-  .notice{border-radius:9px;padding:11px 14px;font-size:13px;margin-bottom:12px}
-  .n-info{background:#fff8e6;border:1px solid var(--gold-soft);color:#7a5c0a}
-  .n-bad{background:#fae3e0;border:1px solid #e3a99f;color:var(--bad)}
-  .n-ok{background:#e2f4ea;border:1px solid #9ad3b1;color:var(--ok)}
-  .n-plain{background:#eef2f7;border:1px solid var(--line);color:var(--navy)}
-  .alertbox{margin:0 0 4px;font-size:12px;font-weight:700}
-  .ok-msg{background:#e2f4ea;border:1px solid #9ad3b1;color:var(--ok);padding:12px 14px;border-radius:9px;font-size:14px;margin-bottom:14px;display:none}
-  .modal-bg{position:fixed;inset:0;background:rgba(15,39,71,.5);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
+
+  .btn{background:var(--clay);color:#fff;border:0;padding:11px 20px;border-radius:var(--r-sm);
+    font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:filter .12s}
+  .btn:hover{filter:brightness(1.07)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn.sec{background:var(--surface);color:var(--ink2);border:1px solid var(--line)}
+  .btn.sec:hover{border-color:#cfc8ba;filter:none;background:var(--surface2)}
+  .btn.sm{padding:7px 13px;font-size:13px}
+  .btn.ghost{background:transparent;color:var(--clay);border:0;text-decoration:underline;padding:2px;cursor:pointer;font-size:13.5px;font-family:inherit}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:12px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+  th{background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.7px;font-weight:650;border-bottom:1px solid var(--line)}
+  tr:hover td{background:var(--surface2)}
+
+  .tag{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .t-manifestado{background:var(--info-bg);color:var(--info)}
+  .t-em_analise{background:var(--warn-bg);color:var(--warn)}
+  .t-doc_pendente{background:#eeeae4;color:var(--muted)}
+  .t-favoravel{background:var(--ok-bg);color:var(--ok)}
+  .t-desfavoravel{background:var(--bad-bg);color:var(--bad)}
+  .t-concluido{background:#ece7f1;color:#5c4b78}
+  .pill{font-size:11px;background:#f0ece5;color:var(--muted);padding:3px 9px;border-radius:99px;white-space:nowrap;display:inline-block;margin:1px 0}
+
+  .pos{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;background:#f0ece5;color:var(--ink2);border-radius:99px;font-weight:650;font-size:12.5px}
+  .pos.p1{background:var(--clay);color:#fff}
+
+  .periodo-h{display:flex;justify-content:space-between;align-items:center;padding:14px 0 8px;margin-top:26px;
+    border-bottom:1px solid var(--line);flex-wrap:wrap;gap:6px}
+  .periodo-h b{font-size:16px;letter-spacing:-.2px}
+  .periodo-h span{font-size:12.5px;color:var(--muted)}
+  .fila-h{font-size:12px;font-weight:650;color:var(--muted);margin:22px 0 2px;text-transform:uppercase;letter-spacing:.7px}
+  .empty{text-align:center;color:var(--muted);padding:44px;font-size:14px}
+
+  .notice{border-radius:var(--r-sm);padding:13px 16px;font-size:13.5px;margin-bottom:14px;border:1px solid transparent}
+  .n-info{background:var(--warn-bg);border-color:#eadfc3;color:#7a5510}
+  .n-bad{background:var(--bad-bg);border-color:#eccdc5;color:var(--bad)}
+  .n-ok{background:var(--ok-bg);border-color:#cfe2d3;color:var(--ok)}
+  .n-plain{background:var(--surface2);border-color:var(--line);color:var(--ink2)}
+  .alertbox{margin:0 0 6px;font-size:12.5px;font-weight:600}
+  .ok-msg{background:var(--ok-bg);border:1px solid #cfe2d3;color:var(--ok);padding:14px 16px;border-radius:var(--r-sm);font-size:14px;margin-bottom:18px;display:none}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(29,28,26,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
   .modal-bg.on{display:flex}
-  .modal{background:#fff;border-radius:14px;max-width:620px;width:100%;padding:22px}
-  .modal h3{margin:0 0 12px;color:var(--navy)}
-  .mini{font-size:11.5px;color:var(--muted)}
-  details{margin-top:10px}summary{cursor:pointer;font-size:13px;color:var(--info);font-weight:600}
-  .crit{font-size:12.5px;color:var(--muted);line-height:1.75}.crit b{color:var(--navy)}
-  .crit ul{margin:6px 0 0;padding-left:20px}.crit li{margin-bottom:5px}
-  .chk{display:flex;align-items:center;gap:8px;font-size:13px;margin-top:8px}.chk input{width:auto}
-  .anted{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;display:inline-block}
-  .a-ok{background:#e2f4ea;color:var(--ok)}.a-warn{background:#fdf2dc;color:var(--warn)}.a-bad{background:#fae3e0;color:var(--bad)}
-  .trilha{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-  .step{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:#eceef1;color:var(--muted);white-space:nowrap}
-  .step.done{background:#e2f4ea;color:var(--ok)}
-  .step.next{background:#fdf2dc;color:var(--warn);outline:1.5px solid var(--gold-soft)}
-  .kpi{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:12px}
-  .kpi div{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-  .kpi b{display:block;font-size:21px;color:var(--navy);line-height:1.2}
-  .kpi span{font-size:11.5px;color:var(--muted)}
-  .quem{font-size:11px;color:var(--info);margin-top:3px}
-  .userbar{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--navy);background:#f0f3f7;border:1px solid var(--line);border-radius:9px;padding:7px 12px;margin-bottom:12px;flex-wrap:wrap}
-  .userbar b{color:var(--navy)}
-  .setup-user{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#fafbfd}
-  .subnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:10px}
-  .subnav button{background:#fff;border:1.5px solid var(--line);color:var(--navy);padding:8px 15px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer}
-  .subnav button:hover{border-color:var(--gold)}
-  .subnav button.active{background:var(--navy);border-color:var(--navy);color:#fff}
-  .capa-hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:var(--radius);padding:34px 32px;margin-bottom:18px;border-bottom:4px solid var(--gold)}
-  .capa-hero h2{color:#fff;font-size:26px;margin:0 0 6px;line-height:1.25}
-  .capa-hero .lead{font-size:15px;color:#dce4ef;max-width:760px;margin:0 0 18px;line-height:1.6}
-  .capa-hero .dept{font-size:12.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold-soft);margin:0 0 12px;font-weight:700}
-  .capa-obj{background:rgba(255,255,255,.09);border-left:3px solid var(--gold);border-radius:0 9px 9px 0;padding:14px 18px;max-width:820px}
-  .capa-obj b{color:var(--gold-soft)}
-  .cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-  .cardlink{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--sh);padding:18px;text-align:left;cursor:pointer;font:inherit;color:inherit;display:block;width:100%}
-  .cardlink:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(15,39,71,.12)}
-  .cardlink b{display:block;color:var(--navy);font-size:15px;margin-bottom:5px}
+  .modal{background:var(--surface);border-radius:var(--r);max-width:640px;width:100%;padding:26px;box-shadow:0 24px 60px -20px rgba(29,28,26,.4)}
+  .modal h3{margin:0 0 14px;font-size:18px;font-weight:620}
+
+  details{margin-top:12px}
+  summary{cursor:pointer;font-size:13.5px;color:var(--clay);font-weight:600}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-top:9px}.chk input{width:auto;accent-color:var(--clay)}
+
+  .anted{font-size:11px;font-weight:650;padding:3px 8px;border-radius:99px;display:inline-block}
+  .a-ok{background:var(--ok-bg);color:var(--ok)}.a-warn{background:var(--warn-bg);color:var(--warn)}.a-bad{background:var(--bad-bg);color:var(--bad)}
+
+  .trilha{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .step{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:99px;background:#f0ece5;color:var(--muted);white-space:nowrap}
+  .step.done{background:var(--ok-bg);color:var(--ok)}
+  .step.next{background:var(--warn-bg);color:var(--warn)}
+
+  .kpi{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:18px}
+  .kpi div{background:var(--surface2);border:1px solid var(--line2);border-radius:12px;padding:16px 18px}
+  .kpi b{display:block;font-size:28px;color:var(--ink);line-height:1.1;font-weight:600;letter-spacing:-1px}
+  .kpi span{font-size:12px;color:var(--muted);display:block;margin-top:4px;line-height:1.4}
+
+  .quem{font-size:11.5px;color:var(--clay);margin-top:4px}
+  .userbar{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink2);padding:0 0 18px;flex-wrap:wrap}
+  .userbar b{color:var(--ink)}
+  .setup-user{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--surface2)}
+
+  .subnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;align-items:center}
+  .subnav button{background:var(--surface);border:1px solid var(--line);color:var(--ink2);padding:8px 15px;
+    border-radius:99px;font-size:13px;font-weight:550;cursor:pointer;font-family:inherit;transition:all .12s}
+  .subnav button:hover{border-color:#cfc8ba;background:var(--surface2)}
+  .subnav button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  .hero{padding:20px 0 34px;border-bottom:1px solid var(--line);margin-bottom:34px}
+  .hero .eyebrow{font-size:11.5px;letter-spacing:2px;text-transform:uppercase;color:var(--clay);font-weight:650;margin:0 0 14px}
+  .hero h2{font-size:clamp(30px,5vw,46px);line-height:1.1;margin:0 0 18px;font-weight:400;letter-spacing:-1.4px;max-width:16ch}
+  .hero p{font-size:17px;color:var(--ink2);margin:0;max-width:56ch;line-height:1.55}
+  .hero p b{color:var(--ink);font-weight:600}
+
+  .cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+  .cardlink{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;
+    text-align:left;cursor:pointer;font:inherit;color:inherit;display:block;width:100%;transition:all .14s;box-shadow:var(--sh)}
+  .cardlink:hover{border-color:var(--clay);transform:translateY(-2px)}
+  .cardlink .ic{width:34px;height:34px;border-radius:10px;background:var(--clay-soft);color:var(--clay-ink);
+    display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .cardlink b{display:block;font-size:14.5px;margin-bottom:4px;font-weight:600}
   .cardlink span{font-size:12.5px;color:var(--muted);line-height:1.5}
-  .passos{counter-reset:passo;list-style:none;padding:0;margin:0;display:grid;gap:12px}
-  .passos li{counter-increment:passo;position:relative;padding-left:44px;font-size:13px;color:var(--muted);line-height:1.6}
-  .passos li::before{content:counter(passo);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
-  .passos li b{color:var(--navy)}
-  .prazos{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-  .prazo{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#f7f9fc}
-  .prazo b{display:block;font-size:20px;color:var(--navy)}
-  .prazo span{font-size:12.5px;color:var(--muted);line-height:1.5;display:block;margin-top:3px}
-  .confbox{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-  .confbox div{flex:1;min-width:220px}
-  .confbox b{color:var(--navy);font-size:13.5px}
+
+  .fluxo{display:grid;gap:24px 0;grid-template-columns:repeat(2,1fr);counter-reset:et}
+  @media(min-width:900px){.fluxo{grid-template-columns:repeat(4,1fr);gap:0}}
+  .et{counter-increment:et;padding:0 20px 0 0;position:relative}
+  .et .n{width:30px;height:30px;border-radius:99px;background:var(--ink);color:#fff;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:650;margin-bottom:12px;position:relative;z-index:1}
+  .et .n::before{content:counter(et)}
+  .et b{display:block;font-size:14px;margin-bottom:4px;font-weight:600}
+  .et span{font-size:12.5px;color:var(--muted);line-height:1.5;display:block}
+  .et::after{content:'';position:absolute;left:34px;top:15px;right:8px;height:1px;background:var(--line)}
+  .et:last-child::after{display:none}
+
+  .stats{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(165px,1fr))}
+  .stat{border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--surface)}
+  .stat b{display:block;font-size:26px;letter-spacing:-1px;font-weight:600;color:var(--clay-ink)}
+  .stat span{font-size:12.5px;color:var(--muted);line-height:1.45;display:block;margin-top:4px}
+
+  .acc{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface);overflow:hidden}
+  .acc>button{width:100%;background:transparent;border:0;padding:16px 18px;display:flex;gap:12px;align-items:center;
+    cursor:pointer;font:inherit;text-align:left;color:var(--ink)}
+  .acc>button:hover{background:var(--surface2)}
+  .acc>button .tt{flex:1;font-size:14.5px;font-weight:550}
+  .acc>button .cv{color:var(--muted);font-size:18px;line-height:1;transition:transform .15s}
+  .acc.on>button .cv{transform:rotate(45deg)}
+  .acc .corpo{display:none;padding:0 18px 18px;border-top:1px solid var(--line2)}
+  .acc.on .corpo{display:block;padding-top:14px}
+  .acc .corpo p{margin:0 0 10px}
+
+  .confbox{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;display:flex;
+    justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surface2)}
+  .confbox div{flex:1;min-width:230px}
+  .confbox b{font-size:14px;font-weight:600}
   .confbox p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
-  @media(max-width:680px){.hide-m{display:none}.capa-hero{padding:24px 20px}.capa-hero h2{font-size:21px}}
+
+  .info{display:inline-flex;width:16px;height:16px;border-radius:99px;background:#e7e2d9;color:var(--muted);
+    font-size:10.5px;font-weight:700;align-items:center;justify-content:center;cursor:help;margin-left:5px;
+    position:relative;vertical-align:middle}
+  .info:hover{background:var(--clay);color:#fff}
+  .info:hover::after{content:attr(data-tip);position:absolute;left:22px;top:-8px;width:250px;background:var(--deep);
+    color:#fff;font-weight:400;font-size:12px;line-height:1.5;padding:11px 13px;border-radius:10px;z-index:60;
+    box-shadow:0 12px 32px -8px rgba(0,0,0,.4);white-space:normal;text-align:left}
+
+  @media(max-width:700px){
+    main{padding:24px 16px 60px}
+    .card{padding:20px}
+    .hide-m{display:none}
+    .et{padding-right:0}
+    .et::after{display:none}
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="brand">
     <svg class="seal" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Emblema do Departamento de Administração">
-      <circle cx="32" cy="32" r="30" fill="#0f2747" stroke="#c9a227" stroke-width="2.5"/>
-      <circle cx="32" cy="32" r="23.5" fill="none" stroke="#c9a227" stroke-width="1" opacity=".55"/>
-      <text x="32" y="30" text-anchor="middle" font-size="15" font-weight="800" fill="#c9a227" font-family="Georgia,serif">ADM</text>
-      <text x="32" y="43" text-anchor="middle" font-size="7" letter-spacing="1.5" fill="#e9d8a0" font-family="Georgia,serif">DEPTO</text>
+      <rect x="2" y="2" width="60" height="60" rx="16" fill="#bf5a38"/>
+      <text x="32" y="39" text-anchor="middle" font-size="24" font-weight="600" fill="#fff" font-family="Georgia,serif">A</text>
     </svg>
     <div>
       <h1>Comissão de Afastamentos</h1>
-      <p>Departamento de Administração · minuta de 29/04/2026</p>
+      <p>Departamento de Administração</p>
     </div>
   </div>
 </header>
 <nav>
-  <button id="tab-capa" class="active" onclick="go('capa')">Início</button>
-  <button id="tab-form" onclick="go('form')">Manifestar interesse</button>
-  <button id="tab-fila" onclick="go('fila')">Fila pública</button>
-  <button id="tab-com" onclick="go('com')">Painel da comissão</button>
-  <button id="tab-reg" onclick="go('reg')">Regras e fluxo</button>
+  <div class="navin">
+    <button id="tab-capa" class="active" onclick="go('capa')">Início</button>
+    <button id="tab-form" onclick="go('form')">Manifestar interesse</button>
+    <button id="tab-fila" onclick="go('fila')">Fila</button>
+    <button id="tab-com" onclick="go('com')">Painel da comissão</button>
+    <button id="tab-reg" onclick="go('reg')">Regras</button>
+  </div>
 </nav>
 <main>
 <div id="gate-dep" style="display:none"></div>
 
 <!-- CAPA -->
 <section id="v-capa">
-  <div class="capa-hero">
-    <p class="dept">Departamento de Administração</p>
-    <h2>Comissão de Afastamentos Docentes</h2>
-    <p class="lead">Fila pública de manifestação de interesse em afastamento, análise dos pedidos e acompanhamento do trâmite até a publicação da portaria.</p>
-    <div class="capa-obj">
-      <b>Objetivo da comissão.</b> Atuar na <b>mediação entre a chefia de departamento e o docente</b>, para que as demandas do curso em relação ao quantitativo de docentes em suas áreas e disciplinas específicas sejam devidamente atendidas. Cabe à comissão apoiar a pensar, buscar e negociar alternativas para cobrir quem se afasta, de modo que o afastamento seja viável para todos: sem sobrecarregar os colegas, garantindo a oferta de disciplinas e sem deixar alunos sem aula.
+  <div class="hero">
+    <p class="eyebrow">Minuta de 29 de abril de 2026</p>
+    <h2 class="serif">Afastamento docente, planejado com antecedência.</h2>
+    <p>A comissão faz a <b>mediação entre a chefia e o docente</b>, para que o afastamento seja viável para todos: sem sobrecarregar colegas e sem deixar disciplinas descobertas.</p>
+  </div>
+
+  <div class="cards" style="margin-bottom:34px">
+    <button class="cardlink" onclick="go('form')">
+      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+      <b>Manifestar interesse</b><span>Entrar na fila do departamento</span>
+    </button>
+    <button class="cardlink" onclick="go('fila')">
+      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>
+      <b>Ver a fila</b><span>Posição, período e situação</span>
+    </button>
+    <button class="cardlink" onclick="go('reg')">
+      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
+      <b>Regras</b><span>O documento do departamento</span>
+    </button>
+    <button class="cardlink" onclick="go('com')">
+      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+      <b>Painel da comissão</b><span>Área restrita às integrantes</span>
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>Do interesse à portaria</h2>
+    <p class="sub">Quatro etapas. Cada uma depende da anterior, e a última libera o pedido de substituto.</p>
+    <div class="fluxo">
+      <div class="et"><div class="n"></div><b>Manifestação</b><span>1 ano antes. Entra na fila cronológica.</span></div>
+      <div class="et"><div class="n"></div><b>Documentação</b><span>6 meses antes. Só então a solicitação vale.</span></div>
+      <div class="et"><div class="n"></div><b>Parecer e colegiado</b><span>Aprovado, abre o processo no SEI.</span></div>
+      <div class="et"><div class="n"></div><b>Congregação</b><span>Portaria publicada libera o substituto.</span></div>
     </div>
   </div>
 
-  <div class="cards" style="margin-bottom:18px">
-    <button class="cardlink" onclick="go('form')"><b>Manifestar interesse</b><span>Docente registra a intenção de se afastar e entra na fila cronológica do departamento.</span></button>
-    <button class="cardlink" onclick="go('fila')"><b>Consultar a fila pública</b><span>Fila aberta ao departamento, com posição, período pretendido e situação de cada pedido.</span></button>
-    <button class="cardlink" onclick="go('reg')"><b>Ler as regras</b><span>Resumo da minuta de 29/04/2026: limites, prazos, critérios de desempate e trâmite.</span></button>
-    <button class="cardlink" onclick="go('com')"><b>Painel da comissão</b><span>Área restrita às integrantes, com acesso por e-mail institucional e senha própria.</span></button>
-  </div>
-
   <div class="card">
-    <h2>Por que o afastamento passa pela comissão</h2>
-    <p class="sub">Resumo do documento aprovado pelo departamento.</p>
-    <p class="crit">O afastamento é um <b>direito</b>, e a universidade prevê a <b>possibilidade</b> de substituir quem se afasta. Possibilidade, não garantia: conseguir o substituto depende de fatores que não estão sob controle do departamento. As regras existem para aproximar o departamento de conseguir esse substituto no tempo necessário, ou para reduzir danos quando não for possível.</p>
-    <p class="crit" style="margin-top:10px">O afastamento afeta públicos diferentes ao mesmo tempo: quem se afasta, quem fica, a chefia, a coordenação do curso e os alunos. É esse conjunto de interesses que a comissão precisa conciliar.</p>
-
-    <h3 class="sec">Tempo é a palavra-chave</h3>
-    <p class="crit">O substituto é pedido de duas formas, pelo <b>pedido anual de vagas</b> ou por <b>vaga emergencial</b>. Nos dois casos é preciso justificar com a <b>portaria de afastamento já publicada</b>, e a portaria só sai depois de passar pela Congregação. Isso leva tempo, e é por isso que o sistema cobra antecedência e acompanha cada etapa do trâmite.</p>
-  </div>
-
-  <div class="card">
-    <h2>Como funciona, em quatro passos</h2>
-    <ol class="passos">
-      <li><b>Manifestação de interesse.</b> O docente registra a intenção com <b>1 ano</b> de antecedência e entra na fila, que é pública e cronológica.</li>
-      <li><b>Documentação à comissão.</b> Antes de abrir o processo no SEI, envia por e-mail período, duração, tipo de licença, plano de trabalho e carta-convite, com pelo menos <b>6 meses</b> de antecedência. É isso que dá validade à solicitação.</li>
-      <li><b>Parecer e colegiado.</b> A comissão analisa, emite parecer e o pedido segue para aprovação do colegiado. Aprovado, o docente abre o processo no SEI.</li>
-      <li><b>Congregação e portaria.</b> Com a aprovação do colegiado o caso vai à Congregação e, publicada a portaria, a chefia pode solicitar o substituto.</li>
-    </ol>
-  </div>
-
-  <div class="card">
-    <h2>Prazos e limites que o sistema verifica</h2>
-    <div class="prazos">
-      <div class="prazo"><b>1 ano</b><span>antecedência da manifestação de interesse ao departamento</span></div>
-      <div class="prazo"><b>6 meses</b><span>antecedência mínima da documentação enviada à comissão</span></div>
-      <div class="prazo"><b>2 docentes</b><span>máximo afastados por período, contando quem atravessa dois períodos</span></div>
-      <div class="prazo"><b>1 por área</b><span>dois da mesma área não se afastam juntos sem cobertura indicada</span></div>
+    <h2>Os quatro números que regem a fila</h2>
+    <p class="sub">Verificados automaticamente a cada manifestação.</p>
+    <div class="stats">
+      <div class="stat"><b>1 ano</b><span>antecedência da manifestação</span></div>
+      <div class="stat"><b>6 meses</b><span>antecedência da documentação</span></div>
+      <div class="stat"><b>2</b><span>docentes afastados por período</span></div>
+      <div class="stat"><b>1</b><span>docente por área no mesmo período</span></div>
     </div>
-    <div class="notice n-info" style="margin:16px 0 0">A fila constitui manifestação formal de intenção, com finalidade exclusiva de planejamento acadêmico e administrativo. <b>Não configura solicitação formal nem gera direito adquirido.</b></div>
+    <p class="mini" style="margin:18px 0 0">A fila é manifestação de intenção para planejamento. Não configura solicitação formal nem gera direito adquirido.</p>
   </div>
 </section>
 
@@ -202,7 +278,7 @@
   <div class="ok-msg" id="okMsg"></div>
   <div class="card">
     <h2>Manifestação de interesse em afastamento</h2>
-    <p class="sub">A fila constitui manifestação formal de intenção, com finalidade exclusiva de planejamento acadêmico e administrativo. Não configura solicitação formal nem gera direito adquirido. A manifestação deve ser feita com <b>1 ano</b> de antecedência; a solicitação só passa a ter validade com o envio da documentação por e-mail à comissão, com pelo menos <b>6 meses</b> de antecedência.</p>
+    <p class="sub">Manifestação com <b>1 ano</b> de antecedência. A solicitação só passa a valer com a documentação entregue à comissão, com pelo menos <b>6 meses</b>.</p>
     <div class="grid">
       <div><label class="req">Nome do docente</label><input id="f_nome"></div>
       <div><label class="req">E-mail institucional</label><input id="f_email" type="email" placeholder="nome@instituicao.br"></div>
@@ -229,12 +305,12 @@
         <option value="">— selecione —</option><option>Afastamento para pós-doutorado</option><option>Licença para capacitação</option></select></div>
       <div><label>Orientações em andamento</label><input id="f_orient" placeholder="Ex.: 3 TCC, 1 mestrado"></div>
       <div class="full" style="border-top:1px solid var(--line);padding-top:14px">
-        <label>Anexar documentos<i class="info" data-tip="Plano de trabalho e carta-convite são exigidos pela minuta antes da abertura do processo no SEI. Pode anexar agora ou depois, por e-mail à comissão. PDF, Word ou imagem, até 3 MB cada.">i</i></label>
+        <label>Anexar documentos<i class="info" data-tip="Exigidos pela minuta antes da abertura do processo no SEI. Pode anexar agora ou depois, por e-mail à comissão.">i</i></label>
         <div class="grid" style="gap:12px">
           <div><label class="mini" style="font-weight:400">Plano de trabalho</label><input type="file" id="f_arqPlano" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" onchange="conferirArquivo(this)"></div>
           <div><label class="mini" style="font-weight:400">Carta-convite</label><input type="file" id="f_arqCarta" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" onchange="conferirArquivo(this)"></div>
         </div>
-        <p class="mini" style="margin:8px 0 0">Anexar aqui já marca o item como entregue na análise da comissão. Sem anexo, o item fica pendente até o envio por e-mail.</p>
+        <p class="mini" style="margin:8px 0 0">Anexar aqui já marca o item como entregue. PDF, Word ou imagem, até 3 MB cada.</p>
       </div>
       <div class="full"><label>Disciplinas lecionadas no período</label><input id="f_disc" placeholder="Ex.: ACA360, ACAK01"></div>
       <div class="full"><label>Sugestão de cobertura / remanejamento<i class="info" data-tip="Indicar substituto, remanejamento com área aderente ou redistribuição é o que permite que dois docentes da mesma área concorram no mesmo período.">i</i></label><select id="f_cob">
@@ -253,7 +329,7 @@
 <section id="v-fila" style="display:none">
   <div class="card">
     <h2>Fila pública de intenção</h2>
-    <p class="sub">Fila pública para o departamento e soberana, com ordenação cronológica. A posição é indicativa de planejamento; a comissão aplica os critérios de desempate ao organizar cada período. Esta tela não exibe e-mail, SIAPE, justificativa nem parecer.</p>
+    <p class="sub">Ordenação cronológica. A posição é indicativa; a comissão aplica os critérios de desempate ao organizar cada período.</p>
     <div class="row" style="margin-bottom:8px">
       <input id="fq" placeholder="buscar por nome, área ou período" style="max-width:320px" oninput="renderFila()">
       <label class="chk" style="margin:0"><input type="checkbox" id="fq_ativos" checked onchange="renderFila()"> <span style="font-weight:600;font-size:12.5px">ocultar concluídos e desfavoráveis</span></label>
@@ -283,7 +359,7 @@
     <div id="notifBox"></div>
     <div class="card">
       <h2>Visão geral</h2>
-      <p class="sub">Situação da fila e o que está pendente em cada pedido.</p>
+      <p class="sub">O que está pendente em cada pedido.</p>
       <div id="kpiBox" class="kpi"></div>
       <div id="tetoBanner"></div>
       <div id="acoesBox"></div>
@@ -325,7 +401,7 @@
   <div id="cs-org" style="display:none">
     <div class="card">
       <h2>Organizar o período</h2>
-      <p class="sub">O sistema sugere quem contemplar respeitando o limite de 2, o conflito de área, a antecedência e os critérios de desempate, e gera um resumo pronto para o parecer.</p>
+      <p class="sub">Sugestão de quem contemplar, com resumo pronto para o parecer.</p>
       <div class="row">
         <label style="margin:0;font-weight:600;font-size:12px">Período:</label>
         <select id="org_periodo" style="width:auto" onchange="renderCom()"></select>
@@ -340,7 +416,7 @@
   <div id="cs-hist" style="display:none">
     <div class="card">
       <div class="row" style="justify-content:space-between">
-        <div><h2>Histórico de alterações</h2><p class="sub" style="margin:0">Quem fez o quê, quando. Inclui entradas no painel, manifestações dos docentes e ações da comissão.</p></div>
+        <div><h2>Histórico de alterações</h2><p class="sub" style="margin:0">Quem fez o quê, quando.</p></div>
         <div class="row">
           <input id="hq" placeholder="filtrar por pessoa ou ação" style="width:230px" oninput="renderHist()">
           <button class="btn sec sm" onclick="exportHist()">Exportar CSV</button>
@@ -354,7 +430,7 @@
   <div id="cs-conf" style="display:none">
     <div class="card">
       <h2>Configurações do departamento</h2>
-      <p class="sub">Parâmetros usados pelas verificações automáticas e pelo envio de documentação.</p>
+      <p class="sub">Parâmetros das verificações automáticas.</p>
       <div class="confbox"><div><b>E-mail da comissão</b><p id="cf_email">—</p></div><button class="btn sec sm" onclick="setEmailComissao()">Alterar</button></div>
       <div class="confbox"><div><b>Áreas do departamento</b><p id="cf_areas">—</p></div><button class="btn sec sm" onclick="setAreas()">Alterar</button></div>
       <div class="confbox"><div><b>Quadro efetivo e teto percentual</b><p id="cf_quadro">—</p></div><button class="btn sec sm" onclick="setQuadro()">Alterar</button></div>
@@ -362,7 +438,7 @@
     </div>
     <div class="card">
       <h2>Acessos</h2>
-      <p class="sub">Todas as integrantes têm os mesmos poderes. Toda ação fica registrada no histórico com o nome de quem fez.</p>
+      <p class="sub">Mesmos poderes para todas. Toda ação fica no histórico.</p>
       <div id="cf_usuarios"></div>
       <div class="row" style="margin-top:14px">
         <button class="btn sec sm" onclick="abrirUsuarios()">Gerenciar usuários</button>
@@ -371,7 +447,7 @@
     </div>
     <div class="card">
       <h2>Backup dos dados</h2>
-      <p class="sub">O plano gratuito do banco não garante persistência. Baixe um backup com regularidade.</p>
+      <p class="sub">O banco não garante persistência. Baixe um backup com regularidade.</p>
       <div class="row">
         <button class="btn sec sm" onclick="backup()">Baixar backup</button>
         <button class="btn sec sm" onclick="restaurar()">Restaurar backup</button>
@@ -384,8 +460,8 @@
 <!-- REGRAS -->
 <section id="v-reg" style="display:none">
   <div class="card">
-    <h2>Regras de afastamento do departamento</h2>
-    <p class="sub">Conteúdo integral da minuta de 29/04/2026, organizado por seção. Cada regra indica se o sistema a verifica automaticamente, se apenas acompanha, ou se o cumprimento corre fora do sistema.</p>
+    <h2>Regras do departamento</h2>
+    <p class="sub">Minuta de 29/04/2026, item por item. O selo indica o que o sistema verifica sozinho.</p>
     <div id="regNav" class="subnav" style="margin:0;border:0;padding:0"></div>
   </div>
   <div id="regWrap"></div>
@@ -555,92 +631,106 @@ async function entrarDep(destino){
   }catch(e){$('dep_err').textContent=e.message;}finally{bt.disabled=false;bt.textContent='Entrar';}
 }
 function goCom(s){['visao','fila','org','hist','conf'].forEach(x=>{$('cs-'+x).style.display=x===s?'block':'none';$('sc-'+x).classList.toggle('active',x===s);});window.scrollTo(0,0);}
-/* ---- Regras: conteúdo da minuta de 29/04/2026, renderizado a partir dos dados ---- */
+/* ---- Regras: conteúdo da minuta de 29/04/2026, em blocos que abrem ao clicar ---- */
 const SELOS={
-  auto:['Verificado pelo sistema','#e2f4ea','#1f8a4c'],
-  acomp:['Acompanhado no painel','#e6effa','#2a6fb0'],
-  fora:['Cumprimento fora do sistema','#eceef1','#6b7682'],
-  interno:['Procedimento interno da comissão','#fdf2dc','#c98a17']
+  auto:['Verificado pelo sistema','var(--ok-bg)','var(--ok)'],
+  acomp:['Acompanhado no painel','var(--info-bg)','var(--info)'],
+  fora:['Fora do sistema','#f0ece5','var(--muted)'],
+  interno:['Procedimento interno','var(--warn-bg)','var(--warn)']
 };
 const REGRAS=[
- {id:'contexto',nome:'Contexto',titulo:'Algumas considerações de contexto',
-  blocos:[
-   {sub:'Para que uma comissão de afastamento?',textos:[
-    'O principal motivo é que a questão do afastamento envolve, afeta e pode prejudicar, direta ou indiretamente, interesses de públicos diferentes: o docente que se afasta, os docentes que ficam, a chefia de departamento, a coordenação do curso e os alunos.',
-    'Pelo fato de o afastamento ser um direito, a própria universidade prevê a possibilidade de que esse docente seja substituído. Contudo, essa é apenas uma possibilidade e não uma garantia, pois consegui-la depende de vários fatores, alguns fora do controle de professores, chefia ou coordenação.',
-    'As sugestões de regras foram criadas com o objetivo de que o departamento esteja mais perto de conseguir um substituto para o professor afastado, dentro do tempo necessário, ou de reduzir danos caso não seja possível consegui-lo.',
-    'A atribuição desta comissão, portanto, é apoiar a pensar, buscar e negociar possibilidades e alternativas para cobrir o docente que se afasta, fazendo com que esse afastamento se apresente como viável para todos os envolvidos: sem sobrecarregar os colegas, garantindo a oferta de disciplinas para o curso e sem deixar alunos sem disciplina. A comissão e a chefia devem conversar sobre as possibilidades de cobrir o colega, considerando os docentes disponíveis e as possibilidades de remanejamento de professores.']},
-   {sub:'Como substitutos são solicitados?',textos:[
-    'A chefia solicita substitutos de duas maneiras. A primeira é no pedido anual de vagas, cujo período de trâmite é responsabilidade de instâncias superiores, sem influência do departamento. A segunda é o pedido de vagas emergenciais, que pode ocorrer a qualquer momento.',
-    'Para ambos os trâmites é preciso justificar o pedido de substituto com a portaria do afastamento já publicada. Essa portaria, por sua vez, precisa passar antes pela Congregação. Isto é, leva tempo.',
-    'A antecedência é importante porque, no caso de não ser possível incluir o afastamento no pedido anual de vagas, ele será feito via pedido de vaga emergencial, que também depende da publicação da portaria.',
-    'Tempo é a palavra-chave. É necessário tempo de antecedência para planejar a contratação, caso já existam nomes de reserva em processos seletivos anteriores, ou tempo para providenciar novo processo seletivo, o que depende de decisão de instâncias superiores.']}
+ {id:'contexto',nome:'Contexto',titulo:'Por que a comissão existe',
+  itens:[
+   ['O afastamento afeta muita gente ao mesmo tempo',
+    'O principal motivo é que a questão do afastamento envolve, afeta e pode prejudicar, direta ou indiretamente, interesses de públicos diferentes: o docente que se afasta, os docentes que ficam, a chefia de departamento, a coordenação do curso e os alunos.','acomp'],
+   ['Substituição é possibilidade, não garantia',
+    'Pelo fato de o afastamento ser um direito, a própria universidade prevê a possibilidade de que esse docente seja substituído. Contudo, essa é apenas uma possibilidade e não uma garantia, pois consegui-la depende de vários fatores, alguns fora do controle de professores, chefia ou coordenação. As sugestões de regras foram criadas com o objetivo de que o departamento esteja mais perto de conseguir um substituto dentro do tempo necessário, ou de reduzir danos caso não seja possível.','acomp'],
+   ['A atribuição da comissão',
+    'Apoiar a pensar, buscar e negociar possibilidades e alternativas para cobrir o docente que se afasta, fazendo com que esse afastamento se apresente como viável para todos os envolvidos: sem sobrecarregar os colegas, garantindo a oferta de disciplinas para o curso e sem deixar alunos sem disciplina. A comissão e a chefia devem conversar sobre as possibilidades de cobrir o colega, considerando os docentes disponíveis e as possibilidades de remanejamento de professores.','acomp'],
+   ['Como os substitutos são solicitados',
+    'A chefia solicita substitutos de duas maneiras. A primeira é no pedido anual de vagas, cujo período de trâmite é responsabilidade de instâncias superiores, sem influência do departamento. A segunda é o pedido de vagas emergenciais, que pode ocorrer a qualquer momento. Para ambos é preciso justificar o pedido com a portaria do afastamento já publicada, e essa portaria precisa passar antes pela Congregação.','fora'],
+   ['Tempo é a palavra-chave',
+    'A antecedência é importante porque, no caso de não ser possível incluir o afastamento no pedido anual de vagas, ele será feito via pedido de vaga emergencial, que também depende da publicação da portaria. É necessário tempo para planejar a contratação, caso já existam nomes de reserva em processos seletivos anteriores, ou tempo para providenciar novo processo seletivo, o que depende de decisão de instâncias superiores.','acomp']
   ]},
- {id:'gerais',nome:'Regras gerais',titulo:'Sugestões de regras gerais',
+ {id:'gerais',nome:'Regras gerais',titulo:'Regras gerais',
   itens:[
-   ['O papel principal da comissão é atuar na mediação entre a chefia de departamento e o docente, para que as demandas do curso em relação ao quantitativo de docentes em suas áreas e disciplinas específicas sejam devidamente atendidas.','acomp'],
-   ['Para o bom funcionamento do curso, não se afastarão mais de 2 professores por período.','auto'],
-   ['Dois professores da mesma área não podem se afastar simultaneamente, a não ser que haja possibilidade de substituição dos dois, ou de remanejamento de professores com aderência às áreas de substituição.','auto'],
-   ['Todos os afastamentos devem passar primeiro pela comissão, para que esta confira se os pedidos seguem as regras do departamento e são feitos com a necessária antecedência.','acomp'],
-   ['Antes de abrir o processo no SEI, o docente deve enviar por e-mail para a comissão a documentação com informações sobre o afastamento: período, duração, tipo de licença, plano de trabalho e carta-convite.','auto'],
-   ['Após o parecer da comissão, o afastamento será submetido à aprovação do colegiado. Sendo aprovado, o docente deve se comprometer a providenciar o mais rápido possível a abertura do processo no SEI.','acomp'],
-   ['A chefia de departamento não poderá aprovar processos de pedido de afastamento que não tenham passado pela comissão, e o afastamento só poderá ser submetido à Congregação após a aprovação no colegiado.','fora'],
-   ['A manifestação de interesse de pedido de afastamento ao departamento deve ser feita com 1 ano de antecedência. A fila é uma manifestação de interesse, com a ordenação cronológica dos interessados.','auto'],
-   ['A solicitação de afastamento só terá validade na submissão do e-mail citado acima à comissão, com pelo menos 6 meses de antecedência.','auto'],
-   ['Os casos que não respeitarem as regras não serão assinados pela chefia de departamento.','fora']
+   ['Mediação entre chefia e docente',
+    'O papel principal da comissão é atuar na mediação entre a chefia de departamento e o docente, para que as demandas do curso em relação ao quantitativo de docentes em suas áreas e disciplinas específicas sejam devidamente atendidas.','acomp'],
+   ['No máximo 2 professores afastados por período',
+    'Para o bom funcionamento do curso, não se afastarão mais de 2 professores por período.','auto'],
+   ['Dois da mesma área não se afastam juntos',
+    'Dois professores da mesma área não podem se afastar simultaneamente, a não ser que haja possibilidade de substituição dos dois, ou de remanejamento de professores com aderência às áreas de substituição.','auto'],
+   ['Todo afastamento passa primeiro pela comissão',
+    'Todos os afastamentos devem passar primeiro pela comissão, para que esta confira se os pedidos seguem as regras do departamento e são feitos com a necessária antecedência.','acomp'],
+   ['Documentação por e-mail antes do SEI',
+    'Antes de abrir o processo no SEI, o docente deve enviar por e-mail para a comissão a documentação com informações sobre o afastamento: período, duração, tipo de licença, plano de trabalho e carta-convite.','auto'],
+   ['Depois do parecer, vai ao colegiado',
+    'Após o parecer da comissão, o afastamento será submetido à aprovação do colegiado. Sendo aprovado, o docente deve se comprometer a providenciar o mais rápido possível a abertura do processo no SEI.','acomp'],
+   ['A chefia não aprova o que não passou pela comissão',
+    'A chefia de departamento não poderá aprovar processos de pedido de afastamento que não tenham passado pela comissão, e o afastamento só poderá ser submetido à Congregação após a aprovação no colegiado.','fora'],
+   ['Manifestação com 1 ano de antecedência',
+    'A manifestação de interesse de pedido de afastamento ao departamento deve ser feita com 1 ano de antecedência. A fila é uma manifestação de interesse, com a ordenação cronológica dos interessados.','auto'],
+   ['Solicitação válida com 6 meses de antecedência',
+    'A solicitação de afastamento só terá validade na submissão do e-mail citado acima à comissão, com pelo menos 6 meses de antecedência.','auto'],
+   ['Fora das regras, a chefia não assina',
+    'Os casos que não respeitarem as regras não serão assinados pela chefia de departamento.','fora']
   ]},
- {id:'fila',nome:'Fila',titulo:'Sugestões de regras de fila',
+ {id:'fila',nome:'Fila',titulo:'Regras de fila',
   itens:[
-   ['Haverá uma fila de docentes interessados em afastamento, pública para o departamento, e esta fila é soberana.','auto'],
-   ['A fila constitui manifestação formal de intenção de afastamento, com finalidade exclusiva de planejamento acadêmico e administrativo, não configurando solicitação formal nem gerando direito adquirido.','auto']
-  ],
-  lista:{titulo:'Critérios de desempate da posição na fila, nesta ordem',selo:'auto',itens:[
-   'A prioridade é para quem não teve nenhum afastamento ou para quem teve menos afastamentos.',
-   'Tem prioridade quem está há mais tempo no departamento.',
-   'Em caso de docentes com o mesmo tempo de casa, tem prioridade quem está em nível mais avançado na carreira.']}
- },
- {id:'capac',nome:'Capacitação',titulo:'Sugestões de regras para Capacitação',
-  itens:[
-   ['A fila para capacitação é separada da fila de pós-doutorado, e o afastamento para capacitação não fica restrito a 2 docentes caso seja feito no período de recesso universitário.','auto'],
-   ['Fora do recesso, a capacitação entra na regra geral de no máximo 2 professores afastados por período.','auto']
+   ['A fila é pública e soberana',
+    'Haverá uma fila de docentes interessados em afastamento, pública para o departamento, e esta fila é soberana.','auto'],
+   ['Intenção, não direito adquirido',
+    'A fila constitui manifestação formal de intenção de afastamento, com finalidade exclusiva de planejamento acadêmico e administrativo, não configurando solicitação formal nem gerando direito adquirido.','auto'],
+   ['Primeiro desempate: menos afastamentos',
+    'A prioridade é para quem não teve nenhum afastamento ou para quem teve menos afastamentos.','auto'],
+   ['Segundo desempate: mais tempo de casa',
+    'Tem prioridade quem está há mais tempo no departamento.','auto'],
+   ['Terceiro desempate: nível na carreira',
+    'Em caso de docentes com o mesmo tempo de casa, tem prioridade quem está em nível mais avançado na carreira.','auto']
   ]},
- {id:'posdoc',nome:'Pós-doutorado',titulo:'Sugestões de regras para Pós-doutorado',
+ {id:'modal',nome:'Modalidades',titulo:'Pós-doutorado e capacitação',
   itens:[
-   ['O afastamento para pós-doutorado pode ter duração de 6 meses a 1 ano, considerando todas as regras pertinentes.','auto']
+   ['Pós-doutorado dura de 6 meses a 1 ano',
+    'O afastamento para pós-doutorado pode ter duração de 6 meses a 1 ano, considerando todas as regras pertinentes. Entra no limite de 2 docentes por período.','auto'],
+   ['Capacitação tem fila separada',
+    'A fila para capacitação é separada da fila de pós-doutorado, e o afastamento para capacitação não fica restrito a 2 docentes caso seja feito no período de recesso universitário.','auto'],
+   ['Capacitação fora do recesso conta no limite',
+    'Realizada fora do recesso universitário, a capacitação entra na regra geral de no máximo 2 professores afastados por período.','auto']
   ]},
  {id:'obs',nome:'Observações',titulo:'Observações',
   itens:[
-   ['Os pedidos de afastamento para simpósio, seminários e eventos congêneres seguem as regras da universidade e não passam por esta fila.','fora'],
-   ['Os casos excepcionais não previstos serão avaliados pela comissão, e podem ser marcados como tal no parecer.','acomp'],
-   ['Segundo comunicado da PR4 de 24/10/24, a partir de 1/11/24 os processos referentes à Licença para Capacitação, Incentivo à Qualificação e outros devem ser encaminhados para a PR4/CDDP/SAC, a Seção de Acompanhamento das Carreiras, e não para a DVDE.','fora']
+   ['Eventos seguem as regras da universidade',
+    'Os pedidos de afastamento para simpósio, seminários e eventos congêneres seguem as regras da universidade e não passam por esta fila.','fora'],
+   ['Casos excepcionais vão à comissão',
+    'Os casos excepcionais não previstos serão avaliados pela comissão, e podem ser marcados como tal no parecer.','acomp'],
+   ['Capacitação tramita pela PR4/CDDP/SAC',
+    'Segundo comunicado da PR4 de 24/10/24, a partir de 1/11/24 os processos referentes à Licença para Capacitação, Incentivo à Qualificação e outros devem ser encaminhados para a PR4/CDDP/SAC, a Seção de Acompanhamento das Carreiras, e não para a DVDE.','fora']
   ]},
- {id:'interno',nome:'Procedimentos internos',titulo:'Procedimentos internos da comissão',
+ {id:'interno',nome:'Da comissão',titulo:'Procedimentos internos da comissão',
   aviso:'As práticas desta seção foram adotadas pela comissão e não constam expressamente da minuta.',
   itens:[
-   ['Repactuação de período: quem não se afasta no período manifestado mas deseja permanecer na fila é realocado conforme o motivo. Por impedimento institucional ou por perda de prazo ou documentação, a data de manifestação é preservada e a prioridade se mantém. Por desistência ou adiamento voluntário, recebe nova data e vai para o fim da fila.','interno'],
-   ['Teto percentual do quadro efetivo afastado simultaneamente: parâmetro auxiliar de planejamento, desativado por padrão. Quando ativado, vale sempre o menor entre ele e o limite de 2 por período.','interno'],
-   ['Registro de alterações: cada integrante entra com o próprio e-mail institucional e senha, e toda entrada no painel ou alteração em qualquer pedido fica registrada com nome, data, hora e o que mudou.','interno']
+   ['Repactuação de período',
+    'Quem não se afasta no período manifestado mas deseja permanecer na fila é realocado conforme o motivo. Por impedimento institucional ou por perda de prazo ou documentação, a data de manifestação é preservada e a prioridade se mantém. Por desistência ou adiamento voluntário, recebe nova data e vai para o fim da fila.','interno'],
+   ['Teto percentual do quadro',
+    'Parâmetro auxiliar de planejamento, desativado por padrão. Quando ativado, vale sempre o menor entre ele e o limite de 2 por período.','interno'],
+   ['Registro de alterações',
+    'Cada integrante entra com o próprio e-mail institucional e senha. Toda entrada no painel ou alteração em qualquer pedido fica registrada com nome, data, hora e o que mudou.','interno'],
+   ['Acesso do departamento',
+    'A fila só abre para quem tem o código de acesso definido pela comissão, para que os dados dos docentes não fiquem expostos na internet.','interno']
   ]}
 ];
-function selo(k){const[t,bg,cor]=SELOS[k]||SELOS.fora;return`<span class="pill" style="background:${bg};color:${cor};font-weight:700">${t}</span>`;}
+function selo(k){const s=SELOS[k]||SELOS.fora;return`<span class="pill" style="background:${s[1]};color:${s[2]};font-weight:650">${s[0]}</span>`;}
+function abrirAcc(el){el.parentElement.classList.toggle('on');}
 function renderRegras(){
   $('regNav').innerHTML=REGRAS.map((s,i)=>`<button id="sr-${s.id}" class="${i===0?'active':''}" onclick="goReg('${s.id}')">${esc(s.nome)}</button>`).join('');
   $('regWrap').innerHTML=REGRAS.map((s,i)=>{
-    let h=`<div id="rs-${s.id}" class="card" style="display:${i===0?'block':'none'}"><h2>${esc(s.titulo)}</h2>`;
+    let h=`<div id="rs-${s.id}" class="card" style="display:${i===0?'block':'none'}"><h2>${esc(s.titulo)}</h2>
+      <p class="sub">Clique em qualquer item para ler o texto do documento.</p>`;
     if(s.aviso)h+=`<div class="notice n-info">${esc(s.aviso)}</div>`;
-    (s.blocos||[]).forEach(b=>{
-      h+=`<h3 class="sec">${esc(b.sub)}</h3>`;
-      b.textos.forEach(t=>{h+=`<p class="crit" style="margin:0 0 10px">${esc(t)}</p>`;});
+    s.itens.forEach(([tit,txt,k])=>{
+      h+=`<div class="acc"><button onclick="abrirAcc(this)"><span class="tt">${esc(tit)}</span>${selo(k)}<span class="cv">+</span></button>
+        <div class="corpo"><p class="crit">${esc(txt)}</p></div></div>`;
     });
-    (s.itens||[]).forEach(([t,k])=>{
-      h+=`<div style="border-left:3px solid var(--line);padding:2px 0 2px 14px;margin:0 0 14px">
-        <p class="crit" style="margin:0 0 5px">${esc(t)}</p>${selo(k)}</div>`;
-    });
-    if(s.lista){
-      h+=`<h3 class="sec">${esc(s.lista.titulo)}</h3><ol class="passos" style="margin-top:10px">`;
-      s.lista.itens.forEach(t=>{h+=`<li>${esc(t)}</li>`;});
-      h+=`</ol><div style="margin-top:10px">${selo(s.lista.selo)}</div>`;
-    }
     return h+'</div>';
   }).join('');
 }
