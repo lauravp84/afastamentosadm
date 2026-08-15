@@ -522,12 +522,17 @@ function closeModal(id){$(id).classList.remove('on');}
 function go(t){
   ['capa','form','fila','com','reg'].forEach(x=>{$('v-'+x).style.display=x===t?'block':'none';$('tab-'+x).classList.toggle('active',x===t);});
   window.scrollTo(0,0);
-  if((t==='fila'||t==='form')&&precisaCodigo()){pedirCodigo(t);return;}
+  if((t==='fila'||t==='form')&&precisaCodigo(t)){pedirCodigo(t);return;}
   $('gate-dep').style.display='none';
   if(t==='fila')carregarFila();
   if(t==='com')openCom();
 }
-function precisaCodigo(){return !TOKEN && !ESTADO.liberado;}
+// A fila sempre exige liberação. O formulário só exige quando há código definido,
+// porque o docente informa apenas os próprios dados e não vê os de ninguém.
+function precisaCodigo(t){
+  if(TOKEN||ESTADO.liberado)return false;
+  return t==='fila'?true:!!ESTADO.protegido;
+}
 function pedirCodigo(destino){
   $('v-'+destino).style.display='none';
   const g=$('gate-dep');g.style.display='block';
