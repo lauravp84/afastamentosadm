@@ -162,10 +162,24 @@
   .anted{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-block;white-space:nowrap}
   .a-ok{background:var(--ok-bg);color:var(--ok)}.a-warn{background:var(--warn-bg);color:var(--warn)}.a-bad{background:var(--bad-bg);color:var(--bad)}
 
-  .trilha{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-  .step{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--line2);color:var(--muted);white-space:nowrap}
-  .step.done{background:var(--accent-soft);color:var(--accent-deep)}
-  .step.next{background:var(--warn-bg);color:var(--warn)}
+  /* trilha de progresso: quatro segmentos */
+  .track{display:flex;gap:6px;margin-top:6px}
+  .seg{width:22px;height:5px;border-radius:999px;background:var(--line);flex:none}
+  .seg.on{background:var(--accent)}
+
+  /* visão geral: pedidos e coluna lateral de ações */
+  .visao{display:grid;grid-template-columns:1.7fr 1fr;gap:22px;align-items:start;margin-top:26px}
+  .ped{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+  .ped h2{padding:20px 24px 14px;margin:0;font-size:16px;font-weight:620;letter-spacing:-.2px}
+  .ped-h,.ped-l{display:grid;grid-template-columns:1.5fr 1fr 1.1fr 1.2fr;gap:14px}
+  .ped-h{padding:8px 24px;border-bottom:1px solid var(--line2);font-size:11px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .ped-l{padding:15px 24px;border-bottom:1px solid var(--line2);align-items:center}
+  .ped-l:last-child{border-bottom:0}
+  .ped-l .nm{font-weight:620;color:var(--ink);font-size:13.5px}
+  .ped-l .cel{font-size:12.5px;color:var(--muted)}
+
+  .rotulo{font-size:12.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:26px}
 
   /* ---------- painel ---------- */
   .kpi{display:grid;gap:18px;grid-template-columns:repeat(4,1fr);margin-bottom:24px}
@@ -253,6 +267,7 @@
   /* ---------- responsivo ---------- */
   @media(max-width:1024px){
     .cards,.stats,.kpi,.fluxo,.g4{grid-template-columns:repeat(2,1fr)}
+    .visao{grid-template-columns:1fr}
     .et:nth-child(2)::after{display:none}
     .band h1{font-size:38px}
   }
@@ -270,6 +285,8 @@
     .lin .dir{justify-content:flex-start}
     .hide-m{display:none}
     .hdruser i{display:none}
+    .ped-h{display:none}
+    .ped-l{grid-template-columns:1fr;gap:6px}
   }
 </style>
 </head>
@@ -324,8 +341,7 @@
   </div>
 
   <div class="card" style="margin-top:26px;padding:34px 26px">
-    <h2>Do interesse à portaria</h2>
-    <p class="sub">Quatro etapas. Cada uma depende da anterior, e a última libera o pedido de substituto.</p>
+    <div class="rotulo">Como funciona</div>
     <div class="fluxo">
       <div class="et"><div class="n"></div><b>Manifestação</b><span>Interesse com 12 meses de antecedência.</span></div>
       <div class="et"><div class="n"></div><b>Documentação</b><span>Plano e carta-convite com 6 meses.</span></div>
@@ -440,10 +456,13 @@
     <div id="notifBox"></div>
     <div id="kpiBox" class="kpi"></div>
     <div id="tetoBanner"></div>
-    <div class="card">
-      <h2>Próximas ações</h2>
-      <p class="sub">O que está pendente em cada pedido, ordenado pela proximidade do início.</p>
-      <div id="acoesBox"></div>
+    <div class="visao">
+      <div id="pedidosBox"></div>
+      <div class="card" style="margin:0">
+        <h2>Próximas ações</h2>
+        <p class="sub">O que está pendente, pela proximidade do início.</p>
+        <div id="acoesBox"></div>
+      </div>
     </div>
   </div>
 
@@ -848,12 +867,28 @@ function proximaAcao(r){
   if(!tr.substituto&&tr.via!=='sem')return{k:'substituto',t:'solicitar substituto (vaga anual ou emergencial)',quem:'chefia'};
   return null;
 }
+/* Etapa do trâmite, de 0 a 7, conforme o modelo do handoff. A etapa é deduzida
+   das datas do trâmite, do status e da documentação entregue. */
+const ETAPAS=['Interesse manifestado','Documentação enviada','Em análise','Parecer emitido',
+  'Aprovado no colegiado','Processo no SEI','Congregação','Portaria publicada'];
+function etapaIdx(r){
+  const tr=r.tram||{};
+  if(tr.portaria)return 7;
+  if(tr.congregacao)return 6;
+  if(tr.sei)return 5;
+  if(tr.colegiado)return 4;
+  if(r.status==='favoravel'||r.status==='desfavoravel'||r.status==='concluido')return 3;
+  if(r.status==='em_analise')return 2;
+  if(docCompleta(r))return 1;
+  return 0;
+}
+// Segmentos preenchidos: etapa 0 preenche 1; etapa 1 preenche 2; etapas 2 e 3 preenchem 3; 4 ou mais preenchem 4.
+function preenchidos(i){return i>=4?4:(i>=2?3:(i>=1?2:1));}
 function trilha(r){
-  const prox=proximaAcao(r),tr=r.tram||{};
-  let h='<div class="trilha">';
-  h+=`<span class="step ${docCompleta(r)?'done':(prox&&prox.k==='doc'?'next':'')}">Doc.</span>`;
-  h+=`<span class="step ${r.status==='favoravel'||r.status==='concluido'?'done':(prox&&prox.k==='parecer'?'next':'')}">Parecer</span>`;
-  TRAMS.forEach(([k,n])=>{h+=`<span class="step ${tr[k]?'done':(prox&&prox.k===k?'next':'')}" title="${esc(tr[k]||'')}">${n}</span>`;});
+  const i=etapaIdx(r),n=preenchidos(i),tr=r.tram||{};
+  const detalhe=TRAMS.filter(([k])=>tr[k]).map(([k,n2])=>n2+' '+tr[k]).join(' · ');
+  let h=`<div class="track" title="${esc(ETAPAS[i]+(detalhe?'. '+detalhe:''))}">`;
+  for(let s=0;s<4;s++)h+=`<span class="seg${s<n?' on':''}"></span>`;
   return h+'</div>';
 }
 function ordenar(arr,modo){const a=[...arr];
@@ -1136,6 +1171,18 @@ function renderConfig(){
   $('cf_usuarios').innerHTML=(DADOS.usuarios||[]).map(u=>
     `<div class="confbox" style="margin-bottom:8px"><div><b>${esc(u.nome)}</b><p>${esc(u.login)}</p></div>${u.login===(EU&&EU.login)?'<span class="pill">você</span>':''}</div>`).join('')||'<p class="mini">nenhum acesso cadastrado</p>';
 }
+function renderPedidos(){
+  const R=ordenar(DADOS.registros.filter(r=>r.status!=='concluido'&&r.status!=='desfavoravel'),'crono');
+  const linhas=R.slice(0,10).map(r=>`<div class="ped-l">
+    <div><div class="nm">${esc(r.nome)}</div><div class="cel">${esc(r.area||'')}</div></div>
+    <div class="cel">${esc(r.tipo)}</div>
+    <div><span class="tag t-${r.status}">${STAT[r.status]}</span></div>
+    <div>${trilha(r)}<div class="cel" style="margin-top:6px">${esc(ETAPAS[etapaIdx(r)])}</div></div>
+  </div>`).join('');
+  $('pedidosBox').innerHTML=`<div class="ped"><h2>Pedidos em andamento</h2>
+    <div class="ped-h"><div>Docente</div><div>Tipo</div><div>Situação</div><div>Trâmite</div></div>
+    ${linhas||'<div class="empty">Nenhum pedido em andamento.</div>'}</div>`;
+}
 function renderAcoes(){
   const itens=DADOS.registros.map(r=>[r,proximaAcao(r)]).filter(([,a])=>a);
   const ord=itens.map(([r,a])=>{const m=mesesAte(r.inicio);return{r,a,m:m==null?999:m};}).sort((x,y)=>x.m-y.m).slice(0,8);
@@ -1152,7 +1199,7 @@ function renderCom(){
   $('userBar').innerHTML=`<div class="userbar">Conectada como <b>${esc(EU.login)}</b>. Toda alteração feita aqui fica registrada no histórico com seu nome.</div>`;
   const novos=DADOS.registros.filter(r=>!r.visto).length;
   $('notifBox').innerHTML=novos?`<div class="notice n-info"><b>${novos}</b> registro(s) novo(s) recebido(s) pela comissão. <button class="btn ghost" onclick="marcarVistos()">Marcar como lidos</button></div>`:'';
-  buildPeriodOpts();renderKPI();renderAcoes();renderHist();renderConfig();
+  buildPeriodOpts();renderKPI();renderPedidos();renderAcoes();renderHist();renderConfig();
   const F=filtros(),modo=$('ordCom').value,g=agruparF(F),per=Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)),w=$('comWrap');
   renderAssistente($('org_periodo').value,$('org_modo').value);
   const{quadro,pct,teto}=tetoConfig();
@@ -1173,7 +1220,7 @@ function renderCom(){
         <td>${esc(r.tipo)}<div class="mini">${esc(perLabel(r))} · ${esc(r.inicio||'')} · ${esc(r.dur)}m ${antedTag(r)}</div>
           <div class="mini">${contaLimite(r)?'conta no limite':'fora do limite'} · ${esc(COB[r.cob]||r.cob||'')}</div></td>
         <td class="hide-m"><span class="pill">afast.: ${esc(r.numaf)}</span> <span class="pill">ingr.: ${esc(r.ingresso)}</span> <span class="pill">pós-doc: ${r.jaPosdoc==='sim'?('sim '+esc(r.anoPosdoc||'')):'não'}</span></td>
-        <td class="hide-m">${docCompleta(r)?'<span class="pill" style="background:var(--ok-bg);color:var(--ok)">documentação completa</span>':'<span class="pill" style="background:var(--bad-bg);color:var(--bad)">falta: '+esc(docsFaltando(r).join(', '))+'</span>'}${trilha(r)}</td>
+        <td class="hide-m">${docCompleta(r)?'<span class="pill" style="background:var(--ok-bg);color:var(--ok)">documentação completa</span>':'<span class="pill" style="background:var(--bad-bg);color:var(--bad)">falta: '+esc(docsFaltando(r).join(', '))+'</span>'}${trilha(r)}<div class="mini" style="margin-top:6px">${esc(ETAPAS[etapaIdx(r)])}</div></td>
         <td><span class="tag t-${r.status}">${STAT[r.status]}</span>${pa?'<div class="mini">'+esc(pa.t)+'</div>':'<div class="mini">sem pendência</div>'}${r.parecer?'<div class="mini">'+esc(r.parecer.slice(0,40))+(r.parecer.length>40?'…':'')+'</div>':''}</td>
         <td><button class="btn sec sm" onclick="openDec('${r.id}')">Abrir</button></td></tr>`;}).join('');
       const extra=fk==='dout_pos'?' · limite de 2 por período':(fk==='capac'?' · fila separada':' · fora do limite');

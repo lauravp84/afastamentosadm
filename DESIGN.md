@@ -98,7 +98,9 @@ Sans do sistema em tudo: `-apple-system, "Segoe UI", system-ui, Roboto, Arial, s
 
 **Faixa de aviso** (`.faixa`): pílula em cor de atenção com ícone de relógio, usada no topo do formulário.
 
-**Trilha** (`.trilha` e `.step`): etapas do trâmite em pílulas. Cumprida em `--accent-soft`, próxima em cor de atenção, pendente em `--line2`.
+**Trilha** (`.track` e `.seg`): quatro segmentos de 22x5px, raio total. Preenchidos em `--accent`, vazios em `--line`. A etapa do trâmite vai de 0 a 7 e é deduzida em `etapaIdx()` a partir das datas do trâmite, do status e da documentação entregue: interesse manifestado, documentação enviada, em análise, parecer emitido, aprovado no colegiado, processo no SEI, Congregação, portaria publicada. Etapa 0 preenche 1 segmento; etapa 1 preenche 2; etapas 2 e 3 preenchem 3; etapa 4 ou maior preenche 4. O nome da etapa aparece abaixo da trilha, e as datas já registradas ficam no `title`.
+
+**Cartão de pedidos** (`.ped`): usado na Visão geral do painel, em grade `1.7fr 1fr` (`.visao`) com a coluna de Próximas ações ao lado. Quatro colunas: Docente, Tipo, Situação, Trâmite. Abaixo de 1024px a grade vira uma coluna; abaixo de 720px cada linha vira bloco empilhado.
 
 **Tabelas**: cabeçalho sem fundo, maiúsculas de 11px. Linhas separadas por `--line2`, hover em `--surface2`.
 
