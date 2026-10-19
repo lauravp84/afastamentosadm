@@ -288,6 +288,29 @@
     .ped-h{display:none}
     .ped-l{grid-template-columns:1fr;gap:6px}
   }
+  /* formulário do docente, estilo Google Forms */
+  .gf,.gf-capa{max-width:680px;margin-left:auto;margin-right:auto}
+  .gf-capa{background:var(--surface);border:1px solid var(--line);border-top:8px solid var(--accent);border-radius:var(--r);padding:24px 26px;margin-top:22px}
+  .gf-capa h2{font-size:24px;letter-spacing:-.4px;margin:0 0 8px}
+  .gf-capa p{margin:0;font-size:14.5px;color:var(--ink2);line-height:1.55}
+  .req-txt{color:var(--accent)}
+  .gf-sec{margin-top:18px}
+  .gf-sec-h{background:var(--accent);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:12px 22px}
+  .gf-sec-h span{display:block;font-size:11.5px;opacity:.8;letter-spacing:.04em;text-transform:uppercase}
+  .gf-sec-h b{display:block;font-size:17px;margin-top:2px}
+  .gf-sec-h em{display:block;font-style:normal;font-size:13px;opacity:.88;margin-top:4px}
+  .gf-q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;margin-top:12px}
+  .gf-sec-h+.gf-q{margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-top:0}
+  .gf-q:focus-within{border-left:5px solid var(--accent);padding-left:20px}
+  .gf-q>label:first-child{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px}
+  .gf-q>label:not(:first-child),.gf-q>div>label:not(.gf-r):not(.drop){font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px}
+  .gf-ajuda{font-size:12.5px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+  .gf-op{display:flex;flex-direction:column;gap:4px}
+  .gf-lin{flex-direction:row;flex-wrap:wrap;gap:4px 22px}
+  .gf-r{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:400;color:var(--ink);margin:0;padding:7px 0;cursor:pointer}
+  .gf-r input{width:18px;height:18px;margin:0;accent-color:var(--accent);flex:none}
+  .gf-fim{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px auto 10px;max-width:680px}
+  @media (max-width:600px){.gf-q{padding:18px 16px}.gf-q:focus-within{padding-left:12px}.gf-capa{padding:20px 18px}.gf-sec-h{padding:12px 16px}}
 </style>
 </head>
 <body>
@@ -362,41 +385,64 @@
 <!-- FORMULÁRIO -->
 <section id="v-form" style="display:none">
   <div class="ok-msg" id="okMsg"></div>
-  <h2>Manifestar interesse</h2>
-  <p class="sub" style="margin-bottom:0">Registre sua intenção de afastamento. A data de envio define sua posição na fila cronológica.</p>
-  <div class="faixa" style="margin-top:20px">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-    Interesse com 12 meses e documentação com 6 meses de antecedência.
+  <div class="gf-capa">
+    <h2>Manifestar interesse em afastamento</h2>
+    <p>Leva cerca de 3 minutos. A data de envio define sua posição na fila.</p>
+    <p class="gf-ajuda" style="margin-top:10px">Manifeste com 12 meses de antecedência e entregue o plano e a carta-convite com 6 meses. <span class="req-txt">*</span> Obrigatório</p>
   </div>
-  <div class="card" style="margin-top:26px">
-    <div class="grid g4">
-      <div class="c2"><label class="req">Nome do docente</label><input id="f_nome" placeholder="Seu nome"></div>
-      <div class="c2"><label class="req">E-mail institucional</label><input id="f_email" type="email" placeholder="nome@instituicao.br"></div>
-      <div><label>SIAPE / Matrícula</label><input id="f_siape" placeholder="0000000"></div>
-      <div><label class="req">Área / disciplina específica<i class="info" data-tip="Selecione a área padronizada. A regra que impede dois docentes da mesma área de se afastarem juntos depende desta escolha; texto livre causaria falhas na verificação.">i</i></label><select id="f_area" onchange="onArea()"></select></div>
-      <div id="box_areaOutra" style="display:none"><label>Especifique a área</label><input id="f_areaOutra"></div>
-      <div><label class="req">Classe na carreira<i class="info" data-tip="Terceiro critério de desempate: em caso de mesmo tempo de casa, tem prioridade quem está em nível mais avançado.">i</i></label><select id="f_classe"><option>Auxiliar</option><option>Assistente</option><option selected>Adjunto</option><option>Associado</option><option>Titular</option></select></div>
-      <div><label>Nível</label><select id="f_nivel"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-      <div><label class="req">Ano de ingresso no departamento<i class="info" data-tip="Segundo critério de desempate: tem prioridade quem está há mais tempo no departamento.">i</i></label><input id="f_ingresso" type="number" placeholder="Ex.: 2014"></div>
-      <div><label class="req">Nº de afastamentos já usufruídos no departamento<i class="info" data-tip="Primeiro critério de desempate: a prioridade é de quem não teve nenhum ou teve menos afastamentos.">i</i></label><input id="f_numaf" type="number" min="0" value="0"></div>
-      <div><label class="req">Tipo de afastamento<i class="info" data-tip="Esta comissão trata apenas de pós-doutorado e capacitação. Capacitação tem fila separada e, no recesso, fica fora do limite de 2 por período.">i</i></label><select id="f_tipo" onchange="onTipo()">
-        <option>Pós-doutorado</option><option>Capacitação</option></select></div>
-      <div id="box_recesso" style="display:none"><label>Capacitação no recesso universitário?<i class="info" data-tip="A capacitação realizada no recesso universitário não fica restrita ao limite de 2 docentes por período.">i</i></label><select id="f_recesso" onchange="avisoTipo()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
-      <div class="full" id="avisoTipo"></div>
-      <div><label>Já realizou pós-doutorado antes?</label><select id="f_japd" onchange="onJapd()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
-      <div id="box_japd" style="display:none"><label>Ano(s) do(s) pós-doc anterior(es)</label><input id="f_anopd" placeholder="Ex.: 2018; 2022"></div>
-      <div class="full"><label class="req">Período acadêmico pretendido, do início ao fim<i class="info" data-tip="Um afastamento que atravessa dois períodos ocupa vaga nos dois para efeito do limite de 2 docentes. Máximo de 2 períodos.">i</i></label>
-        <div class="row" style="gap:6px;align-items:center"><select id="f_ano" style="flex:1" onchange="coerencia()"></select><select id="f_sem" style="width:76px" onchange="coerencia()"><option value="1">.1</option><option value="2">.2</option></select><span class="mini">até</span><select id="f_anoF" style="flex:1" onchange="coerencia()"></select><select id="f_semF" style="width:76px" onchange="coerencia()"><option value="1">.1</option><option value="2">.2</option></select></div></div>
-      <div><label class="req">Data de início pretendida</label><input id="f_inicio" type="date" onchange="prazo();coerencia()"></div>
-      <div><label class="req">Duração (meses)</label><input id="f_dur" type="number" min="1" placeholder="Pós-doc: 6 a 12" oninput="coerencia()"></div>
-      <div class="full" id="prazoInfo"></div>
-      <div class="full" id="coerInfo"></div>
-      <div><label>Tipo de licença<i class="info" data-tip="Desde 1/11/24, a Licença para Capacitação tramita pela PR4/CDDP/SAC, e não pela DVDE.">i</i></label><select id="f_lic">
-        <option value="">— selecione —</option><option>Afastamento para pós-doutorado</option><option>Licença para capacitação</option></select></div>
-      <div><label>Orientações em andamento</label><input id="f_orient" placeholder="Ex.: 3 TCC, 1 mestrado"></div>
-      <div class="full" style="border-top:1px solid var(--line2);padding-top:20px">
-        <label>Anexar documentos<i class="info" data-tip="Exigidos pela minuta antes da abertura do processo no SEI. Pode anexar agora ou depois, por e-mail à comissão.">i</i></label>
-        <div class="grid" style="gap:18px">
+  <form class="gf" onsubmit="event.preventDefault();enviar()" novalidate>
+    <div class="gf-sec">
+      <div class="gf-sec-h"><span>1 de 3</span><b>Seus dados</b></div>
+      <div class="gf-q"><label for="f_nome" class="req">Nome completo</label><input id="f_nome" autocomplete="name"></div>
+      <div class="gf-q"><label for="f_email" class="req">E-mail institucional</label><input id="f_email" type="email" autocomplete="email" placeholder="nome@facc.ufrj.br"></div>
+      <div class="gf-q"><label for="f_area" class="req">Área</label><select id="f_area" onchange="onArea()"></select>
+        <div id="box_areaOutra" style="display:none;margin-top:10px"><input id="f_areaOutra" placeholder="Qual área?"></div></div>
+      <div class="gf-q"><label class="req">Classe na carreira</label>
+        <div class="gf-op"><label class="gf-r"><input type="radio" name="f_classe" value="Auxiliar"> Auxiliar</label>
+          <label class="gf-r"><input type="radio" name="f_classe" value="Assistente"> Assistente</label>
+          <label class="gf-r"><input type="radio" name="f_classe" value="Adjunto" checked> Adjunto</label>
+          <label class="gf-r"><input type="radio" name="f_classe" value="Associado"> Associado</label>
+          <label class="gf-r"><input type="radio" name="f_classe" value="Titular"> Titular</label></div></div>
+      <div class="gf-q"><label class="req">Nível</label><div class="gf-op gf-lin"><label class="gf-r"><input type="radio" name="f_nivel" value="1" checked> 1</label>
+          <label class="gf-r"><input type="radio" name="f_nivel" value="2"> 2</label>
+          <label class="gf-r"><input type="radio" name="f_nivel" value="3"> 3</label>
+          <label class="gf-r"><input type="radio" name="f_nivel" value="4"> 4</label></div></div>
+      <div class="gf-q"><label for="f_ingresso" class="req">Em que ano você entrou no departamento?</label><input id="f_ingresso" type="number" inputmode="numeric" placeholder="Ex.: 2014" style="max-width:160px"></div>
+      <div class="gf-q"><label for="f_numaf" class="req">Quantos afastamentos você já teve no departamento?</label><input id="f_numaf" type="number" inputmode="numeric" min="0" value="0" style="max-width:160px">
+        <p class="gf-ajuda">Ano de ingresso, número de afastamentos e classe são usados para desempatar a fila.</p></div>
+    </div>
+
+    <div class="gf-sec">
+      <div class="gf-sec-h"><span>2 de 3</span><b>O afastamento</b></div>
+      <div class="gf-q"><label class="req">Tipo de afastamento</label>
+        <div class="gf-op">
+          <label class="gf-r"><input type="radio" name="f_tipo" value="Pós-doutorado" checked onchange="onTipo()"> Pós-doutorado</label>
+          <label class="gf-r"><input type="radio" name="f_tipo" value="Capacitação" onchange="onTipo()"> Capacitação</label>
+        </div>
+        <div id="box_recesso" style="display:none;margin-top:14px"><label>A capacitação será no recesso universitário?</label>
+          <div class="gf-op gf-lin">
+            <label class="gf-r"><input type="radio" name="f_recesso" value="nao" checked onchange="avisoTipo()"> Não</label>
+            <label class="gf-r"><input type="radio" name="f_recesso" value="sim" onchange="avisoTipo()"> Sim</label>
+          </div></div>
+        <div id="avisoTipo" style="margin-top:12px"></div></div>
+      <div class="gf-q"><label for="f_inicio" class="req">Data em que pretende começar</label><input id="f_inicio" type="date" onchange="sugerirPeriodo();prazo();coerencia()" style="max-width:220px">
+        <div id="prazoInfo" style="margin-top:10px"></div></div>
+      <div class="gf-q"><label for="f_dur" class="req">Duração, em meses</label><input id="f_dur" type="number" inputmode="numeric" min="1" placeholder="Pós-doc: de 6 a 12" oninput="coerencia()" style="max-width:160px"></div>
+      <div class="gf-q"><label for="f_per" class="req">Período letivo em que começa</label><select id="f_per" onchange="coerencia()" style="max-width:220px"></select>
+        <label style="margin-top:16px">O afastamento ocupa quantos períodos?</label>
+        <div class="gf-op gf-lin">
+          <label class="gf-r"><input type="radio" name="f_nper" value="1" checked onchange="coerencia()"> Um período</label>
+          <label class="gf-r"><input type="radio" name="f_nper" value="2" onchange="coerencia()"> Dois períodos</label>
+        </div>
+        <div id="coerInfo" style="margin-top:10px"></div></div>
+    </div>
+
+    <div class="gf-sec">
+      <div class="gf-sec-h"><span>3 de 3</span><b>Informações adicionais</b><em>Opcional. Pode completar depois, por e-mail à comissão.</em></div>
+      <div class="gf-q"><label for="f_destino">Instituição e local de destino</label><input id="f_destino"></div>
+      <div class="gf-q"><label for="f_just">Resumo do plano de trabalho</label><textarea id="f_just" rows="3"></textarea></div>
+      <div class="gf-q"><label>Documentos</label>
+        <div class="grid" style="gap:12px">
           <label class="drop" style="margin:0">
             <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
             <span><b data-rot="Plano de trabalho">Plano de trabalho</b><em>anexar, até 3 MB</em></span>
@@ -407,20 +453,31 @@
             <span><b data-rot="Carta-convite">Carta-convite</b><em>anexar, até 3 MB</em></span>
             <input type="file" id="f_arqCarta" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" onchange="conferirArquivo(this)">
           </label>
+        </div></div>
+      <div class="gf-q"><label for="f_siape">SIAPE</label><input id="f_siape" inputmode="numeric" style="max-width:220px"></div>
+      <div class="gf-q"><label for="f_disc">Disciplinas que você leciona no período</label><input id="f_disc" placeholder="Ex.: ACA360, ACAK01"></div>
+      <div class="gf-q"><label for="f_orient">Orientações em andamento</label><input id="f_orient" placeholder="Ex.: 3 TCC, 1 mestrado"></div>
+      <div class="gf-q"><label>Quem cobre suas disciplinas?</label>
+        <div class="gf-op">
+          <label class="gf-r"><input type="radio" name="f_cob" value="adefinir" checked> A definir com a chefia</label>
+          <label class="gf-r"><input type="radio" name="f_cob" value="substituto"> Substituto já previsto</label>
+          <label class="gf-r"><input type="radio" name="f_cob" value="remanejamento"> Colega de área próxima</label>
+          <label class="gf-r"><input type="radio" name="f_cob" value="redistribuicao"> Redistribuição entre docentes</label>
+          <label class="gf-r"><input type="radio" name="f_cob" value="sem"> Sem cobertura prevista</label>
+        </div></div>
+      <div class="gf-q"><label>Já fez pós-doutorado antes?</label>
+        <div class="gf-op gf-lin">
+          <label class="gf-r"><input type="radio" name="f_japd" value="nao" checked onchange="onJapd()"> Não</label>
+          <label class="gf-r"><input type="radio" name="f_japd" value="sim" onchange="onJapd()"> Sim</label>
         </div>
-        <p class="mini" style="margin:10px 0 0">Anexar aqui já marca o item como entregue. PDF, Word ou imagem.</p>
-      </div>
-      <div class="full"><label>Disciplinas lecionadas no período</label><input id="f_disc" placeholder="Ex.: ACA360, ACAK01"></div>
-      <div class="full"><label>Sugestão de cobertura / remanejamento<i class="info" data-tip="Indicar substituto, remanejamento com área aderente ou redistribuição é o que permite que dois docentes da mesma área concorram no mesmo período.">i</i></label><select id="f_cob">
-        <option value="adefinir">A definir com a chefia</option><option value="substituto">Substituto já previsto</option><option value="remanejamento">Remanejamento com área aderente</option><option value="redistribuicao">Redistribuição interna entre docentes</option><option value="sem">Sem cobertura prevista</option></select></div>
-      <div class="c2"><label>Instituição / destino</label><input id="f_destino" placeholder="Instituição e local"></div>
-      <div class="full"><label>Justificativa / plano de trabalho (resumo)</label><textarea id="f_just" placeholder="Relevância do afastamento e do plano de trabalho"></textarea></div>
+        <div id="box_japd" style="display:none;margin-top:10px"><input id="f_anopd" placeholder="Em que ano(s)? Ex.: 2018; 2022"></div></div>
     </div>
-    <div class="row" style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line2)">
-      <button class="btn" id="btEnviar" onclick="enviar()">Registrar interesse</button>
-      <button class="btn sec" onclick="limpar()">Limpar</button>
+
+    <div class="gf-fim">
+      <button type="submit" class="btn" id="btEnviar">Enviar</button>
+      <button type="button" class="btn ghost" onclick="limpar()">Limpar formulário</button>
     </div>
-  </div>
+  </form>
 </section>
 
 <!-- FILA PÚBLICA -->
@@ -903,13 +960,16 @@ function quandoBR(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleD
 function defAreas(){return['Operações e Logística','Finanças','Marketing','Gestão de Pessoas','Estratégia e Organizações','Métodos Quantitativos','Sistemas de Informação','Contabilidade','Economia','Administração Pública','Outra'];}
 function areasAtuais(){const a=(DADOS.config&&DADOS.config.areas)||ESTADO.areas;return (a&&a.length)?a:defAreas();}
 function buildAreaOpts(){const sel=$('f_area'),cur=sel.value;sel.innerHTML='<option value="">— selecione —</option>'+areasAtuais().map(a=>`<option ${a===cur?'selected':''}>${esc(a)}</option>`).join('');}
-function buildAnos(){const y=new Date().getFullYear();let o='';for(let i=0;i<6;i++)o+=`<option>${y+i}</option>`;['f_ano','f_anoF'].forEach(id=>{if($(id))$(id).innerHTML=o;});}
+function rv(n){const e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:'';}
+function setRv(n,v){document.querySelectorAll('input[name="'+n+'"]').forEach(e=>e.checked=e.value===v);}
+function buildAnos(){const y=new Date().getFullYear();let o='<option value="">— selecione —</option>';for(let i=0;i<6;i++)o+=`<option>${y+i}.1</option><option>${y+i}.2</option>`;if($('f_per'))$('f_per').innerHTML=o;}
+function sugerirPeriodo(){const p=perDeData($('f_inicio').value),sel=$('f_per');if(p&&[...sel.options].some(o=>o.value===p))sel.value=p;}
 function onArea(){$('box_areaOutra').style.display=$('f_area').value==='Outra'?'block':'none';}
-function onJapd(){$('box_japd').style.display=$('f_japd').value==='sim'?'block':'none';}
-function onTipo(){$('box_recesso').style.display=$('f_tipo').value.startsWith('Capacitação')?'block':'none';avisoTipo();prazo();coerencia();}
+function onJapd(){$('box_japd').style.display=rv('f_japd')==='sim'?'block':'none';}
+function onTipo(){$('box_recesso').style.display=rv('f_tipo').startsWith('Capacitação')?'block':'none';avisoTipo();prazo();coerencia();}
 function avisoTipo(){
-  const t=$('f_tipo').value;let m='';
-  if(t.startsWith('Capacitação'))m=$('f_recesso').value==='sim'?'Capacitação no recesso universitário: fila separada e fora do limite de 2 docentes por período.':'Capacitação fora do recesso: fila separada, mas conta no limite de 2 docentes por período.';
+  const t=rv('f_tipo');let m='';
+  if(t.startsWith('Capacitação'))m=rv('f_recesso')==='sim'?'Capacitação no recesso universitário: fila separada e fora do limite de 2 docentes por período.':'Capacitação fora do recesso: fila separada, mas conta no limite de 2 docentes por período.';
   else m='O afastamento para pós-doutorado tem duração de 6 meses a 1 ano e entra no limite de 2 docentes por período.';
   $('avisoTipo').innerHTML='<div class="notice n-plain" style="margin:0">'+m+'</div>';
 }
@@ -943,42 +1003,37 @@ function prazo(){const m=mesesAte($('f_inicio').value),b=$('prazoInfo');if(m==nu
 function perDeData(d){if(!d)return null;const dt=new Date(d+'T00:00');return dt.getFullYear()+'.'+(dt.getMonth()+1<=7?'1':'2');}
 function coerencia(){
   const b=$('coerInfo');if(!b)return;const msgs=[];
-  const ini=$('f_inicio').value,pi=$('f_ano').value+'.'+$('f_sem').value,pf=$('f_anoF').value+'.'+$('f_semF').value,dur=+$('f_dur').value;
+  const ini=$('f_inicio').value,pi=$('f_per').value,dur=+$('f_dur').value,span=+rv('f_nper')-1;
   const sug=perDeData(ini);
-  if(sug&&sug!==pi)msgs.push('A data de início indica o período <b>'+sug+'</b>, diferente do período inicial informado ('+pi+'). Confirme qual está correto.');
-  const span=perIdx(pf)-perIdx(pi);
-  if(span<0)msgs.push('O período final é anterior ao inicial.');
-  else if(span>1)msgs.push('O afastamento não pode passar de dois períodos.');
-  else if(span===1&&dur&&dur<=6)msgs.push('Duração de '+dur+' meses declarada para dois períodos. Verifique o período final, pois o docente ocupará vaga nos dois.');
+  if(sug&&pi&&sug!==pi)msgs.push('A data de início indica o período <b>'+sug+'</b>, diferente do período escolhido ('+pi+'). Confirme qual está correto.');
+  if(pi&&span===1)msgs.push('Você ocupará vaga nos períodos <b>'+pi+'</b> e <b>'+perLabelDe(perIdx(pi)+1)+'</b>.');
+  if(span===1&&dur&&dur<=6)msgs.push('Duração de '+dur+' meses declarada para dois períodos. Verifique o período final, pois o docente ocupará vaga nos dois.');
   else if(span===0&&dur&&dur>7)msgs.push('Duração de '+dur+' meses em um único período. Verifique se o afastamento não atravessa o período seguinte.');
-  if($('f_tipo').value==='Pós-doutorado'&&dur&&(dur<6||dur>12))msgs.push('O pós-doutorado deve ter de 6 a 12 meses.');
+  if(rv('f_tipo')==='Pós-doutorado'&&dur&&(dur<6||dur>12))msgs.push('O pós-doutorado deve ter de 6 a 12 meses.');
   b.innerHTML=msgs.length?'<div class="notice n-info" style="margin:0">'+msgs.join('<br>')+'</div>':'';
 }
 async function enviar(){
-  const req={f_nome:'Nome',f_email:'E-mail',f_area:'Área',f_ingresso:'Ano de ingresso',f_numaf:'Nº de afastamentos',f_inicio:'Data de início',f_dur:'Duração'};
+  const req={f_nome:'Nome completo',f_email:'E-mail institucional',f_area:'Área',f_ingresso:'Ano de entrada no departamento',f_numaf:'Quantos afastamentos já teve',f_inicio:'Data em que pretende começar',f_dur:'Duração',f_per:'Período letivo em que começa'};
   for(const k in req){if(!$(k).value.toString().trim()){alert('Preencha: '+req[k]);$(k).focus();return;}}
   if($('f_area').value==='Outra'&&!$('f_areaOutra').value.trim()){alert('Especifique a área.');$('f_areaOutra').focus();return;}
   const email=$('f_email').value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){alert('E-mail inválido.');$('f_email').focus();return;}
   const areaVal=$('f_area').value==='Outra'?$('f_areaOutra').value.trim():$('f_area').value;
-  const periodoVal=$('f_ano').value+'.'+$('f_sem').value, periodoFimVal=$('f_anoF').value+'.'+$('f_semF').value;
-  const span=perIdx(periodoFimVal)-perIdx(periodoVal);
-  if(span<0){alert('O período final não pode ser anterior ao inicial.');return;}
-  if(span>1){alert('O afastamento não pode passar de dois períodos (ex.: 2026.2 até 2027.1 é o máximo).');return;}
-  const tipo=$('f_tipo').value,dur=+$('f_dur').value,m=mesesAte($('f_inicio').value);
+  const periodoVal=$('f_per').value, periodoFimVal=rv('f_nper')==='2'?perLabelDe(perIdx(periodoVal)+1):periodoVal;
+  const tipo=rv('f_tipo'),dur=+$('f_dur').value,m=mesesAte($('f_inicio').value);
   if(tipo==='Pós-doutorado'&&(dur<6||dur>12)&&!confirm('O pós-doutorado deve durar de 6 a 12 meses. Registrar mesmo assim?'))return;
   if(m!=null&&m<6&&!confirm('Antecedência menor que 6 meses. A solicitação não terá validade sem a documentação no prazo. Registrar a manifestação mesmo assim?'))return;
   const bt=$('btEnviar');bt.disabled=true;bt.textContent='Enviando…';
   const arqPlano=await lerArquivo($('f_arqPlano')), arqCarta=await lerArquivo($('f_arqCarta'));
   const registro={
     nome:$('f_nome').value.trim(),email:email,siape:$('f_siape').value.trim(),area:areaVal,
-    classe:$('f_classe').value,nivel:$('f_nivel').value,ingresso:$('f_ingresso').value,numaf:$('f_numaf').value,
-    tipo:tipo,fila:filaDe(tipo),recesso:$('f_recesso').value,periodo:periodoVal,periodoFim:periodoFimVal,
-    inicio:$('f_inicio').value,dur:$('f_dur').value,lic:$('f_lic').value,
+    classe:rv('f_classe'),nivel:rv('f_nivel'),ingresso:$('f_ingresso').value,numaf:$('f_numaf').value,
+    tipo:tipo,fila:filaDe(tipo),recesso:tipo.startsWith('Capacitação')?rv('f_recesso'):'nao',periodo:periodoVal,periodoFim:periodoFimVal,
+    inicio:$('f_inicio').value,dur:$('f_dur').value,lic:tipo==='Pós-doutorado'?'Afastamento para pós-doutorado':'Licença para capacitação',
     carta:arqCarta?'sim':'nao',plano:arqPlano?'sim':'nao',
-    orient:$('f_orient').value.trim(),disc:$('f_disc').value.trim(),cob:$('f_cob').value,destino:$('f_destino').value.trim(),
-    just:$('f_just').value.trim(),jaPosdoc:$('f_japd').value,anoPosdoc:$('f_anopd').value.trim(),
-    docs:{periodo:true,duracao:true,licenca:!!$('f_lic').value,plano:!!arqPlano,carta:!!arqCarta}
+    orient:$('f_orient').value.trim(),disc:$('f_disc').value.trim(),cob:rv('f_cob'),destino:$('f_destino').value.trim(),
+    just:$('f_just').value.trim(),jaPosdoc:rv('f_japd'),anoPosdoc:$('f_anopd').value.trim(),
+    docs:{periodo:true,duracao:true,licenca:true,plano:!!arqPlano,carta:!!arqCarta}
   };
   try{
     const res=await api('manifestar',{registro});
@@ -997,9 +1052,9 @@ async function enviar(){
       '<a class="btn ghost" onclick=\'mailtoComissao('+JSON.stringify(JSON.stringify(registro))+')\'>Enviar documentação por e-mail à comissão</a>';
     $('okMsg').style.display='block';limpar();window.scrollTo(0,0);
     PUB=[];
-  }catch(e){erro(e);}finally{bt.disabled=false;bt.textContent='Registrar interesse';}
+  }catch(e){erro(e);}finally{bt.disabled=false;bt.textContent='Enviar';}
 }
-function limpar(){['f_nome','f_email','f_siape','f_ingresso','f_inicio','f_dur','f_orient','f_disc','f_destino','f_just','f_anopd','f_areaOutra','f_arqPlano','f_arqCarta'].forEach(i=>{const e=$(i);if(e)e.value='';});$('f_numaf').value='0';$('f_area').selectedIndex=0;$('f_cob').selectedIndex=0;$('f_japd').value='nao';$('f_lic').selectedIndex=0;$('box_japd').style.display='none';$('box_areaOutra').style.display='none';$('prazoInfo').innerHTML='';$('coerInfo').innerHTML='';['f_arqPlano','f_arqCarta'].forEach(i=>rotuloAnexo($(i)));}
+function limpar(){['f_nome','f_email','f_siape','f_ingresso','f_inicio','f_dur','f_orient','f_disc','f_destino','f_just','f_anopd','f_areaOutra','f_arqPlano','f_arqCarta'].forEach(i=>{const e=$(i);if(e)e.value='';});$('f_numaf').value='0';$('f_area').selectedIndex=0;$('f_per').selectedIndex=0;[['f_tipo','Pós-doutorado'],['f_recesso','nao'],['f_classe','Adjunto'],['f_nivel','1'],['f_nper','1'],['f_cob','adefinir'],['f_japd','nao']].forEach(([n,v])=>setRv(n,v));$('box_recesso').style.display='none';avisoTipo();$('box_japd').style.display='none';$('box_areaOutra').style.display='none';$('prazoInfo').innerHTML='';$('coerInfo').innerHTML='';['f_arqPlano','f_arqCarta'].forEach(i=>rotuloAnexo($(i)));}
 function mailtoComissao(json){
   const r=typeof json==='string'?JSON.parse(json):json;
   const to=(DADOS.config&&DADOS.config.emailComissao)||ESTADO.emailComissao||'';
