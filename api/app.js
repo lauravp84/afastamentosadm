@@ -18,6 +18,8 @@ const K = {
   audit: 'af:auditoria'
 };
 const MAX_AUDIT = 800;
+const STATUS = ['manifestado', 'doc_pendente', 'em_analise', 'favoravel', 'desfavoravel', 'aprovado_reuniao', 'negado_reuniao', 'concluido'];
+const DOMINIO_GOOGLE = 'facc.ufrj.br';
 const SESSAO_HORAS = 12;
 
 // Conexão reaproveitada entre invocações da mesma instância serverless.
@@ -184,7 +186,8 @@ module.exports = async (req, res) => {
         protegido: !!conf.codHash,
         liberado: await liberado(req),
         areas: conf.areas || null,
-        emailComissao: conf.emailComissao || ''
+        emailComissao: conf.emailComissao || '',
+        googleClientId: process.env.GOOGLE_CLIENT_ID || ''
       });
       return;
     }
@@ -243,6 +246,27 @@ module.exports = async (req, res) => {
       return;
     }
 
+    /* --- login com Google: só e-mails @facc.ufrj.br cadastrados na comissão --- */
+    if (acao === 'loginGoogle') {
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      if (!clientId) { res.status(409).json({ erro: 'Login com Google ainda não configurado.' }); return; }
+      const cred = String(corpo.credential || '');
+      if (!cred) { res.status(400).json({ erro: 'Credencial do Google ausente.' }); return; }
+      const g = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(cred));
+      const info = g.ok ? await g.json() : null;
+      const email = info && String(info.email || '').toLowerCase();
+      const valido = info && info.aud === clientId && String(info.email_verified) === 'true' &&
+        info.hd === DOMINIO_GOOGLE && email.endsWith('@' + DOMINIO_GOOGLE) && Number(info.exp) * 1000 > Date.now();
+      if (!valido) { res.status(401).json({ erro: 'Use o seu e-mail @' + DOMINIO_GOOGLE + '.' }); return; }
+      const usuarios = await ler(K.users, []);
+      const u = usuarios.find(x => x.login === email && x.ativo !== false);
+      if (!u) { res.status(403).json({ erro: 'Este e-mail não faz parte da comissão.' }); return; }
+      const secret = await texto_bruto(K.secret);
+      await registrarAuditoria(u.nome, 'entrou no painel', '', 'com Google');
+      res.json({ token: assinar(u.id, secret), usuario: { login: u.login, nome: u.nome } });
+      return;
+    }
+
     /* --- fila pública, sem autenticação e sem dados sensíveis --- */
     if (acao === 'fila') {
       if (!(await liberado(req))) { res.status(403).json({ erro: 'Acesso restrito ao departamento. Informe o código de acesso.' }); return; }
@@ -261,7 +285,7 @@ module.exports = async (req, res) => {
       const novo = Object.assign({}, r, {
         id: novoId(),
         ts: new Date().toISOString(),
-        status: 'manifestado',
+        status: 'doc_pendente',
         parecer: '',
         visto: false,
         excecional: false,
@@ -295,6 +319,8 @@ module.exports = async (req, res) => {
       r.docs = r.docs || {};
       r.docs[campo] = true;
       if (campo === 'plano') r.plano = 'sim'; else r.carta = 'sim';
+      // Com plano e carta entregues, o pedido passa a esperar o parecer.
+      if (r.docs.plano && r.docs.carta && (r.status === 'doc_pendente' || r.status === 'manifestado')) r.status = 'em_analise';
       await gravar(K.regs, regs);
       await registrarAuditoria((eu2 ? eu2.nome : r.nome + ' (docente)'), 'anexou documento', r.nome,
         (campo === 'plano' ? 'plano de trabalho' : 'carta-convite') + ': ' + salvo.nome);
@@ -342,7 +368,10 @@ module.exports = async (req, res) => {
       const antes = JSON.parse(JSON.stringify(regs[i]));
       const c = corpo.campos || {};
       const r = regs[i];
-      if (typeof c.status === 'string') r.status = c.status;
+      if (typeof c.status === 'string') {
+        if (!STATUS.includes(c.status)) { res.status(400).json({ erro: 'Situação inválida.' }); return; }
+        r.status = c.status;
+      }
       if (typeof c.parecer === 'string') r.parecer = limpar(c.parecer, 4000);
       if (typeof c.excecional === 'boolean') r.excecional = c.excecional;
       if (c.docs) { r.docs = r.docs || {}; ITENS_DOC.forEach(k => { if (typeof c.docs[k] === 'boolean') r.docs[k] = c.docs[k]; }); }

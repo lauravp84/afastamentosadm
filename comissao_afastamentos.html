@@ -7,658 +7,184 @@
 <style>
   :root{
     /* superfícies e tinta */
-    --paper:#f7f9fc; --surface:#ffffff; --surface2:#f7f9fc;
+    --paper:#f7f9fc; --surface:#ffffff;
     --ink:#14213a; --ink2:#3a4358; --muted:#6b7488;
-    --line:#dfe5ee; --line2:#eef2f7; --dashed:#c9d2e2; --placeholder:#98a0b0;
+    --line:#dfe5ee; --line2:#eef2f7; --field:#c9d2e2;
     /* destaque único */
     --accent:#12326B; --accent-soft:#E4EBF7; --accent-deep:#0A2149;
-    --header:#0B1F3F; --header-text:#eef3fa; --header-muted:#b7c3d8; --nav-off:#93a1ba;
+    --header:#0B1F3F; --header-text:#eef3fa; --nav-off:#b7c3d8;
     /* estado: só em etiqueta, selo ou faixa de aviso */
-    --ok:#3f7d52; --ok-bg:#e8f1e9; --warn:#9a6a12; --warn-bg:#f8efdd;
-    --bad:#a8392a; --bad-bg:#f7e5e1; --info:#45526b; --info-bg:#ebeef4;
-    --r:16px; --r-sm:10px; --wrap:1160px;
-    --sh:0 1px 2px rgba(20,33,58,.04), 0 8px 24px -12px rgba(20,33,58,.10);
-    --ring:0 0 0 3px rgba(18,50,107,.14);
+    --ok:#3f7d52; --ok-bg:#e8f1e9; --done:#2f6440; --done-bg:#dce9e0;
+    --warn:#9a6a12; --warn-bg:#f8efdd; --bad:#a8392a; --bad-bg:#f7e5e1;
+    --info:#45526b; --info-bg:#ebeef4; --off-bg:#eef2f7;
+    --wrap:1040px; --ring:0 0 0 3px rgba(18,50,107,.14);
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
-  body{margin:0;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6;
-    font-family:-apple-system,"Segoe UI",system-ui,Roboto,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased}
-  .serif{font-family:Georgia,"Times New Roman",serif}
+  body{margin:0;background:var(--paper);color:var(--ink);font-size:17px;line-height:1.5;
+    font-family:-apple-system,"Segoe UI",system-ui,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent)} a:hover{color:var(--accent-deep)}
+  input,select,textarea,button{font-family:inherit}
+  button{cursor:pointer}
+  [hidden]{display:none !important}
 
-  /* ---------- cabeçalho fixo ---------- */
-  .hdr{position:sticky;top:0;z-index:40;background:var(--header);color:var(--header-text);height:64px;display:flex;align-items:center}
-  .hdrin{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px;display:flex;align-items:center;gap:16px}
-  .brand{display:flex;align-items:center;gap:12px;background:0;border:0;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;flex:none}
-  .seal{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;flex:none;
-    display:flex;align-items:center;justify-content:center;font-family:Georgia,"Times New Roman",serif;font-size:19px;font-weight:400;line-height:1}
-  .brand b{font-size:14.5px;font-weight:600;color:var(--header-text);white-space:nowrap;letter-spacing:-.1px}
-  nav{margin-left:auto;display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-  nav::-webkit-scrollbar{display:none}
-  nav button{background:transparent;border:0;color:var(--nav-off);padding:8px 14px;border-radius:999px;
-    font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:color .12s,background .12s}
-  nav button:hover{color:#fff}
-  nav button.active{color:#fff;background:rgba(255,255,255,.16);font-weight:600}
-  .hdruser{display:flex;align-items:center;gap:10px;flex:none;border-left:1px solid rgba(255,255,255,.14);margin-left:14px;padding-left:16px}
-  .avatar{width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;
-    font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
-  .hdruser i{font-style:normal;font-size:12.5px;color:var(--header-muted);white-space:nowrap}
-  .hdruser button{background:0;border:0;color:var(--nav-off);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}
-  .hdruser button:hover{color:#fff}
+  /* ---------- cabeçalho ---------- */
+  .hdr{background:var(--header)}
+  .hdrin{max-width:var(--wrap);margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;background:0;border:0;padding:0;color:inherit}
+  .seal{width:38px;height:38px;border-radius:9px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-family:Georgia,"Times New Roman",serif;font-size:21px;line-height:1;flex:none}
+  .brand b{color:var(--header-text);font-size:17px;font-weight:600}
+  .nav{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .nav .pill{background:transparent;border:0;color:var(--nav-off);font-size:16px;font-weight:600;padding:9px 16px;border-radius:999px}
+  .nav .pill.on{background:rgba(255,255,255,.16);color:#fff}
+  .nav .out{background:transparent;border:1px solid rgba(255,255,255,.28);color:#fff;font-size:15px;font-weight:600;padding:9px 16px;border-radius:10px;margin-left:8px}
 
-  /* ---------- faixa da capa ---------- */
-  .band{background:var(--header);color:var(--header-text);padding:72px 0 84px}
-  .bandin{max-width:var(--wrap);margin:0 auto;padding:0 32px}
-  .band .seal{width:52px;height:52px;border-radius:12px;font-size:30px;margin-bottom:28px}
-  .band h1{margin:0;font-size:46px;font-weight:400;letter-spacing:-1.4px;line-height:1.2;color:#fff;max-width:760px}
-  .band p{margin:20px 0 0;font-size:15px;line-height:1.6;color:var(--header-muted);max-width:620px}
-
-  main{max-width:var(--wrap);margin:0 auto;padding:44px 32px 80px}
-  #v-reg{max-width:820px;margin:0 auto}
-
-  /* ---------- blocos base ---------- */
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:26px;margin-bottom:22px}
-  h2{font-size:26px;margin:0 0 6px;color:var(--ink);font-weight:620;letter-spacing:-.5px}
-  .card h2{font-size:19px;letter-spacing:-.3px}
-  h3.sec{font-size:14.5px;margin:24px 0 8px;color:var(--ink);font-weight:620}
-  .sub{font-size:13.5px;color:var(--muted);margin:0 0 20px;max-width:70ch;line-height:1.6}
-  .crit{font-size:14px;color:var(--ink2);line-height:1.65;max-width:70ch}
-  .crit b{color:var(--ink);font-weight:600}
-  .crit ul{margin:8px 0 0;padding-left:20px}.crit li{margin-bottom:6px}
-  .mini{font-size:12px;color:var(--muted)}
-
-  label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 6px}
-  .req::after{content:" *";color:var(--accent)}
-  input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:var(--r-sm);
-    font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);transition:border-color .12s,box-shadow .12s}
-  input::placeholder,textarea::placeholder{color:var(--placeholder)}
-  input:hover,select:hover,textarea:hover{border-color:var(--dashed)}
-  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box-shadow:var(--ring)}
-  textarea{resize:vertical;min-height:76px}
-
-  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  /* ---------- página ---------- */
+  main{max-width:var(--wrap);margin:0 auto;padding:44px 24px 80px;display:flex;flex-direction:column;gap:28px}
+  .h1{font-size:32px;font-weight:620;letter-spacing:-.7px;margin:0;line-height:1.2}
+  .h1.big{font-size:34px;letter-spacing:-.8px}
+  .lead{font-size:16px;color:var(--muted);margin:6px 0 0}
+  .col{display:flex;flex-direction:column;gap:22px}
+  .narrow{max-width:760px;width:100%}
+  .center{align-self:center;width:100%}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px 32px}
+  .card.sm{border-radius:16px;padding:20px 24px}
+  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
   .grid .full{grid-column:1/-1}
-  .g4{grid-template-columns:repeat(4,1fr)}
-  .g4 .c2{grid-column:span 2}
-  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .muted{color:var(--muted)}
+  .small{font-size:15px}
+  .foot{max-width:var(--wrap);margin:0 auto;padding:0 24px 40px;display:flex;gap:18px;flex-wrap:wrap;font-size:15px}
+  .foot button{background:0;border:0;padding:0;color:var(--muted);font-size:15px;text-decoration:underline}
 
-  .btn{background:var(--accent);color:#fff;border:0;padding:12px 24px;border-radius:var(--r-sm);
-    font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .12s}
+  /* ---------- botões ---------- */
+  .btn{font-size:17px;font-weight:600;padding:14px 26px;border-radius:10px;background:var(--accent);color:#fff;border:1px solid var(--accent);line-height:1.2}
   .btn:hover{background:var(--accent-deep)}
-  .btn:disabled{opacity:.5;cursor:default}
-  .btn:focus-visible{outline:0;box-shadow:var(--ring)}
-  .btn.sec{background:var(--surface2);color:var(--ink2);border:1px solid var(--line)}
-  .btn.sec:hover{background:#eef2f8;border-color:var(--dashed)}
-  .btn.sm{padding:8px 15px;font-size:13px}
-  .btn.ghost{background:transparent;color:var(--accent);border:0;text-decoration:underline;padding:2px;cursor:pointer;font-size:13.5px;font-family:inherit}
-  .btn.ghost:hover{color:var(--accent-deep)}
-  .btn.wide{width:100%;padding:12px;text-align:center}
+  .btn.sec{background:#fff;color:var(--ink2);border-color:var(--line)}
+  .btn.sec:hover{border-color:var(--field);color:var(--ink)}
+  .btn.sm{font-size:16px;padding:12px 22px}
+  .btn:disabled{opacity:.6;cursor:default}
+  .linkbtn{background:0;border:0;padding:0;color:var(--accent);font-size:16px;font-weight:600;align-self:flex-start}
+  .acts{display:flex;gap:12px;flex-wrap:wrap}
+  .acts.split{justify-content:space-between;padding-top:20px;border-top:1px solid var(--line2)}
 
-  /* ---------- tabelas ---------- */
-  table{width:100%;border-collapse:collapse;font-size:13.5px}
-  th,td{text-align:left;padding:14px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
-  th{background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;
-    border-bottom:1px solid var(--line);padding:8px 12px}
-  tr:hover td{background:var(--surface2)}
+  /* ---------- formulário ---------- */
+  .fld{display:flex;flex-direction:column;gap:8px}
+  .fld>span,.lbl{font-size:16px;font-weight:600}
+  input,textarea,select{padding:14px 16px;font-size:17px;border:1px solid var(--field);border-radius:10px;color:var(--ink);background:#fff;width:100%}
+  input[type=date]{padding:13px 16px}
+  textarea{resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:0;border-color:var(--accent);box-shadow:var(--ring)}
+  .chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-size:16px;font-weight:600;padding:12px 18px;border-radius:12px;background:#fff;color:var(--ink2);border:1px solid var(--line)}
+  .chip.lg{font-size:17px;padding:14px 22px}
+  .chip[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .chip:focus-visible,.btn:focus-visible,.pill:focus-visible{outline:0;box-shadow:var(--ring)}
+  .bars{display:grid;gap:10px}
+  .bars>div{display:flex;flex-direction:column;gap:8px}
+  .bars i{height:8px;border-radius:999px;background:var(--line)}
+  .bars i.on{background:var(--accent)}
+  .bars b{font-size:15px;font-weight:600;color:var(--muted)}
+  .bars b.on{color:var(--ink)}
+  .drop{position:relative;border:1.5px dashed var(--field);border-radius:14px;padding:20px;display:flex;gap:14px;align-items:center;background:#fff;cursor:pointer}
+  .drop.ok{background:var(--ok-bg)}
+  .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;padding:0}
+  .drop .ic{width:42px;height:42px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+  .drop .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .drop .tx span{font-size:15px;color:var(--muted);overflow-wrap:anywhere}
+  .msg{font-size:16px;font-weight:600;padding:12px 16px;border-radius:10px}
+  .msg.bad{background:var(--bad-bg);color:var(--bad)}
+  .msg.warn{background:var(--warn-bg);color:var(--warn)}
+  .msg.info{background:var(--paper);color:var(--ink2);font-weight:400;display:flex;gap:14px;align-items:center}
 
-  /* ---------- etiquetas e selos ---------- */
-  .tag{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
-  .t-manifestado{background:var(--info-bg);color:var(--info)}
-  .t-em_analise{background:var(--warn-bg);color:var(--warn)}
-  .t-doc_pendente{background:var(--line2);color:var(--muted)}
-  .t-favoravel{background:var(--ok-bg);color:var(--ok)}
-  .t-desfavoravel{background:var(--bad-bg);color:var(--bad)}
-  .t-concluido{background:#dce9e0;color:#2f6440}
-  .pill{font-size:11.5px;background:var(--info-bg);color:var(--info);padding:3px 10px;border-radius:999px;white-space:nowrap;display:inline-block;margin:1px 0;font-weight:600}
-  .selo{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--info);
-    background:var(--info-bg);border-radius:999px;padding:4px 11px}
+  /* ---------- início ---------- */
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+  .tile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:10px;text-align:left;color:var(--ink)}
+  .tile b{font-size:23px;font-weight:620}
+  .tile span{font-size:16px;color:var(--muted)}
+  .tile.main{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tile.main span{color:#c9d6ec}
+  .tile:hover{border-color:var(--field)} .tile.main:hover{background:var(--accent-deep)}
+  .steps4{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
+  .steps4>div{display:flex;flex-direction:column;gap:6px}
+  .num{width:34px;height:34px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .steps4 b{font-size:16px} .steps4 span{font-size:15px;color:var(--muted)}
 
-  .pos{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;
-    background:var(--accent-soft);color:var(--accent-deep);border-radius:999px;font-weight:700;font-size:14px;flex:none}
-  .pos.p1{background:var(--accent);color:#fff}
+  /* ---------- listas ---------- */
+  .list{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .item{display:flex;align-items:center;gap:18px;padding:18px 24px;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+  .item:last-child{border-bottom:0}
+  .item .pos{width:38px;height:38px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;flex:none}
+  .who{display:flex;flex-direction:column;gap:2px;flex:1;min-width:180px}
+  .who b{font-size:18px;font-weight:620}
+  .who span{font-size:15px;color:var(--muted)}
+  .tag{font-size:15px;font-weight:600;padding:6px 14px;border-radius:999px;white-space:nowrap}
+  .pcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .pcard .who b{font-size:19px}
+  .ghead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .ghead b{font-size:22px;font-weight:620}
+  .ghead span{font-size:16px;font-weight:600}
+  .empty{text-align:center;padding:48px;font-size:17px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:16px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filters .chip{border-radius:999px;padding:10px 18px}
+  .topline{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 
-  /* ---------- fila em cartões ---------- */
-  .grupo{margin-top:32px}
-  .grupo:first-child{margin-top:0}
-  .grupo-h{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-  .grupo-h b{font-size:15px;font-weight:620;color:var(--ink);letter-spacing:-.2px}
-  .grupo-h span{font-size:12.5px;color:var(--muted)}
-  .lista{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
-  .lin{display:grid;grid-template-columns:56px 1.6fr 1.2fr 1fr auto;gap:16px;align-items:center;
-    padding:16px 22px;border-bottom:1px solid var(--line2)}
-  .lin:last-child{border-bottom:0}
-  .lin .nm{font-weight:620;color:var(--ink);font-size:14px}
-  .lin .cel{font-size:13px;color:var(--muted)}
-  .lin .dir{display:flex;align-items:center;gap:12px;justify-content:flex-end;flex-wrap:wrap}
-  .periodo-h{display:flex;justify-content:space-between;align-items:baseline;margin:36px 0 14px;flex-wrap:wrap;gap:8px}
-  .periodo-h b{font-size:19px;font-weight:620;letter-spacing:-.3px;color:var(--ink)}
-  .periodo-h span{font-size:12.5px;color:var(--muted)}
-  .fila-h{font-size:11px;font-weight:700;color:var(--muted);margin:22px 0 10px;text-transform:uppercase;letter-spacing:.05em}
-  .empty{text-align:center;color:var(--muted);padding:44px;font-size:14px}
+  /* ---------- detalhe, vagas ---------- */
+  .data{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+  .data>div{display:flex;flex-direction:column;gap:4px}
+  .data em{font-style:normal;font-size:14px;font-weight:600;color:var(--muted)}
+  .data .falta{color:var(--bad);font-weight:600}
+  .ask{display:flex;flex-direction:column;gap:14px;padding-top:20px;border-top:1px solid var(--line2)}
+  .ask>b{font-size:19px;font-weight:620}
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .vcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px}
+  .vcard .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .vcard .top b{font-size:22px}
+  .vbars{display:flex;gap:6px}
+  .vbars i{flex:1;height:10px;border-radius:999px;background:var(--line)}
+  .vbars i.on{background:var(--accent)}
+  details.more{border-top:1px solid var(--line2);padding-top:16px}
+  details.more summary{font-size:16px;font-weight:600;color:var(--accent);cursor:pointer}
+  .ok-ic{width:56px;height:56px;border-radius:999px;background:var(--ok-bg);color:var(--ok);display:flex;align-items:center;justify-content:center}
+  .lock-ic{width:48px;height:48px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
+  .gbtn{display:flex;align-items:center;justify-content:center;gap:12px;font-size:17px;font-weight:600;padding:15px 24px;border-radius:10px;background:#fff;border:1px solid var(--field);color:var(--ink)}
 
-  /* ---------- avisos ---------- */
-  .notice{border-radius:var(--r-sm);padding:13px 16px;font-size:13.5px;margin-bottom:14px;border:1px solid transparent;line-height:1.55}
-  .n-info{background:var(--warn-bg);border-color:#eadfc3;color:var(--warn)}
-  .n-bad{background:var(--bad-bg);border-color:#eccdc5;color:var(--bad)}
-  .n-ok{background:var(--ok-bg);border-color:#cfe2d3;color:var(--ok)}
-  .n-plain{background:var(--surface2);border-color:var(--line);color:var(--ink2)}
-  .faixa{display:inline-flex;align-items:center;gap:10px;background:var(--warn-bg);color:var(--warn);
-    border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:600;margin:0 0 6px}
-  .alertbox{margin:0 0 6px;font-size:12.5px;font-weight:600}
-  .ok-msg{background:var(--ok-bg);border:1px solid #cfe2d3;color:var(--ok);padding:14px 16px;border-radius:var(--r-sm);font-size:14px;margin-bottom:18px;display:none}
+  /* ---------- tabelas (histórico) ---------- */
+  .tbl{width:100%;border-collapse:collapse;font-size:15px}
+  .tbl th{text-align:left;font-size:14px;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .tbl td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+  .scroll{overflow-x:auto}
+  .rule{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line2)}
+  .rule:last-child{border-bottom:0}
+  .rule b{display:block;font-size:17px}
+  .rule p{margin:4px 0 0;font-size:16px;color:var(--ink2)}
 
-  /* ---------- modais ---------- */
-  .modal-bg{position:fixed;inset:0;background:rgba(20,33,58,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto}
-  .modal-bg.on{display:flex}
-  .modal{background:var(--surface);border-radius:var(--r);max-width:640px;width:100%;padding:26px;box-shadow:0 24px 60px -20px rgba(20,33,58,.4)}
-  .modal h3{margin:0 0 14px;font-size:18px;font-weight:620;color:var(--ink)}
-
-  details{margin-top:12px}
-  summary{cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:600}
-  .chk{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-top:9px}
-  .chk input{width:auto;accent-color:var(--accent)}
-
-  .anted{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-block;white-space:nowrap}
-  .a-ok{background:var(--ok-bg);color:var(--ok)}.a-warn{background:var(--warn-bg);color:var(--warn)}.a-bad{background:var(--bad-bg);color:var(--bad)}
-
-  /* trilha de progresso: quatro segmentos */
-  .track{display:flex;gap:6px;margin-top:6px}
-  .seg{width:22px;height:5px;border-radius:999px;background:var(--line);flex:none}
-  .seg.on{background:var(--accent)}
-
-  /* visão geral: pedidos e coluna lateral de ações */
-  .visao{display:grid;grid-template-columns:1.7fr 1fr;gap:22px;align-items:start;margin-top:26px}
-  .ped{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
-  .ped h2{padding:20px 24px 14px;margin:0;font-size:16px;font-weight:620;letter-spacing:-.2px}
-  .ped-h,.ped-l{display:grid;grid-template-columns:1.5fr 1fr 1.1fr 1.2fr;gap:14px}
-  .ped-h{padding:8px 24px;border-bottom:1px solid var(--line2);font-size:11px;font-weight:700;
-    text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-  .ped-l{padding:15px 24px;border-bottom:1px solid var(--line2);align-items:center}
-  .ped-l:last-child{border-bottom:0}
-  .ped-l .nm{font-weight:620;color:var(--ink);font-size:13.5px}
-  .ped-l .cel{font-size:12.5px;color:var(--muted)}
-
-  .rotulo{font-size:12.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:26px}
-
-  /* ---------- painel ---------- */
-  .kpi{display:grid;gap:18px;grid-template-columns:repeat(4,1fr);margin-bottom:24px}
-  .kpi div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--sh)}
-  .kpi b{display:block;font-size:36px;color:var(--accent-deep);line-height:1;font-weight:700;letter-spacing:-1px}
-  .kpi span{font-size:13px;color:var(--muted);display:block;margin-top:9px;line-height:1.4}
-
-  .quem{font-size:11.5px;color:var(--accent);margin-top:4px}
-  .userbar{font-size:12.5px;color:var(--muted);padding:0 0 18px}
-  .userbar b{color:var(--ink2)}
-  .setup-user{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--surface2)}
-
-  .subnav{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0;align-items:center}
-  .subnav button{background:var(--surface);border:1px solid var(--line);color:var(--muted);padding:8px 16px;
-    border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .12s}
-  .subnav button:hover{border-color:var(--dashed);color:var(--ink2)}
-  .subnav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-
-  /* ---------- capa ---------- */
-  .cards{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
-  .cardlink{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;
-    text-align:left;cursor:pointer;font:inherit;color:inherit;display:block;width:100%;box-shadow:var(--sh);transition:transform .15s}
-  .cardlink:hover{transform:translateY(-2px)}
-  .cardlink .ic{width:40px;height:40px;border-radius:10px;background:var(--accent-soft);color:var(--accent);
-    display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-  .cardlink b{display:block;font-size:15px;margin-bottom:4px;font-weight:620;color:var(--ink)}
-  .cardlink span{font-size:13px;color:var(--muted);line-height:1.5}
-
-  .fluxo{display:grid;grid-template-columns:repeat(4,1fr);counter-reset:et}
-  .et{counter-increment:et;position:relative;padding-right:18px}
-  .et .n{width:38px;height:38px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);
-    display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;position:relative;z-index:1}
-  .et .n::before{content:counter(et)}
-  .et::after{content:'';position:absolute;left:42px;top:18px;right:0;height:2px;background:var(--line)}
-  .et:last-child::after{display:none}
-  .et b{display:block;font-size:13.5px;margin-top:14px;font-weight:620;color:var(--ink)}
-  .et span{font-size:12.5px;color:var(--muted);line-height:1.5;display:block;max-width:150px;margin-top:2px}
-
-  .stats{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
-  .stat{border:1px solid var(--line);border-radius:var(--r);padding:26px;background:var(--surface2)}
-  .stat b{display:block;font-size:40px;letter-spacing:-1px;font-weight:700;line-height:1;color:var(--accent-deep)}
-  .stat span{font-size:13.5px;color:var(--muted);line-height:1.4;display:block;margin-top:10px}
-
-  /* ---------- blocos que abrem ---------- */
-  .acc{border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px;background:var(--surface);overflow:hidden;box-shadow:var(--sh)}
-  .acc>button{width:100%;background:transparent;border:0;padding:20px 24px;display:flex;gap:16px;align-items:center;
-    cursor:pointer;font:inherit;text-align:left;color:var(--ink)}
-  .acc>button:hover{background:var(--surface2)}
-  .acc>button .tt{flex:1;font-size:16px;font-weight:620;letter-spacing:-.2px}
-  .acc>button .cv{color:var(--placeholder);display:flex;align-items:center;transition:transform .2s;flex:none}
-  .acc.on>button .cv{transform:rotate(180deg)}
-  .acc .corpo{display:none;padding:0 24px 22px}
-  .acc.on .corpo{display:block}
-
-  .confbox{border:1px solid var(--line);border-radius:var(--r-sm);padding:16px 18px;margin-bottom:12px;display:flex;
-    justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surface2)}
-  .confbox div{flex:1;min-width:230px}
-  .confbox b{font-size:14px;font-weight:600;color:var(--ink)}
-  .confbox p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
-
-  /* ---------- anexos ---------- */
-  .drop{border:1.5px dashed var(--dashed);border-radius:var(--r-sm);padding:18px;display:flex;gap:12px;
-    align-items:center;position:relative;transition:border-color .12s}
-  .drop:hover{border-color:var(--accent)}
-  .drop .ic{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent);
-    display:flex;align-items:center;justify-content:center;flex:none}
-  .drop b{display:block;font-size:13px;font-weight:600;color:var(--ink2)}
-  .drop em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:1px}
-  .drop input[type=file]{position:absolute;inset:0;width:100%;height:100%;padding:0;margin:0;opacity:0;cursor:pointer;border:0}
-
-  /* ---------- acesso restrito ---------- */
-  .gate{max-width:420px;margin:0 auto;padding:36px 0 40px}
-  .gate .ic{width:44px;height:44px;border-radius:10px;background:var(--accent-soft);color:var(--accent);
-    display:flex;align-items:center;justify-content:center;margin-bottom:22px}
-  .gate-foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-
-  .info{display:inline-flex;width:16px;height:16px;border-radius:999px;background:var(--line);color:var(--muted);
-    font-size:10.5px;font-weight:700;align-items:center;justify-content:center;cursor:help;margin-left:5px;
-    position:relative;vertical-align:middle}
-  .info:hover{background:var(--accent);color:#fff}
-  .info:hover::after{content:attr(data-tip);position:absolute;left:22px;top:-8px;width:250px;background:var(--header);
-    color:#fff;font-weight:400;font-size:12px;line-height:1.5;padding:11px 13px;border-radius:10px;z-index:60;
-    box-shadow:0 12px 32px -8px rgba(20,33,58,.4);white-space:normal;text-align:left}
-
-  /* ---------- responsivo ---------- */
-  @media(max-width:1024px){
-    .cards,.stats,.kpi,.fluxo,.g4{grid-template-columns:repeat(2,1fr)}
-    .visao{grid-template-columns:1fr}
-    .et:nth-child(2)::after{display:none}
-    .band h1{font-size:38px}
-  }
-  @media(max-width:720px){
-    .hdrin{padding:0 16px}
-    .bandin{padding:0 16px}
-    .band{padding:44px 0 52px}
-    .band h1{font-size:34px;letter-spacing:-1px}
-    main{padding:28px 16px 60px}
-    .card{padding:20px}
-    .cards,.stats,.kpi,.fluxo,.g4,.g4 .c2{grid-template-columns:1fr;grid-column:auto}
-    .et{padding-right:0}
-    .et::after{display:none}
-    .lin{grid-template-columns:44px 1fr;gap:10px}
-    .lin .dir{justify-content:flex-start}
-    .hide-m{display:none}
-    .hdruser i{display:none}
-    .ped-h{display:none}
-    .ped-l{grid-template-columns:1fr;gap:6px}
+  @media (max-width:600px){
+    main{padding:28px 16px 64px}
+    .hdrin{padding:12px 16px}
+    .card{padding:22px 18px}
+    .item,.pcard{padding:16px}
+    .h1{font-size:28px} .h1.big{font-size:30px}
+    .bars b{font-size:14px}
   }
 </style>
 </head>
 <body>
+
 <header class="hdr">
   <div class="hdrin">
-    <button class="brand" onclick="go('capa')" aria-label="Ir para o início">
-      <span class="seal" aria-hidden="true">A</span>
-      <b>Comissão de Afastamentos</b>
-    </button>
-    <nav>
-      <button id="tab-capa" class="active" onclick="go('capa')">Início</button>
-      <button id="tab-form" onclick="go('form')">Manifestar interesse</button>
-      <button id="tab-fila" onclick="go('fila')">Fila</button>
-      <button id="tab-com" onclick="go('com')">Painel</button>
-      <button id="tab-reg" onclick="go('reg')">Regras</button>
-    </nav>
-    <div id="hdrUser"></div>
+    <button class="brand" onclick="irInicio()" aria-label="Início"><span class="seal">A</span><b>Comissão de Afastamentos</b></button>
+    <div class="nav" id="nav"></div>
   </div>
 </header>
 
-<div class="band" id="capaBand">
-  <div class="bandin">
-    <div class="seal" aria-hidden="true">A</div>
-    <h1 class="serif">Afastamentos docentes, do interesse à portaria</h1>
-    <p>A comissão faz a mediação entre a chefia e o docente, para que o afastamento seja viável para todos: sem sobrecarregar colegas e sem deixar disciplinas descobertas.</p>
-  </div>
-</div>
-
-<main>
-<div id="gate-dep" style="display:none"></div>
-
-<!-- CAPA -->
-<section id="v-capa">
-  <div class="cards">
-    <button class="cardlink" onclick="go('form')">
-      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
-      <b>Manifestar interesse</b><span>Entre na fila cronológica.</span>
-    </button>
-    <button class="cardlink" onclick="go('fila')">
-      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>
-      <b>Fila do departamento</b><span>Veja a ordem por período.</span>
-    </button>
-    <button class="cardlink" onclick="go('com')">
-      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
-      <b>Painel da comissão</b><span>Acompanhe o trâmite.</span>
-    </button>
-    <button class="cardlink" onclick="go('reg')">
-      <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
-      <b>Regras</b><span>Prazos, limites e requisitos.</span>
-    </button>
-  </div>
-
-  <div class="card" style="margin-top:26px;padding:34px 26px">
-    <div class="rotulo">Como funciona</div>
-    <div class="fluxo">
-      <div class="et"><div class="n"></div><b>Manifestação</b><span>Interesse com 12 meses de antecedência.</span></div>
-      <div class="et"><div class="n"></div><b>Documentação</b><span>Plano e carta-convite com 6 meses.</span></div>
-      <div class="et"><div class="n"></div><b>Parecer</b><span>Análise e voto da comissão.</span></div>
-      <div class="et"><div class="n"></div><b>Portaria</b><span>Colegiado, SEI, Congregação e publicação.</span></div>
-    </div>
-  </div>
-
-  <div class="stats" style="margin-top:26px">
-    <div class="stat"><b>1</b><span>ano de antecedência para manifestar interesse</span></div>
-    <div class="stat"><b>6</b><span>meses de antecedência para a documentação</span></div>
-    <div class="stat"><b>2</b><span>docentes afastados por período, no máximo</span></div>
-    <div class="stat"><b>1</b><span>docente afastado por área, por vez</span></div>
-  </div>
-  <p class="mini" style="margin:22px 0 0;max-width:70ch">Minuta de 29 de abril de 2026. A fila é manifestação de intenção para planejamento. Não configura solicitação formal nem gera direito adquirido.</p>
-</section>
-
-<!-- FORMULÁRIO -->
-<section id="v-form" style="display:none">
-  <div class="ok-msg" id="okMsg"></div>
-  <h2>Manifestar interesse</h2>
-  <p class="sub" style="margin-bottom:0">Registre sua intenção de afastamento. A data de envio define sua posição na fila cronológica.</p>
-  <div class="faixa" style="margin-top:20px">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-    Interesse com 12 meses e documentação com 6 meses de antecedência.
-  </div>
-  <div class="card" style="margin-top:26px">
-    <div class="grid g4">
-      <div class="c2"><label class="req">Nome do docente</label><input id="f_nome" placeholder="Seu nome"></div>
-      <div class="c2"><label class="req">E-mail institucional</label><input id="f_email" type="email" placeholder="nome@instituicao.br"></div>
-      <div><label>SIAPE / Matrícula</label><input id="f_siape" placeholder="0000000"></div>
-      <div><label class="req">Área / disciplina específica<i class="info" data-tip="Selecione a área padronizada. A regra que impede dois docentes da mesma área de se afastarem juntos depende desta escolha; texto livre causaria falhas na verificação.">i</i></label><select id="f_area" onchange="onArea()"></select></div>
-      <div id="box_areaOutra" style="display:none"><label>Especifique a área</label><input id="f_areaOutra"></div>
-      <div><label class="req">Classe na carreira<i class="info" data-tip="Terceiro critério de desempate: em caso de mesmo tempo de casa, tem prioridade quem está em nível mais avançado.">i</i></label><select id="f_classe"><option>Auxiliar</option><option>Assistente</option><option selected>Adjunto</option><option>Associado</option><option>Titular</option></select></div>
-      <div><label>Nível</label><select id="f_nivel"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-      <div><label class="req">Ano de ingresso no departamento<i class="info" data-tip="Segundo critério de desempate: tem prioridade quem está há mais tempo no departamento.">i</i></label><input id="f_ingresso" type="number" placeholder="Ex.: 2014"></div>
-      <div><label class="req">Nº de afastamentos já usufruídos no departamento<i class="info" data-tip="Primeiro critério de desempate: a prioridade é de quem não teve nenhum ou teve menos afastamentos.">i</i></label><input id="f_numaf" type="number" min="0" value="0"></div>
-      <div><label class="req">Tipo de afastamento<i class="info" data-tip="Esta comissão trata apenas de pós-doutorado e capacitação. Capacitação tem fila separada e, no recesso, fica fora do limite de 2 por período.">i</i></label><select id="f_tipo" onchange="onTipo()">
-        <option>Pós-doutorado</option><option>Capacitação</option></select></div>
-      <div id="box_recesso" style="display:none"><label>Capacitação no recesso universitário?<i class="info" data-tip="A capacitação realizada no recesso universitário não fica restrita ao limite de 2 docentes por período.">i</i></label><select id="f_recesso" onchange="avisoTipo()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
-      <div class="full" id="avisoTipo"></div>
-      <div><label>Já realizou pós-doutorado antes?</label><select id="f_japd" onchange="onJapd()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
-      <div id="box_japd" style="display:none"><label>Ano(s) do(s) pós-doc anterior(es)</label><input id="f_anopd" placeholder="Ex.: 2018; 2022"></div>
-      <div class="full"><label class="req">Período acadêmico pretendido, do início ao fim<i class="info" data-tip="Um afastamento que atravessa dois períodos ocupa vaga nos dois para efeito do limite de 2 docentes. Máximo de 2 períodos.">i</i></label>
-        <div class="row" style="gap:6px;align-items:center"><select id="f_ano" style="flex:1" onchange="coerencia()"></select><select id="f_sem" style="width:76px" onchange="coerencia()"><option value="1">.1</option><option value="2">.2</option></select><span class="mini">até</span><select id="f_anoF" style="flex:1" onchange="coerencia()"></select><select id="f_semF" style="width:76px" onchange="coerencia()"><option value="1">.1</option><option value="2">.2</option></select></div></div>
-      <div><label class="req">Data de início pretendida</label><input id="f_inicio" type="date" onchange="prazo();coerencia()"></div>
-      <div><label class="req">Duração (meses)</label><input id="f_dur" type="number" min="1" placeholder="Pós-doc: 6 a 12" oninput="coerencia()"></div>
-      <div class="full" id="prazoInfo"></div>
-      <div class="full" id="coerInfo"></div>
-      <div><label>Tipo de licença<i class="info" data-tip="Desde 1/11/24, a Licença para Capacitação tramita pela PR4/CDDP/SAC, e não pela DVDE.">i</i></label><select id="f_lic">
-        <option value="">— selecione —</option><option>Afastamento para pós-doutorado</option><option>Licença para capacitação</option></select></div>
-      <div><label>Orientações em andamento</label><input id="f_orient" placeholder="Ex.: 3 TCC, 1 mestrado"></div>
-      <div class="full" style="border-top:1px solid var(--line2);padding-top:20px">
-        <label>Anexar documentos<i class="info" data-tip="Exigidos pela minuta antes da abertura do processo no SEI. Pode anexar agora ou depois, por e-mail à comissão.">i</i></label>
-        <div class="grid" style="gap:18px">
-          <label class="drop" style="margin:0">
-            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
-            <span><b data-rot="Plano de trabalho">Plano de trabalho</b><em>anexar, até 3 MB</em></span>
-            <input type="file" id="f_arqPlano" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" onchange="conferirArquivo(this)">
-          </label>
-          <label class="drop" style="margin:0">
-            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
-            <span><b data-rot="Carta-convite">Carta-convite</b><em>anexar, até 3 MB</em></span>
-            <input type="file" id="f_arqCarta" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" onchange="conferirArquivo(this)">
-          </label>
-        </div>
-        <p class="mini" style="margin:10px 0 0">Anexar aqui já marca o item como entregue. PDF, Word ou imagem.</p>
-      </div>
-      <div class="full"><label>Disciplinas lecionadas no período</label><input id="f_disc" placeholder="Ex.: ACA360, ACAK01"></div>
-      <div class="full"><label>Sugestão de cobertura / remanejamento<i class="info" data-tip="Indicar substituto, remanejamento com área aderente ou redistribuição é o que permite que dois docentes da mesma área concorram no mesmo período.">i</i></label><select id="f_cob">
-        <option value="adefinir">A definir com a chefia</option><option value="substituto">Substituto já previsto</option><option value="remanejamento">Remanejamento com área aderente</option><option value="redistribuicao">Redistribuição interna entre docentes</option><option value="sem">Sem cobertura prevista</option></select></div>
-      <div class="c2"><label>Instituição / destino</label><input id="f_destino" placeholder="Instituição e local"></div>
-      <div class="full"><label>Justificativa / plano de trabalho (resumo)</label><textarea id="f_just" placeholder="Relevância do afastamento e do plano de trabalho"></textarea></div>
-    </div>
-    <div class="row" style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line2)">
-      <button class="btn" id="btEnviar" onclick="enviar()">Registrar interesse</button>
-      <button class="btn sec" onclick="limpar()">Limpar</button>
-    </div>
-  </div>
-</section>
-
-<!-- FILA PÚBLICA -->
-<section id="v-fila" style="display:none">
-  <h2>Fila de interesse</h2>
-  <p class="sub">Ordem cronológica por data de manifestação, agrupada pelo período de início do afastamento. A posição é indicativa; a comissão aplica os critérios de desempate ao organizar cada período.</p>
-  <div class="row" style="margin-bottom:8px">
-    <input id="fq" placeholder="buscar por nome, área ou período" style="max-width:320px" oninput="renderFila()">
-    <label class="chk" style="margin:0"><input type="checkbox" id="fq_ativos" checked onchange="renderFila()"> <span style="font-weight:600;font-size:12.5px">ocultar concluídos e desfavoráveis</span></label>
-    <button class="btn sec sm" onclick="carregarFila(true)">Atualizar</button>
-  </div>
-  <div id="filaWrap" style="margin-top:24px"><div class="empty">Carregando…</div></div>
-</section>
-
-<!-- COMISSÃO -->
-<section id="v-com" style="display:none">
-  <div id="comGate"></div>
-  <div id="comPanel" style="display:none">
-  <span class="selo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Acesso restrito à comissão</span>
-  <h2 style="margin-top:10px">Painel da comissão</h2>
-  <div id="userBar"></div>
-  <div class="subnav">
-    <button id="sc-visao" class="active" onclick="goCom('visao')">Visão geral</button>
-    <button id="sc-fila" onclick="goCom('fila')">Fila e pareceres</button>
-    <button id="sc-org" onclick="goCom('org')">Organizar período</button>
-    <button id="sc-hist" onclick="goCom('hist')">Histórico</button>
-    <button id="sc-conf" onclick="goCom('conf')">Configurações</button>
-    <button class="btn sec sm" style="margin-left:auto;border-radius:999px" onclick="recarregar()">Atualizar</button>
-  </div>
-
-  <!-- VISÃO GERAL -->
-  <div id="cs-visao">
-    <div id="notifBox"></div>
-    <div id="kpiBox" class="kpi"></div>
-    <div id="tetoBanner"></div>
-    <div class="visao">
-      <div id="pedidosBox"></div>
-      <div class="card" style="margin:0">
-        <h2>Próximas ações</h2>
-        <p class="sub">O que está pendente, pela proximidade do início.</p>
-        <div id="acoesBox"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FILA E PARECERES -->
-  <div id="cs-fila" style="display:none">
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <div><h2>Fila e pareceres</h2><p class="sub" style="margin:0">Dados completos, critérios de desempate, alertas de regra, trâmite e parecer.</p></div>
-        <div class="row">
-          <label style="margin:0;font-weight:600;font-size:12px">Ordenar:</label>
-          <select id="ordCom" style="width:auto" onchange="renderCom()"><option value="crono">Cronológica (fila oficial)</option><option value="desemp">Critérios de desempate</option></select>
-          <button class="btn sec sm" onclick="exportCSV()">Exportar CSV</button>
-        </div>
-      </div>
-      <details>
-        <summary>Critérios de desempate e regras verificadas pelo sistema</summary>
-        <p class="crit">Fila ordenada por <b>data de manifestação</b> (cronológica, soberana). Desempate hierárquico: <b>1)</b> menor número de afastamentos anteriores; <b>2)</b> maior tempo de departamento; <b>3)</b> classe e nível mais avançados.<br>
-        Verificações automáticas: limite de <b>2 docentes afastados por período</b>, contando pós-doutorado, doutorado e capacitação fora do recesso, e contando o docente em <b>todos os períodos que o afastamento atravessa</b>; <b>dois docentes da mesma área</b> não se afastam juntos, salvo substituição dos dois ou remanejamento com aderência; capacitação no recesso e eventos ficam fora do limite; antecedência de 1 ano para a manifestação e de 6 meses para a documentação; duração de 6 a 12 meses no pós-doutorado.</p>
-      </details>
-      <div id="filtros" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:14px 0;padding:14px;background:var(--surface2);border:1px solid var(--line);border-radius:10px">
-        <div><label>Período</label><select id="ft_periodo" style="width:auto" onchange="renderCom()"></select></div>
-        <div><label>Fila</label><select id="ft_fila" style="width:auto" onchange="renderCom()"><option value="">Todas</option><option value="dout_pos">Pós-doutorado</option><option value="capac">Capacitação</option></select></div>
-        <div><label>Status</label><select id="ft_status" style="width:auto" onchange="renderCom()"><option value="">Todos</option><option value="manifestado">Manifestado</option><option value="em_analise">Em análise</option><option value="doc_pendente">Doc. pendente</option><option value="favoravel">Parecer favorável</option><option value="desfavoravel">Parecer desfavorável</option><option value="concluido">Concluído</option></select></div>
-        <div><label>Antecedência</label><select id="ft_antec" style="width:auto" onchange="renderCom()"><option value="">Todas</option><option value="ok">&ge;6 meses</option><option value="fora">&lt;6 meses</option></select></div>
-        <div><label>Trâmite</label><select id="ft_tram" style="width:auto" onchange="renderCom()"><option value="">Todos</option><option value="pend">Com pendência</option><option value="portaria">Sem portaria publicada</option><option value="compl">Trâmite completo</option></select></div>
-        <div><label>Área</label><input id="ft_area" style="width:150px" oninput="renderCom()" placeholder="filtrar área"></div>
-        <div><label>Docente</label><input id="ft_nome" style="width:150px" oninput="renderCom()" placeholder="nome"></div>
-        <div class="chk" style="margin:0"><input type="checkbox" id="ft_doc" onchange="renderCom()"><label style="margin:0">Só doc. completa</label></div>
-        <button class="btn sec sm" onclick="limparFiltros()">Limpar filtros</button>
-      </div>
-      <div id="comWrap"></div>
-    </div>
-  </div>
-
-  <!-- ORGANIZAR PERÍODO -->
-  <div id="cs-org" style="display:none">
-    <div class="card">
-      <h2>Organizar o período</h2>
-      <p class="sub">Sugestão de quem contemplar, com resumo pronto para o parecer.</p>
-      <div class="row">
-        <label style="margin:0;font-weight:600;font-size:12px">Período:</label>
-        <select id="org_periodo" style="width:auto" onchange="renderCom()"></select>
-        <label style="margin:0;font-weight:600;font-size:12px">Ordenação:</label>
-        <select id="org_modo" style="width:auto" onchange="renderCom()"><option value="crono">Cronológica (fila oficial)</option><option value="desemp">Critérios de desempate</option></select>
-      </div>
-    </div>
-    <div id="assistente" class="card"></div>
-  </div>
-
-  <!-- HISTÓRICO -->
-  <div id="cs-hist" style="display:none">
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <div><h2>Histórico de alterações</h2><p class="sub" style="margin:0">Quem fez o quê, quando.</p></div>
-        <div class="row">
-          <input id="hq" placeholder="filtrar por pessoa ou ação" style="width:230px" oninput="renderHist()">
-          <button class="btn sec sm" onclick="exportHist()">Exportar CSV</button>
-        </div>
-      </div>
-      <div id="histWrap" style="margin-top:12px"></div>
-    </div>
-  </div>
-
-  <!-- CONFIGURAÇÕES -->
-  <div id="cs-conf" style="display:none">
-    <div class="card">
-      <h2>Configurações do departamento</h2>
-      <p class="sub">Parâmetros das verificações automáticas.</p>
-      <div class="confbox"><div><b>E-mail da comissão</b><p id="cf_email">—</p></div><button class="btn sec sm" onclick="setEmailComissao()">Alterar</button></div>
-      <div class="confbox"><div><b>Áreas do departamento</b><p id="cf_areas">—</p></div><button class="btn sec sm" onclick="setAreas()">Alterar</button></div>
-      <div class="confbox"><div><b>Quadro efetivo e teto percentual</b><p id="cf_quadro">—</p></div><button class="btn sec sm" onclick="setQuadro()">Alterar</button></div>
-      <div class="confbox" style="border-color:var(--dashed)"><div><b>Acesso do departamento</b><p id="cf_codigo">—</p></div><button class="btn sec sm" onclick="setCodigo()">Definir código</button></div>
-    </div>
-    <div class="card">
-      <h2>Acessos</h2>
-      <p class="sub">Mesmos poderes para todas. Toda ação fica no histórico.</p>
-      <div id="cf_usuarios"></div>
-      <div class="row" style="margin-top:14px">
-        <button class="btn sec sm" onclick="abrirUsuarios()">Gerenciar usuários</button>
-        <button class="btn sec sm" onclick="abrirSenha()">Minha senha</button>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Backup dos dados</h2>
-      <p class="sub">O banco não garante persistência. Baixe um backup com regularidade.</p>
-      <div class="row">
-        <button class="btn sec sm" onclick="backup()">Baixar backup</button>
-        <button class="btn sec sm" onclick="restaurar()">Restaurar backup</button>
-      </div>
-    </div>
-  </div>
-  </div>
-</section>
-
-<!-- REGRAS -->
-<section id="v-reg" style="display:none">
-  <h2>Regras da comissão</h2>
-  <p class="sub">Minuta de 29/04/2026, item por item. Toque em um bloco para ler o texto completo. O selo indica o que o sistema verifica sozinho.</p>
-  <div id="regNav" class="subnav"></div>
-  <div id="regWrap"></div>
-</section>
-</main>
-
-<!-- MODAL DECISÃO -->
-<div class="modal-bg" id="mDec">
-  <div class="modal">
-    <h3 id="decTit">Parecer</h3>
-    <input type="hidden" id="dec_id">
-    <div id="decResumo" class="notice n-plain" style="font-size:12.5px"></div>
-    <label>Status na comissão</label>
-    <select id="dec_status">
-      <option value="manifestado">Manifestado</option><option value="em_analise">Em análise</option>
-      <option value="doc_pendente">Documentação pendente</option>
-      <option value="favoravel">Parecer favorável</option><option value="desfavoravel">Parecer desfavorável</option>
-      <option value="concluido">Afastamento concluído</option>
-    </select>
-
-    <label style="margin-top:14px">Documentação recebida por e-mail<i class="info" data-tip="Itens exigidos pela minuta antes da abertura do processo no SEI.">i</i></label>
-    <div class="row" style="gap:14px">
-      <label class="chk" style="margin:0"><input type="checkbox" id="d_periodo"> período</label>
-      <label class="chk" style="margin:0"><input type="checkbox" id="d_duracao"> duração</label>
-      <label class="chk" style="margin:0"><input type="checkbox" id="d_licenca"> tipo de licença</label>
-      <label class="chk" style="margin:0"><input type="checkbox" id="d_plano"> plano de trabalho</label>
-      <label class="chk" style="margin:0"><input type="checkbox" id="d_carta"> carta-convite</label>
-    </div>
-    <div id="decAnexos" style="margin-top:10px"></div>
-
-    <label style="margin-top:14px">Trâmite<i class="info" data-tip="Sequência prevista: parecer da comissão, aprovação no colegiado, abertura do processo no SEI, Congregação, publicação da portaria e, só então, pedido de substituto.">i</i></label>
-    <div class="grid" style="gap:10px">
-      <div><label class="mini" style="font-weight:400">Aprovação no colegiado</label><input type="date" id="t_colegiado"></div>
-      <div><label class="mini" style="font-weight:400">Processo aberto no SEI</label><input type="date" id="t_sei"></div>
-      <div><label class="mini" style="font-weight:400">Congregação</label><input type="date" id="t_congregacao"></div>
-      <div><label class="mini" style="font-weight:400">Portaria publicada</label><input type="date" id="t_portaria"></div>
-      <div><label class="mini" style="font-weight:400">Substituto solicitado</label><input type="date" id="t_substituto"></div>
-      <div><label class="mini" style="font-weight:400">Via do pedido de substituto</label><select id="t_via"><option value="">— não se aplica —</option><option value="anual">Pedido anual de vagas</option><option value="emergencial">Vaga emergencial</option><option value="sem">Sem pedido de substituto</option></select></div>
-    </div>
-
-    <label class="chk" style="margin-top:12px"><input type="checkbox" id="dec_exc"> <span>Caso excepcional não previsto, avaliado pela comissão</span></label>
-
-    <label style="margin-top:12px">Parecer da comissão</label>
-    <textarea id="dec_parecer"></textarea>
-
-    <div style="border-top:1px solid var(--line);margin:14px 0 10px"></div>
-    <label>Repactuar para outro período</label>
-    <div class="row" style="gap:6px;margin-top:4px">
-      <select id="dec_rep_ano" style="flex:1"></select>
-      <select id="dec_rep_sem" style="width:80px"><option value="1">.1</option><option value="2">.2</option></select>
-      <select id="dec_rep_motivo" style="flex:2"><option value="">— motivo —</option><option value="inst">Impedimento institucional (mantém prioridade)</option><option value="prazo">Perda de prazo / documentação (mantém prioridade)</option><option value="voluntaria">Desistência / adiamento voluntário (vai para o fim)</option></select>
-      <button class="btn sec sm" onclick="repactuar()">Repactuar</button>
-    </div>
-    <div class="row" style="margin-top:18px;justify-content:space-between">
-      <button class="btn ghost" style="color:var(--bad)" onclick="excluir()">Excluir registro</button>
-      <div class="row">
-        <button class="btn sec sm" onclick="closeModal('mDec')">Cancelar</button>
-        <button class="btn sm" id="btSalvarDec" onclick="saveDecisao()">Salvar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL USUÁRIOS -->
-<div class="modal-bg" id="mUsr">
-  <div class="modal">
-    <h3>Usuários da comissão</h3>
-    <div id="usrLista"></div>
-    <div style="border-top:1px solid var(--line);margin:14px 0 10px"></div>
-    <h3 style="font-size:14px">Adicionar usuário</h3>
-    <div class="grid" style="gap:10px">
-      <div><label>Nome</label><input id="u_nome"></div>
-      <div><label>E-mail institucional</label><input id="u_login" type="email"></div>
-      <div><label>Senha inicial (mín. 8)</label><input id="u_senha" type="password"></div>
-    </div>
-    <div class="row" style="margin-top:16px;justify-content:flex-end">
-      <button class="btn sec sm" onclick="closeModal('mUsr')">Fechar</button>
-      <button class="btn sm" onclick="criarUsuario()">Adicionar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL SENHA -->
-<div class="modal-bg" id="mSenha">
-  <div class="modal">
-    <h3>Alterar minha senha</h3>
-    <label>Senha atual</label><input id="s_atual" type="password">
-    <label style="margin-top:10px">Nova senha (mín. 8)</label><input id="s_nova" type="password">
-    <label style="margin-top:10px">Repetir nova senha</label><input id="s_nova2" type="password">
-    <div class="row" style="margin-top:16px;justify-content:flex-end">
-      <button class="btn sec sm" onclick="closeModal('mSenha')">Cancelar</button>
-      <button class="btn sm" onclick="salvarSenha()">Salvar</button>
-    </div>
-  </div>
-</div>
+<main id="tela"></main>
+<div class="foot" id="rodape"></div>
 
 <script>
 /* ================= API ================= */
 const ENDPOINT='/api/app';
+const EMAIL_COPIA='afastamento.adm@facc.ufrj.br';
 let TOKEN=localStorage.getItem('af:token')||'';
 let DEP=localStorage.getItem('af:dep')||'';
 let EU=null; try{EU=JSON.parse(localStorage.getItem('af:usuario')||'null');}catch(e){}
@@ -671,314 +197,296 @@ function cabecalhos(){
 async function api(acao,dados){
   const r=await fetch(ENDPOINT,{method:'POST',headers:cabecalhos(),body:JSON.stringify(Object.assign({acao},dados||{}))});
   let j={};try{j=await r.json();}catch(e){}
-  if(r.status===401&&acao!=='login'){sessaoExpirou();throw new Error(j.erro||'Sessão expirada.');}
+  if(r.status===401&&acao!=='login'&&acao!=='loginGoogle'&&TOKEN){sessaoExpirou();throw new Error(j.erro||'Sessão expirada. Entre novamente.');}
   if(!r.ok)throw new Error(j.erro||('Erro '+r.status));
   return j;
 }
-function sessaoExpirou(){TOKEN='';EU=null;localStorage.removeItem('af:token');localStorage.removeItem('af:usuario');DADOS={registros:[],config:{},auditoria:[],usuarios:[]};renderHeaderUser();if($('v-com').style.display!=='none')openCom();}
+function sessaoExpirou(){
+  TOKEN='';EU=null;localStorage.removeItem('af:token');localStorage.removeItem('af:usuario');
+  DADOS={registros:[],config:{},auditoria:[],usuarios:[]};
+  if(COMISSAO.includes(S.tela))mostrar('entrar');
+}
 
 /* ================= Estado ================= */
-const FILAS={dout_pos:'Pós-doutorado',capac:'Capacitação',evento:'Eventos e missões'};
 const MAX_ARQ=3*1024*1024;
 const CLASSES={'Auxiliar':1,'Assistente':2,'Adjunto':3,'Associado':4,'Titular':5};
-const STAT={manifestado:'Manifestado',em_analise:'Em análise',doc_pendente:'Documentação pendente',favoravel:'Parecer favorável',desfavoravel:'Parecer desfavorável',concluido:'Concluído'};
-const DOCITENS=[['periodo','período'],['duracao','duração'],['licenca','tipo de licença'],['plano','plano de trabalho'],['carta','carta-convite']];
-const TRAMS=[['colegiado','Colegiado'],['sei','SEI'],['congregacao','Congregação'],['portaria','Portaria'],['substituto','Substituto']];
-const COB={adefinir:'A definir com a chefia',substituto:'Substituto previsto',remanejamento:'Remanejamento (área aderente)',redistribuicao:'Redistribuição interna',sem:'Sem cobertura prevista'};
+const AREAS_PADRAO=['Finanças','Marketing','Estratégia','Operações','Contabilidade','Gestão de Pessoas','Outra'];
 const SUGESTOES=[{nome:'Laura Valencia',login:'laura.valencia@facc.ufrj.br'},{nome:'Vanessa Brulon',login:'vanessabrulon@facc.ufrj.br'},{nome:'Camila Avosani',login:'camila.avosani@facc.ufrj.br'}];
-let ESTADO={configurado:false,protegido:false,liberado:false,areas:null,emailComissao:''};
-let PUB=[];                                            // fila pública (dados reduzidos)
-let DADOS={registros:[],config:{},auditoria:[],usuarios:[]};  // painel da comissão (dados completos)
+const COMISSAO=['pedidos','detalhe','vagas','afastados','config'];
+// Situação mostrada na tela, derivada do status gravado no banco.
+const SIT={
+  docs:{t:'Falta documento',bg:'var(--bad-bg)',fg:'var(--bad)',etapa:1,botao:'Ver'},
+  analise:{t:'Esperando parecer',bg:'var(--warn-bg)',fg:'var(--warn)',etapa:2,botao:'Dar parecer'},
+  reuniao:{t:'Vai para a reunião',bg:'var(--info-bg)',fg:'var(--info)',etapa:3,botao:'Registrar reunião'},
+  aprovado:{t:'Aprovado',bg:'var(--ok-bg)',fg:'var(--ok)',etapa:4,botao:'Ver'},
+  afastado:{t:'Afastado',bg:'var(--done-bg)',fg:'var(--done)',etapa:5,botao:'Ver'},
+  negado:{t:'Não aprovado',bg:'var(--off-bg)',fg:'var(--muted)',etapa:0,botao:'Ver'}
+};
+const ETAPAS=['Pedido enviado','Documentos','Parecer da comissão','Reunião de professores','Afastado'];
+const ENCERRADOS=['afastado','negado'];
+
+let ESTADO={configurado:false,protegido:false,liberado:false,areas:null,emailComissao:'',googleClientId:''};
+let PUB=null;                                              // fila pública (dados reduzidos)
+let DADOS={registros:[],config:{},auditoria:[],usuarios:[]}; // área da comissão (dados completos)
+let S={tela:'inicio',passo:1,erro:'',filtro:'and',selId:null,ult:null,senha:false,indisponivel:''};
+let F=null, ARQ={plano:null,carta:null};
 
 const $=id=>document.getElementById(id);
-function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function closeModal(id){$(id).classList.remove('on');}
-function go(t){
-  ['capa','form','fila','com','reg'].forEach(x=>{$('v-'+x).style.display=x===t?'block':'none';$('tab-'+x).classList.toggle('active',x===t);});
-  $('capaBand').style.display=t==='capa'?'block':'none';
-  window.scrollTo(0,0);
-  if((t==='fila'||t==='form')&&precisaCodigo(t)){pedirCodigo(t);return;}
-  $('gate-dep').style.display='none';
-  if(t==='fila')carregarFila();
-  if(t==='com')openCom();
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function erro(e){alert(e&&e.message?e.message:String(e));}
+function topo(){window.scrollTo(0,0);}
+
+/* ================= Regras de negócio ================= */
+function filaDe(tipo){return String(tipo).startsWith('Capacitação')?'capac':'dout_pos';}
+function carreiraVal(r){return (CLASSES[r.classe]||0)*10+(+r.nivel||0);}
+function perIdx(p){const a=String(p).split('.');return (+a[0])*2+((+a[1]||1)-1);}
+function perLabelDe(i){return Math.floor(i/2)+'.'+((i%2)+1);}
+function perDeData(d){if(!d)return null;const dt=new Date(d+'T00:00');return dt.getFullYear()+'.'+(dt.getMonth()+1<=7?'1':'2');}
+function periodoAtual(){return perDeData(new Date().toISOString().slice(0,10));}
+function proximos(n,desde){const a=perIdx(desde);return Array.from({length:n},(_,i)=>perLabelDe(a+i));}
+function perTexto(r){return (r.periodoFim&&r.periodoFim!==r.periodo)?(r.periodo+' a '+r.periodoFim):r.periodo;}
+function periodosDe(r){const a=perIdx(r.periodo),b=perIdx(r.periodoFim||r.periodo);const out=[];for(let i=a;i<=Math.max(a,b);i++)out.push(perLabelDe(i));return out;}
+function ocupa(r,p){return periodosDe(r).includes(p);}
+// Capacitação no recesso universitário fica fora do limite de 2 por período.
+function contaLimite(r){return !(r.fila==='capac'&&r.recesso==='sim');}
+function mesesAte(d){if(!d)return null;const h=new Date(),i=new Date(d+'T00:00');return (i.getFullYear()-h.getFullYear())*12+(i.getMonth()-h.getMonth());}
+function tetoConfig(){const c=DADOS.config||{};const q=+c.quadro||30,p=+c.pct||0;return{quadro:q,pct:p,teto:p>0?Math.floor(q*p/100):Infinity};}
+function limite(){return Math.min(2,tetoConfig().teto);}
+function temDocs(r){if(r.docs)return !!(r.docs.plano&&r.docs.carta);return !!r.docOk;}
+function situacao(r){
+  switch(r.status){
+    case 'concluido':return 'afastado';
+    case 'desfavoravel':case 'negado_reuniao':return 'negado';
+    case 'aprovado_reuniao':return 'aprovado';
+    case 'favoravel':return 'reuniao';
+    case 'em_analise':return 'analise';
+    case 'doc_pendente':return 'docs';
+    default:return temDocs(r)?'analise':'docs';
+  }
 }
+function tag(r){const s=SIT[situacao(r)];return `<span class="tag" style="background:${s.bg};color:${s.fg}">${s.t}</span>`;}
+function ordemFila(a,b){return String(a.tsFila||a.ts).localeCompare(String(b.tsFila||b.ts));}
+function ativos(regs){return regs.filter(r=>situacao(r)!=='negado');}
+function posicao(regs,r){return ativos(regs).filter(x=>x.periodo===r.periodo).sort(ordemFila).findIndex(x=>x.id===r.id)+1;}
+function vagasDe(regs,p){
+  const lim=limite(),ocup=ativos(regs).filter(r=>contaLimite(r)&&ocupa(r,p)),livres=Math.max(0,lim-ocup.length);
+  return {ocup,lim,livres,txt:livres===0?'Sem vagas':(livres===1?'1 vaga':livres+' vagas'),cor:livres===0?'var(--warn)':'var(--ok)'};
+}
+function areasAtuais(){
+  const a=(DADOS.config&&DADOS.config.areas)||ESTADO.areas;
+  const l=(a&&a.length)?a.slice():AREAS_PADRAO.slice();
+  if(!l.includes('Outra'))l.push('Outra');
+  return l;
+}
+
+/* ================= Navegação ================= */
+function logado(){return !!(TOKEN&&EU);}
+function mostrar(tela,extra){
+  Object.assign(S,{tela,erro:''},extra||{});
+  render();topo();
+}
+function irInicio(){mostrar(logado()?'pedidos':'inicio');}
+function irComissao(){
+  if(logado()){mostrar('pedidos');if(!DADOS.registros.length)recarregar();}
+  else mostrar('entrar');
+}
+function render(){
+  renderNav();
+  const v={inicio:vInicio,form:vForm,enviado:vEnviado,fila:vFila,codigo:vCodigo,entrar:vEntrar,setup:vSetup,
+    pedidos:vPedidos,detalhe:vDetalhe,vagas:vVagas,afastados:vAfastados,config:vConfig,regras:vRegras}[S.tela]||vInicio;
+  $('tela').innerHTML=(S.indisponivel?`<div class="msg bad">Sistema indisponível no momento. ${esc(S.indisponivel)}</div>`:'')+v();
+  depoisRender();
+}
+function renderNav(){
+  const com=logado()&&COMISSAO.includes(S.tela);
+  const pill=(t,tela,alt)=>`<button class="pill${S.tela===tela||S.tela===alt?' on':''}" onclick="${tela==='fila'?'irFila()':(tela==='inicio'?'irInicio()':`mostrar('${tela}')`)}">${t}</button>`;
+  $('nav').innerHTML=com
+    ? pill('Pedidos','pedidos','detalhe')+pill('Vagas','vagas')+pill('Afastados','afastados')+`<button class="out" onclick="sair()">Sair</button>`
+    : pill('Início','inicio',S.tela==='codigo'&&S.depois==='form'?'codigo':'form')+pill('Fila','fila',S.tela==='codigo'&&S.depois==='form'?'':'codigo')+`<button class="out" onclick="irComissao()">Sou da comissão</button>`;
+  $('rodape').innerHTML=com
+    ? `<button onclick="mostrar('config')">Configurações</button><span class="muted">Entrou como ${esc(EU.nome)}</span>`
+    : `<button onclick="mostrar('regras')">Regras da comissão</button>`;
+}
+let depoisRender=()=>{};
+
+/* ================= Início ================= */
+function vInicio(){
+  depoisRender=()=>{};
+  return `<div class="col" style="gap:28px">
+    <h1 class="h1 big">O que você quer fazer?</h1>
+    <div class="tiles">
+      <button class="tile main" onclick="irForm()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        <b>Pedir afastamento</b><span>Leva uns 5 minutos. Não precisa de cadastro.</span>
+      </button>
+      <button class="tile" onclick="irFila()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        <b>Ver a fila</b><span>Quem vai se afastar e quando. Seu pedido aparece aqui.</span>
+      </button>
+    </div>
+    <div class="card col" style="gap:18px">
+      <b style="font-size:20px;font-weight:620">Como funciona</b>
+      <div class="steps4">
+        <div><span class="num">1</span><b>Você pede</b><span>Com 1 ano de antecedência</span></div>
+        <div><span class="num">2</span><b>Envia os documentos</b><span>Plano e carta-convite, até 6 meses antes</span></div>
+        <div><span class="num">3</span><b>A comissão dá o parecer</b><span>Máximo de 2 docentes por período</span></div>
+        <div><span class="num">4</span><b>Reunião de professores</b><span>Aprovação final do departamento</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ================= Código do departamento ================= */
 // A fila sempre exige liberação. O formulário só exige quando há código definido,
 // porque o docente informa apenas os próprios dados e não vê os de ninguém.
-function precisaCodigo(t){
+function precisaCodigo(destino){
   if(TOKEN||ESTADO.liberado)return false;
-  return t==='fila'?true:!!ESTADO.protegido;
+  return destino==='fila'?true:!!ESTADO.protegido;
 }
-function pedirCodigo(destino){
-  $('v-'+destino).style.display='none';
-  const g=$('gate-dep');g.style.display='block';
-  g.innerHTML=ESTADO.protegido
-    ? `<div class="card" style="max-width:460px;margin:0 auto"><h2>Acesso restrito ao departamento</h2>
-       <p class="sub">Esta área é reservada aos docentes do departamento. Informe o código de acesso fornecido pela comissão. O acesso fica válido por 30 dias neste navegador.</p>
-       <label>Código de acesso</label><input id="dep_cod" type="password" onkeydown="if(event.key==='Enter')entrarDep('${destino}')">
-       <div class="row" style="margin-top:14px"><button class="btn" id="btDep" onclick="entrarDep('${destino}')">Entrar</button></div>
-       <div id="dep_err" style="color:var(--bad);font-size:13px;margin-top:8px"></div></div>`
-    : `<div class="card" style="max-width:560px;margin:0 auto"><h2>Acesso ainda não liberado</h2>
-       <p class="sub">A comissão ainda não definiu o código de acesso do departamento. Enquanto isso, a fila fica fechada para proteger os dados dos docentes.</p>
-       <p class="crit">Integrantes da comissão: entrem no <b>Painel da comissão</b>, seção <b>Configurações</b>, e definam o código em <b>Acesso do departamento</b>.</p></div>`;
+function vCodigo(){
+  depoisRender=()=>{const c=$('dep_cod');if(c)c.focus();};
+  if(!ESTADO.protegido)return `<div class="card col center" style="max-width:560px;gap:16px">
+      <div class="lock-ic">${ICONE.cadeado}</div>
+      <h1 class="h1" style="font-size:28px">A fila ainda está fechada</h1>
+      <p style="margin:0;color:var(--ink2)">A comissão ainda não definiu o código do departamento. Enquanto isso, a fila fica fechada para proteger os dados dos docentes.</p>
+      <div class="acts"><button class="btn sec" onclick="irInicio()">Voltar ao início</button></div></div>`;
+  return `<div class="card col center" style="max-width:480px;gap:18px">
+    <div class="lock-ic">${ICONE.cadeado}</div>
+    <h1 class="h1" style="font-size:28px">Código do departamento</h1>
+    <p style="margin:0;color:var(--ink2)">Digite o código que a comissão passou para os docentes. Ele vale por 30 dias neste aparelho.</p>
+    <input id="dep_cod" type="password" autocomplete="off" onkeydown="if(event.key==='Enter')entrarDep()">
+    ${S.erro?`<div class="msg bad">${esc(S.erro)}</div>`:''}
+    <div class="acts split" style="border:0;padding:0"><button class="btn sec" onclick="irInicio()">Voltar</button><button class="btn" id="btDep" onclick="entrarDep()">Entrar</button></div>
+  </div>`;
 }
-async function entrarDep(destino){
+async function entrarDep(){
   const bt=$('btDep');bt.disabled=true;bt.textContent='Entrando…';
   try{
     const j=await api('acessoDepartamento',{codigo:$('dep_cod').value});
     DEP=j.acesso;localStorage.setItem('af:dep',DEP);ESTADO.liberado=true;
-    $('gate-dep').style.display='none';go(destino);
-  }catch(e){$('dep_err').textContent=e.message;}finally{bt.disabled=false;bt.textContent='Entrar';}
+    S.depois==='form'?irForm():irFila();
+  }catch(e){S.erro=e.message;render();}
 }
-function goCom(s){['visao','fila','org','hist','conf'].forEach(x=>{$('cs-'+x).style.display=x===s?'block':'none';$('sc-'+x).classList.toggle('active',x===s);});window.scrollTo(0,0);}
-/* ---- Regras: conteúdo da minuta de 29/04/2026, em blocos que abrem ao clicar ---- */
-const SELOS={
-  auto:['Verificado pelo sistema','var(--ok-bg)','var(--ok)'],
-  acomp:['Acompanhado no painel','var(--info-bg)','var(--info)'],
-  fora:['Fora do sistema','var(--line2)','var(--muted)'],
-  interno:['Procedimento interno','var(--warn-bg)','var(--warn)']
-};
-const CHEVRON='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
-const REGRAS=[
- {id:'contexto',nome:'Contexto',titulo:'Por que a comissão existe',
-  itens:[
-   ['O afastamento afeta muita gente ao mesmo tempo',
-    'O principal motivo é que a questão do afastamento envolve, afeta e pode prejudicar, direta ou indiretamente, interesses de públicos diferentes: o docente que se afasta, os docentes que ficam, a chefia de departamento, a coordenação do curso e os alunos.','acomp'],
-   ['Substituição é possibilidade, não garantia',
-    'Pelo fato de o afastamento ser um direito, a própria universidade prevê a possibilidade de que esse docente seja substituído. Contudo, essa é apenas uma possibilidade e não uma garantia, pois consegui-la depende de vários fatores, alguns fora do controle de professores, chefia ou coordenação. As sugestões de regras foram criadas com o objetivo de que o departamento esteja mais perto de conseguir um substituto dentro do tempo necessário, ou de reduzir danos caso não seja possível.','acomp'],
-   ['A atribuição da comissão',
-    'Apoiar a pensar, buscar e negociar possibilidades e alternativas para cobrir o docente que se afasta, fazendo com que esse afastamento se apresente como viável para todos os envolvidos: sem sobrecarregar os colegas, garantindo a oferta de disciplinas para o curso e sem deixar alunos sem disciplina. A comissão e a chefia devem conversar sobre as possibilidades de cobrir o colega, considerando os docentes disponíveis e as possibilidades de remanejamento de professores.','acomp'],
-   ['Como os substitutos são solicitados',
-    'A chefia solicita substitutos de duas maneiras. A primeira é no pedido anual de vagas, cujo período de trâmite é responsabilidade de instâncias superiores, sem influência do departamento. A segunda é o pedido de vagas emergenciais, que pode ocorrer a qualquer momento. Para ambos é preciso justificar o pedido com a portaria do afastamento já publicada, e essa portaria precisa passar antes pela Congregação.','fora'],
-   ['Tempo é a palavra-chave',
-    'A antecedência é importante porque, no caso de não ser possível incluir o afastamento no pedido anual de vagas, ele será feito via pedido de vaga emergencial, que também depende da publicação da portaria. É necessário tempo para planejar a contratação, caso já existam nomes de reserva em processos seletivos anteriores, ou tempo para providenciar novo processo seletivo, o que depende de decisão de instâncias superiores.','acomp']
-  ]},
- {id:'gerais',nome:'Regras gerais',titulo:'Regras gerais',
-  itens:[
-   ['Mediação entre chefia e docente',
-    'O papel principal da comissão é atuar na mediação entre a chefia de departamento e o docente, para que as demandas do curso em relação ao quantitativo de docentes em suas áreas e disciplinas específicas sejam devidamente atendidas.','acomp'],
-   ['No máximo 2 professores afastados por período',
-    'Para o bom funcionamento do curso, não se afastarão mais de 2 professores por período.','auto'],
-   ['Dois da mesma área não se afastam juntos',
-    'Dois professores da mesma área não podem se afastar simultaneamente, a não ser que haja possibilidade de substituição dos dois, ou de remanejamento de professores com aderência às áreas de substituição.','auto'],
-   ['Todo afastamento passa primeiro pela comissão',
-    'Todos os afastamentos devem passar primeiro pela comissão, para que esta confira se os pedidos seguem as regras do departamento e são feitos com a necessária antecedência.','acomp'],
-   ['Documentação por e-mail antes do SEI',
-    'Antes de abrir o processo no SEI, o docente deve enviar por e-mail para a comissão a documentação com informações sobre o afastamento: período, duração, tipo de licença, plano de trabalho e carta-convite.','auto'],
-   ['Depois do parecer, vai ao colegiado',
-    'Após o parecer da comissão, o afastamento será submetido à aprovação do colegiado. Sendo aprovado, o docente deve se comprometer a providenciar o mais rápido possível a abertura do processo no SEI.','acomp'],
-   ['A chefia não aprova o que não passou pela comissão',
-    'A chefia de departamento não poderá aprovar processos de pedido de afastamento que não tenham passado pela comissão, e o afastamento só poderá ser submetido à Congregação após a aprovação no colegiado.','fora'],
-   ['Manifestação com 1 ano de antecedência',
-    'A manifestação de interesse de pedido de afastamento ao departamento deve ser feita com 1 ano de antecedência. A fila é uma manifestação de interesse, com a ordenação cronológica dos interessados.','auto'],
-   ['Solicitação válida com 6 meses de antecedência',
-    'A solicitação de afastamento só terá validade na submissão do e-mail citado acima à comissão, com pelo menos 6 meses de antecedência.','auto'],
-   ['Fora das regras, a chefia não assina',
-    'Os casos que não respeitarem as regras não serão assinados pela chefia de departamento.','fora']
-  ]},
- {id:'fila',nome:'Fila',titulo:'Regras de fila',
-  itens:[
-   ['A fila é pública e soberana',
-    'Haverá uma fila de docentes interessados em afastamento, pública para o departamento, e esta fila é soberana.','auto'],
-   ['Intenção, não direito adquirido',
-    'A fila constitui manifestação formal de intenção de afastamento, com finalidade exclusiva de planejamento acadêmico e administrativo, não configurando solicitação formal nem gerando direito adquirido.','auto'],
-   ['Primeiro desempate: menos afastamentos',
-    'A prioridade é para quem não teve nenhum afastamento ou para quem teve menos afastamentos.','auto'],
-   ['Segundo desempate: mais tempo de casa',
-    'Tem prioridade quem está há mais tempo no departamento.','auto'],
-   ['Terceiro desempate: nível na carreira',
-    'Em caso de docentes com o mesmo tempo de casa, tem prioridade quem está em nível mais avançado na carreira.','auto']
-  ]},
- {id:'modal',nome:'Modalidades',titulo:'Pós-doutorado e capacitação',
-  itens:[
-   ['Pós-doutorado dura de 6 meses a 1 ano',
-    'O afastamento para pós-doutorado pode ter duração de 6 meses a 1 ano, considerando todas as regras pertinentes. Entra no limite de 2 docentes por período.','auto'],
-   ['Capacitação tem fila separada',
-    'A fila para capacitação é separada da fila de pós-doutorado, e o afastamento para capacitação não fica restrito a 2 docentes caso seja feito no período de recesso universitário.','auto'],
-   ['Capacitação fora do recesso conta no limite',
-    'Realizada fora do recesso universitário, a capacitação entra na regra geral de no máximo 2 professores afastados por período.','auto']
-  ]},
- {id:'obs',nome:'Observações',titulo:'Observações',
-  itens:[
-   ['Eventos seguem as regras da universidade',
-    'Os pedidos de afastamento para simpósio, seminários e eventos congêneres seguem as regras da universidade e não passam por esta fila.','fora'],
-   ['Casos excepcionais vão à comissão',
-    'Os casos excepcionais não previstos serão avaliados pela comissão, e podem ser marcados como tal no parecer.','acomp'],
-   ['Capacitação tramita pela PR4/CDDP/SAC',
-    'Segundo comunicado da PR4 de 24/10/24, a partir de 1/11/24 os processos referentes à Licença para Capacitação, Incentivo à Qualificação e outros devem ser encaminhados para a PR4/CDDP/SAC, a Seção de Acompanhamento das Carreiras, e não para a DVDE.','fora']
-  ]},
- {id:'interno',nome:'Da comissão',titulo:'Procedimentos internos da comissão',
-  aviso:'As práticas desta seção foram adotadas pela comissão e não constam expressamente da minuta.',
-  itens:[
-   ['Repactuação de período',
-    'Quem não se afasta no período manifestado mas deseja permanecer na fila é realocado conforme o motivo. Por impedimento institucional ou por perda de prazo ou documentação, a data de manifestação é preservada e a prioridade se mantém. Por desistência ou adiamento voluntário, recebe nova data e vai para o fim da fila.','interno'],
-   ['Teto percentual do quadro',
-    'Parâmetro auxiliar de planejamento, desativado por padrão. Quando ativado, vale sempre o menor entre ele e o limite de 2 por período.','interno'],
-   ['Registro de alterações',
-    'Cada integrante entra com o próprio e-mail institucional e senha. Toda entrada no painel ou alteração em qualquer pedido fica registrada com nome, data, hora e o que mudou.','interno'],
-   ['Acesso do departamento',
-    'A fila só abre para quem tem o código de acesso definido pela comissão, para que os dados dos docentes não fiquem expostos na internet.','interno']
-  ]}
-];
-function selo(k){const s=SELOS[k]||SELOS.fora;return`<span class="pill" style="background:${s[1]};color:${s[2]}">${s[0]}</span>`;}
-// Um bloco aberto por vez dentro da seção. Clicar no bloco aberto fecha.
-function abrirAcc(el){
-  const acc=el.parentElement,secao=acc.parentElement,aberto=acc.classList.contains('on');
-  secao.querySelectorAll('.acc.on').forEach(a=>a.classList.remove('on'));
-  if(!aberto)acc.classList.add('on');
-}
-function renderRegras(){
-  $('regNav').innerHTML=REGRAS.map((s,i)=>`<button id="sr-${s.id}" class="${i===0?'active':''}" onclick="goReg('${s.id}')">${esc(s.nome)}</button>`).join('');
-  $('regWrap').innerHTML=REGRAS.map((s,i)=>{
-    let h=`<div id="rs-${s.id}" style="display:${i===0?'block':'none'};margin-top:28px">
-      <h3 class="sec" style="margin:0 0 4px;font-size:19px;letter-spacing:-.3px">${esc(s.titulo)}</h3>
-      <p class="sub" style="margin-bottom:16px">Toque em um bloco para ler o texto do documento.</p>`;
-    if(s.aviso)h+=`<div class="notice n-info">${esc(s.aviso)}</div>`;
-    s.itens.forEach(([tit,txt,k],j)=>{
-      h+=`<div class="acc${i===0&&j===0?' on':''}"><button onclick="abrirAcc(this)">${selo(k)}<span class="tt">${esc(tit)}</span><span class="cv">${CHEVRON}</span></button>
-        <div class="corpo"><p class="crit" style="margin:0">${esc(txt)}</p></div></div>`;
-    });
-    return h+'</div>';
-  }).join('');
-}
-function goReg(s){REGRAS.forEach(x=>{const d=$('rs-'+x.id);if(d)d.style.display=x.id===s?'block':'none';const b=$('sr-'+x.id);if(b)b.classList.toggle('active',x.id===s);});}
-function erro(e){alert(e&&e.message?e.message:String(e));}
 
-/* ================= Domínio ================= */
-function filaDe(tipo){if(String(tipo).startsWith('Capacitação'))return'capac';if(String(tipo).startsWith('Evento'))return'evento';return'dout_pos';}
-function carreiraVal(r){return (CLASSES[r.classe]||0)*10+(+r.nivel||0);}
-function perIdx(p){const a=String(p).split('.');return (+a[0])*2+((+a[1]||1)-1);}
-function perLabelDe(i){return Math.floor(i/2)+'.'+((i%2)+1);}
-function perLabel(r){return (r.periodoFim&&r.periodoFim!==r.periodo)?(r.periodo+' até '+r.periodoFim):r.periodo;}
-function periodosDe(r){const a=perIdx(r.periodo),b=perIdx(r.periodoFim||r.periodo);const out=[];for(let i=a;i<=Math.max(a,b);i++)out.push(perLabelDe(i));return out;}
-function ocupa(r,p){return periodosDe(r).includes(p);}
-function contaLimite(r){if(r.fila==='evento')return false;if(r.fila==='capac'&&r.recesso==='sim')return false;return true;}
-function docsFaltando(r){if(!r.docs)return r.docOk?[]:['documentação'];return DOCITENS.filter(([k])=>!r.docs[k]).map(([,n])=>n);}
-function docCompleta(r){return r.docs?DOCITENS.every(([k])=>r.docs[k]):!!r.docOk;}
-function mesesAte(d){if(!d)return null;const h=new Date(),i=new Date(d+'T00:00');return (i.getFullYear()-h.getFullYear())*12+(i.getMonth()-h.getMonth());}
-function proximaAcao(r){
-  if(r.status==='desfavoravel'||r.status==='concluido')return null;
-  if(!docCompleta(r))return{k:'doc',t:'documentação pendente: '+docsFaltando(r).join(', '),quem:'docente'};
-  if(r.status!=='favoravel')return{k:'parecer',t:'aguardando parecer da comissão',quem:'comissão'};
-  const tr=r.tram||{};
-  if(!tr.colegiado)return{k:'colegiado',t:'levar à aprovação do colegiado',quem:'comissão/chefia'};
-  if(!tr.sei)return{k:'sei',t:'docente deve abrir o processo no SEI',quem:'docente'};
-  if(!tr.congregacao)return{k:'congregacao',t:'submeter à Congregação',quem:'chefia'};
-  if(!tr.portaria)return{k:'portaria',t:'aguardando publicação da portaria',quem:'instâncias superiores'};
-  if(!tr.substituto&&tr.via!=='sem')return{k:'substituto',t:'solicitar substituto (vaga anual ou emergencial)',quem:'chefia'};
-  return null;
+/* ================= Pedir afastamento ================= */
+function novoForm(){
+  const ini=perLabelDe(perIdx(periodoAtual())+1);
+  return {nome:'',email:'',area:'',areaOutra:'',classe:'Adjunto',ingresso:'',numaf:'0',tipo:'Pós-doutorado',recesso:'nao',ini,fim:ini,inicio:'',dur:'',destino:'',just:''};
 }
-/* Etapa do trâmite, de 0 a 7, conforme o modelo do handoff. A etapa é deduzida
-   das datas do trâmite, do status e da documentação entregue. */
-const ETAPAS=['Interesse manifestado','Documentação enviada','Em análise','Parecer emitido',
-  'Aprovado no colegiado','Processo no SEI','Congregação','Portaria publicada'];
-function etapaIdx(r){
-  const tr=r.tram||{};
-  if(tr.portaria)return 7;
-  if(tr.congregacao)return 6;
-  if(tr.sei)return 5;
-  if(tr.colegiado)return 4;
-  if(r.status==='favoravel'||r.status==='desfavoravel'||r.status==='concluido')return 3;
-  if(r.status==='em_analise')return 2;
-  if(docCompleta(r))return 1;
-  return 0;
+function irForm(){
+  if(precisaCodigo('form')){mostrar('codigo',{depois:'form'});return;}
+  if(!F){F=novoForm();ARQ={plano:null,carta:null};}
+  mostrar('form',{passo:1});
 }
-// Segmentos preenchidos: etapa 0 preenche 1; etapa 1 preenche 2; etapas 2 e 3 preenchem 3; 4 ou mais preenchem 4.
-function preenchidos(i){return i>=4?4:(i>=2?3:(i>=1?2:1));}
-function trilha(r){
-  const i=etapaIdx(r),n=preenchidos(i),tr=r.tram||{};
-  const detalhe=TRAMS.filter(([k])=>tr[k]).map(([k,n2])=>n2+' '+tr[k]).join(' · ');
-  let h=`<div class="track" title="${esc(ETAPAS[i]+(detalhe?'. '+detalhe:''))}">`;
-  for(let s=0;s<4;s++)h+=`<span class="seg${s<n?' on':''}"></span>`;
-  return h+'</div>';
+function setF(k,v){F[k]=v;if(S.erro){S.erro='';const e=$('formErro');if(e)e.remove();}}
+function escolher(k,v){
+  F[k]=v;S.erro='';
+  if(k==='ini'&&perIdx(F.fim)<perIdx(v))F.fim=v;
+  render();
 }
-function ordenar(arr,modo){const a=[...arr];
-  if(modo==='desemp')a.sort((x,y)=>{const af=(+x.numaf||0)-(+y.numaf||0);if(af)return af;const ig=(+x.ingresso||9999)-(+y.ingresso||9999);if(ig)return ig;return carreiraVal(y)-carreiraVal(x);});
-  else a.sort((x,y)=>String(x.tsFila||x.ts).localeCompare(String(y.tsFila||y.ts)));
-  return a;}
-function antedTag(r){const m=mesesAte(r.inicio);if(m==null)return'';let c='a-ok';if(m<6)c='a-bad';else if(m<12)c='a-warn';return'<span class="anted '+c+'">'+m+' m</span>';}
-function repTag(r){if(!r.repact||!r.repact.length)return'';const u=r.repact[r.repact.length-1];const m={inst:'institucional',prazo:'prazo',voluntaria:'voluntária'}[u.motivo]||'';return`<div class="mini" style="color:var(--info)">repactuado de ${esc(u.de)} (${m})${u.motivo!=='voluntaria'?', prioridade mantida':', fim da fila'}</div>`;}
-function quandoBR(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
-
-/* ================= Formulário ================= */
-function defAreas(){return['Operações e Logística','Finanças','Marketing','Gestão de Pessoas','Estratégia e Organizações','Métodos Quantitativos','Sistemas de Informação','Contabilidade','Economia','Administração Pública','Outra'];}
-function areasAtuais(){const a=(DADOS.config&&DADOS.config.areas)||ESTADO.areas;return (a&&a.length)?a:defAreas();}
-function buildAreaOpts(){const sel=$('f_area'),cur=sel.value;sel.innerHTML='<option value="">— selecione —</option>'+areasAtuais().map(a=>`<option ${a===cur?'selected':''}>${esc(a)}</option>`).join('');}
-function buildAnos(){const y=new Date().getFullYear();let o='';for(let i=0;i<6;i++)o+=`<option>${y+i}</option>`;['f_ano','f_anoF'].forEach(id=>{if($(id))$(id).innerHTML=o;});}
-function onArea(){$('box_areaOutra').style.display=$('f_area').value==='Outra'?'block':'none';}
-function onJapd(){$('box_japd').style.display=$('f_japd').value==='sim'?'block':'none';}
-function onTipo(){$('box_recesso').style.display=$('f_tipo').value.startsWith('Capacitação')?'block':'none';avisoTipo();prazo();coerencia();}
-function avisoTipo(){
-  const t=$('f_tipo').value;let m='';
-  if(t.startsWith('Capacitação'))m=$('f_recesso').value==='sim'?'Capacitação no recesso universitário: fila separada e fora do limite de 2 docentes por período.':'Capacitação fora do recesso: fila separada, mas conta no limite de 2 docentes por período.';
-  else m='O afastamento para pós-doutorado tem duração de 6 meses a 1 ano e entra no limite de 2 docentes por período.';
-  $('avisoTipo').innerHTML='<div class="notice n-plain" style="margin:0">'+m+'</div>';
+function chips(k,vals,lg){
+  return `<div class="chips" role="group">${vals.map(v=>`<button type="button" class="chip${lg?' lg':''}" aria-pressed="${F[k]===v}" data-v="${esc(v)}" onclick="escolher('${k}',this.dataset.v)">${esc(v)}</button>`).join('')}</div>`;
 }
-function rotuloAnexo(inp){
-  const cx=inp.closest('.drop');if(!cx)return;
-  const b=cx.querySelector('b'),em=cx.querySelector('em'),f=inp.files&&inp.files[0];
-  b.textContent=f?f.name:b.dataset.rot;
-  em.textContent=f?((f.size/1024).toFixed(0)+' KB, clique para trocar'):'anexar, até 3 MB';
-  cx.style.borderStyle=f?'solid':'dashed';
-  cx.style.borderColor=f?'var(--accent)':'var(--dashed)';
+function campo(k,rot,attrs){
+  return `<label class="fld"><span>${rot}</span><input value="${esc(F[k])}" oninput="setF('${k}',this.value)" ${attrs||''}></label>`;
 }
-function conferirArquivo(inp){
+function vForm(){
+  depoisRender=()=>{};
+  const per=proximos(4,perLabelDe(perIdx(periodoAtual())+1));
+  const p=S.passo;
+  let corpo='';
+  if(p===1)corpo=`<div class="grid">
+      ${campo('nome','Seu nome','autocomplete="name"')}
+      ${campo('email','E-mail da UFRJ','type="email" autocomplete="email" placeholder="nome@facc.ufrj.br"')}
+      <div class="fld full"><span class="lbl">Sua área</span>${chips('area',areasAtuais())}
+        ${F.area==='Outra'?`<input value="${esc(F.areaOutra)}" oninput="setF('areaOutra',this.value)" placeholder="Qual área?" style="margin-top:4px">`:''}</div>
+      <div class="fld full"><span class="lbl">Classe</span>${chips('classe',Object.keys(CLASSES))}</div>
+      ${campo('ingresso','Ano em que entrou no departamento','type="number" inputmode="numeric" placeholder="Ex.: 2014"')}
+      ${campo('numaf','Quantos afastamentos já teve aqui','type="number" inputmode="numeric" min="0"')}
+    </div>`;
+  if(p===2)corpo=`<div class="col">
+      <div class="fld"><span class="lbl">Tipo de afastamento</span>${chips('tipo',['Pós-doutorado','Capacitação'],true)}</div>
+      ${F.tipo==='Capacitação'?`<div class="fld"><span class="lbl">Vai ser no recesso universitário?</span>
+        <div class="chips">${[['nao','Não'],['sim','Sim']].map(([v,t])=>`<button type="button" class="chip" aria-pressed="${F.recesso===v}" onclick="escolher('recesso','${v}')">${t}</button>`).join('')}</div>
+        <span class="small muted">No recesso, a capacitação não entra no limite de 2 docentes por período.</span></div>`:''}
+      <div class="grid">
+        <div class="fld full"><span class="lbl">Começa no período</span>${chips('ini',per)}</div>
+        <div class="fld full"><span class="lbl">Termina no período</span>${chips('fim',per)}</div>
+        <label class="fld"><span>Data de início</span><input type="date" value="${esc(F.inicio)}" onchange="setF('inicio',this.value)"></label>
+        ${campo('dur','Duração em meses','type="number" inputmode="numeric" min="1" placeholder="6 a 12"')}
+      </div>
+      ${campo('destino','Instituição onde vai ficar','placeholder="Instituição e cidade"')}
+      <span class="small muted">Um afastamento pode ocupar no máximo dois períodos seguidos.</span>
+    </div>`;
+  if(p===3)corpo=`<div class="col" style="gap:20px">
+      <div class="grid" style="gap:16px">${anexo('plano','Plano de trabalho',ICONE.doc)}${anexo('carta','Carta-convite',ICONE.envelope)}</div>
+      <span class="small muted">Se ainda não tem os documentos, pode enviar o pedido agora e mandar depois por e-mail.</span>
+      <label class="fld"><span>Resumo do plano (opcional)</span><textarea rows="4" oninput="setF('just',this.value)">${esc(F.just)}</textarea></label>
+    </div>`;
+  return `<div class="col narrow" style="gap:24px">
+    <h1 class="h1">Pedir afastamento</h1>
+    <div class="bars" style="grid-template-columns:repeat(3,1fr)">${['Sobre você','O afastamento','Documentos'].map((t,i)=>`<div><i class="${i<p?'on':''}"></i><b class="${i<p?'on':''}">${t}</b></div>`).join('')}</div>
+    <div class="card col" style="gap:22px">
+      ${corpo}
+      ${S.erro?`<div class="msg bad" id="formErro">${esc(S.erro)}</div>`:''}
+      <div class="acts split">
+        <button class="btn sec" onclick="voltarPasso()">Voltar</button>
+        <button class="btn" id="btAvancar" onclick="avancar()">${p===3?'Enviar pedido':'Continuar'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+function anexo(k,rot,ic){
+  const f=ARQ[k];
+  return `<label class="drop${f?' ok':''}"><span class="ic">${ic}</span>
+    <span class="tx"><b>${rot}</b><span>${f?esc(f.name):'Toque para anexar (PDF ou Word)'}</span></span>
+    <input type="file" accept=".pdf,.doc,.docx,.odt,.png,.jpg,.jpeg" onchange="pegarArquivo('${k}',this)" aria-label="${rot}"></label>`;
+}
+function pegarArquivo(k,inp){
   const f=inp.files&&inp.files[0];
-  if(f&&f.size>MAX_ARQ){alert('O arquivo "'+f.name+'" tem '+(f.size/1048576).toFixed(1)+' MB. O limite é 3 MB.');inp.value='';}
-  rotuloAnexo(inp);
+  if(f&&f.size>MAX_ARQ){alert('O arquivo "'+f.name+'" tem '+(f.size/1048576).toFixed(1)+' MB. O limite é 3 MB.');inp.value='';return;}
+  ARQ[k]=f||null;render();
 }
-function lerArquivo(inp){
+function lerArquivo(f){
   return new Promise(res=>{
-    const f=inp.files&&inp.files[0];if(!f){res(null);return;}
+    if(!f){res(null);return;}
     const fr=new FileReader();
     fr.onload=()=>res({nome:f.name,tipo:f.type||'application/octet-stream',dados:String(fr.result).split(',')[1]});
     fr.onerror=()=>res(null);
     fr.readAsDataURL(f);
   });
 }
-function prazo(){const m=mesesAte($('f_inicio').value),b=$('prazoInfo');if(m==null){b.innerHTML='';return;}
-  let c='a-ok',t='dentro do prazo de manifestação (1 ano ou mais).';
-  if(m<6){c='a-bad';t='menos de 6 meses. A solicitação não terá validade; a comissão precisa da documentação com no mínimo 6 meses de antecedência.';}
-  else if(m<12){c='a-warn';t='entre 6 e 12 meses. Válido para a solicitação, mas abaixo do prazo de 1 ano previsto para a manifestação.';}
-  b.innerHTML='<span class="anted '+c+'">Antecedência: '+m+' meses. '+t+'</span>';}
-function perDeData(d){if(!d)return null;const dt=new Date(d+'T00:00');return dt.getFullYear()+'.'+(dt.getMonth()+1<=7?'1':'2');}
-function coerencia(){
-  const b=$('coerInfo');if(!b)return;const msgs=[];
-  const ini=$('f_inicio').value,pi=$('f_ano').value+'.'+$('f_sem').value,pf=$('f_anoF').value+'.'+$('f_semF').value,dur=+$('f_dur').value;
-  const sug=perDeData(ini);
-  if(sug&&sug!==pi)msgs.push('A data de início indica o período <b>'+sug+'</b>, diferente do período inicial informado ('+pi+'). Confirme qual está correto.');
-  const span=perIdx(pf)-perIdx(pi);
-  if(span<0)msgs.push('O período final é anterior ao inicial.');
-  else if(span>1)msgs.push('O afastamento não pode passar de dois períodos.');
-  else if(span===1&&dur&&dur<=6)msgs.push('Duração de '+dur+' meses declarada para dois períodos. Verifique o período final, pois o docente ocupará vaga nos dois.');
-  else if(span===0&&dur&&dur>7)msgs.push('Duração de '+dur+' meses em um único período. Verifique se o afastamento não atravessa o período seguinte.');
-  if($('f_tipo').value==='Pós-doutorado'&&dur&&(dur<6||dur>12))msgs.push('O pós-doutorado deve ter de 6 a 12 meses.');
-  b.innerHTML=msgs.length?'<div class="notice n-info" style="margin:0">'+msgs.join('<br>')+'</div>':'';
+function voltarPasso(){if(S.passo>1)mostrar('form',{passo:S.passo-1});else irInicio();}
+function falhou(msg){S.erro=msg;render();}
+async function avancar(){
+  if(S.passo===1){
+    if(!F.nome.trim())return falhou('Escreva seu nome.');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(F.email.trim()))return falhou('Confira o e-mail.');
+    if(!F.area)return falhou('Escolha sua área.');
+    if(F.area==='Outra'&&!F.areaOutra.trim())return falhou('Escreva qual é a sua área.');
+  }
+  if(S.passo===2){
+    const d=perIdx(F.fim)-perIdx(F.ini);
+    if(d<0)return falhou('O período final não pode vir antes do inicial.');
+    if(d>1)return falhou('O afastamento pode ocupar no máximo dois períodos seguidos.');
+  }
+  if(S.passo<3){mostrar('form',{passo:S.passo+1});return;}
+  await enviar();
 }
 async function enviar(){
-  const req={f_nome:'Nome',f_email:'E-mail',f_area:'Área',f_ingresso:'Ano de ingresso',f_numaf:'Nº de afastamentos',f_inicio:'Data de início',f_dur:'Duração'};
-  for(const k in req){if(!$(k).value.toString().trim()){alert('Preencha: '+req[k]);$(k).focus();return;}}
-  if($('f_area').value==='Outra'&&!$('f_areaOutra').value.trim()){alert('Especifique a área.');$('f_areaOutra').focus();return;}
-  const email=$('f_email').value.trim();
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){alert('E-mail inválido.');$('f_email').focus();return;}
-  const areaVal=$('f_area').value==='Outra'?$('f_areaOutra').value.trim():$('f_area').value;
-  const periodoVal=$('f_ano').value+'.'+$('f_sem').value, periodoFimVal=$('f_anoF').value+'.'+$('f_semF').value;
-  const span=perIdx(periodoFimVal)-perIdx(periodoVal);
-  if(span<0){alert('O período final não pode ser anterior ao inicial.');return;}
-  if(span>1){alert('O afastamento não pode passar de dois períodos (ex.: 2026.2 até 2027.1 é o máximo).');return;}
-  const tipo=$('f_tipo').value,dur=+$('f_dur').value,m=mesesAte($('f_inicio').value);
-  if(tipo==='Pós-doutorado'&&(dur<6||dur>12)&&!confirm('O pós-doutorado deve durar de 6 a 12 meses. Registrar mesmo assim?'))return;
-  if(m!=null&&m<6&&!confirm('Antecedência menor que 6 meses. A solicitação não terá validade sem a documentação no prazo. Registrar a manifestação mesmo assim?'))return;
-  const bt=$('btEnviar');bt.disabled=true;bt.textContent='Enviando…';
-  const arqPlano=await lerArquivo($('f_arqPlano')), arqCarta=await lerArquivo($('f_arqCarta'));
+  const dur=+F.dur,m=mesesAte(F.inicio);
+  if(F.tipo==='Pós-doutorado'&&F.dur&&(dur<6||dur>12)&&!confirm('O pós-doutorado dura de 6 a 12 meses. Você escreveu '+dur+' meses. Enviar assim mesmo?'))return;
+  if(m!=null&&m<6&&!confirm('Faltam menos de 6 meses para o início. A regra pede pelo menos 6 meses. Enviar assim mesmo?'))return;
+  const bt=$('btAvancar');bt.disabled=true;bt.textContent='Enviando…';
+  const arqPlano=await lerArquivo(ARQ.plano), arqCarta=await lerArquivo(ARQ.carta);
   const registro={
-    nome:$('f_nome').value.trim(),email:email,siape:$('f_siape').value.trim(),area:areaVal,
-    classe:$('f_classe').value,nivel:$('f_nivel').value,ingresso:$('f_ingresso').value,numaf:$('f_numaf').value,
-    tipo:tipo,fila:filaDe(tipo),recesso:$('f_recesso').value,periodo:periodoVal,periodoFim:periodoFimVal,
-    inicio:$('f_inicio').value,dur:$('f_dur').value,lic:$('f_lic').value,
+    nome:F.nome.trim(),email:F.email.trim(),area:F.area==='Outra'?F.areaOutra.trim():F.area,
+    classe:F.classe,nivel:'',ingresso:F.ingresso,numaf:F.numaf||'0',
+    tipo:F.tipo,fila:filaDe(F.tipo),recesso:F.tipo==='Capacitação'?F.recesso:'nao',periodo:F.ini,periodoFim:F.fim,
+    inicio:F.inicio,dur:F.dur,lic:F.tipo==='Pós-doutorado'?'Afastamento para pós-doutorado':'Licença para capacitação',
+    destino:F.destino.trim(),just:F.just.trim(),siape:'',orient:'',disc:'',cob:'',jaPosdoc:'',anoPosdoc:'',
     carta:arqCarta?'sim':'nao',plano:arqPlano?'sim':'nao',
-    orient:$('f_orient').value.trim(),disc:$('f_disc').value.trim(),cob:$('f_cob').value,destino:$('f_destino').value.trim(),
-    just:$('f_just').value.trim(),jaPosdoc:$('f_japd').value,anoPosdoc:$('f_anopd').value.trim(),
-    docs:{periodo:true,duracao:true,licenca:!!$('f_lic').value,plano:!!arqPlano,carta:!!arqCarta}
+    docs:{periodo:true,duracao:true,licenca:true,plano:false,carta:false}
   };
   try{
     const res=await api('manifestar',{registro});
@@ -986,444 +494,123 @@ async function enviar(){
     for(const [campo,arq] of [['plano',arqPlano],['carta',arqCarta]]){
       if(!arq)continue;
       bt.textContent='Enviando anexo…';
-      try{await api('anexar',{id:res.id,campo,email:registro.email,arquivo:arq});}
-      catch(e){falhas.push((campo==='plano'?'plano de trabalho':'carta-convite')+': '+e.message);registro.docs[campo]=false;}
+      try{await api('anexar',{id:res.id,campo,email:registro.email,arquivo:arq});registro.docs[campo]=true;}
+      catch(e){falhas.push(campo==='plano'?'plano de trabalho':'carta-convite');registro[campo]='nao';}
     }
-    const falta=docsFaltando(registro);
-    $('okMsg').innerHTML='Manifestação registrada na fila <b>'+FILAS[registro.fila]+'</b>, período '+esc(perLabel(registro))+'. '+
-      (falhas.length?'<br><b style="color:var(--bad)">Falha ao anexar:</b> '+esc(falhas.join(' · '))+'. Envie por e-mail à comissão.<br>':'')+
-      (falta.length?'Ainda falta entregar à comissão: <b>'+esc(falta.join(', '))+'</b>. ':'')+
-      'A solicitação só passa a valer com o envio da documentação à comissão. '+
-      '<a class="btn ghost" onclick=\'mailtoComissao('+JSON.stringify(JSON.stringify(registro))+')\'>Enviar documentação por e-mail à comissão</a>';
-    $('okMsg').style.display='block';limpar();window.scrollTo(0,0);
-    PUB=[];
-  }catch(e){erro(e);}finally{bt.disabled=false;bt.textContent='Registrar interesse';}
+    copiaEmail(registro);
+    const falta=[!registro.docs.plano&&'plano de trabalho',!registro.docs.carta&&'carta-convite'].filter(Boolean);
+    let pos=0;
+    try{if(ESTADO.liberado||TOKEN){PUB=(await api('fila')).registros||[];pos=posicao(PUB,{id:res.id,periodo:registro.periodo});}}catch(e){}
+    F=null;ARQ={plano:null,carta:null};
+    mostrar('enviado',{ult:{periodo:registro.periodo,pos,falta,falhas}});
+  }catch(e){bt.disabled=false;bt.textContent='Enviar pedido';falhou(e.message);}
 }
-function limpar(){['f_nome','f_email','f_siape','f_ingresso','f_inicio','f_dur','f_orient','f_disc','f_destino','f_just','f_anopd','f_areaOutra','f_arqPlano','f_arqCarta'].forEach(i=>{const e=$(i);if(e)e.value='';});$('f_numaf').value='0';$('f_area').selectedIndex=0;$('f_cob').selectedIndex=0;$('f_japd').value='nao';$('f_lic').selectedIndex=0;$('box_japd').style.display='none';$('box_areaOutra').style.display='none';$('prazoInfo').innerHTML='';$('coerInfo').innerHTML='';['f_arqPlano','f_arqCarta'].forEach(i=>rotuloAnexo($(i)));}
-function mailtoComissao(json){
-  const r=typeof json==='string'?JSON.parse(json):json;
-  const to=(DADOS.config&&DADOS.config.emailComissao)||ESTADO.emailComissao||'';
-  if(!to&&!confirm('O e-mail da comissão ainda não foi configurado no painel. Abrir o rascunho sem destinatário?'))return;
-  const corpo=`Documentação para análise da Comissão de Afastamentos\n\n`+
-   `Docente: ${r.nome} (${r.email})  SIAPE: ${r.siape}\nÁrea: ${r.area}  Classe: ${r.classe} ${r.nivel}\n`+
-   `Fila: ${FILAS[r.fila]}\nTipo: ${r.tipo}\nPeríodo: ${perLabel(r)}  Início: ${r.inicio}  Duração: ${r.dur} meses\n`+
-   `Tipo de licença: ${r.lic||'não informado'}\nCarta-convite anexada: ${r.carta}  Plano de trabalho anexado: ${r.plano}\n`+
-   `Ingresso no departamento: ${r.ingresso}  Afastamentos anteriores: ${r.numaf}\n`+
-   `Disciplinas: ${r.disc}\nSugestão de cobertura: ${COB[r.cob]||r.cob||'—'}\nDestino: ${r.destino}\n\n`+
-   `Itens ainda pendentes: ${docsFaltando(r).join(', ')||'nenhum'}\n\nJustificativa / plano de trabalho:\n${r.just}\n\n`+
-   `Anexar: plano de trabalho e carta-convite.`;
-  location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent('[Afastamento] '+r.nome+' — '+perLabel(r))}&body=${encodeURIComponent(corpo)}`;
+// Cópia do pedido para a caixa da comissão (FormSubmit). Falha aqui não bloqueia o registro.
+function copiaEmail(r){
+  const per=perTexto(r);
+  fetch('https://formsubmit.co/ajax/'+EMAIL_COPIA,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({_subject:'Pedido de afastamento: '+r.nome+' ('+r.tipo+', '+per+')',_template:'table',_captcha:'false',_replyto:r.email,
+      Docente:r.nome,'E-mail':r.email,'Área':r.area,Classe:r.classe,'Ingresso no departamento':r.ingresso,'Afastamentos anteriores':r.numaf,
+      Tipo:r.tipo+(r.fila==='capac'?(r.recesso==='sim'?' (no recesso)':' (fora do recesso)'):''),'Período':per,'Início':r.inicio,'Duração (meses)':r.dur,
+      Destino:r.destino,'Resumo do plano':r.just,'Plano de trabalho':r.docs.plano?'anexado':'falta','Carta-convite':r.docs.carta?'anexada':'falta'})
+  }).catch(()=>{});
+}
+function vEnviado(){
+  depoisRender=()=>{};
+  const u=S.ult||{};
+  return `<div class="card col center" style="max-width:640px;padding:44px;gap:20px">
+    <span class="ok-ic">${ICONE.check}</span>
+    <h1 class="h1" style="font-size:30px;letter-spacing:-.6px">Pedido enviado</h1>
+    <p style="margin:0;font-size:18px;color:var(--ink2)">${u.pos?`Você é o ${u.pos}º na fila de ${esc(u.periodo)}.`:`Seu pedido entrou na fila de ${esc(u.periodo||'')}.`}</p>
+    ${u.falta&&u.falta.length?`<div class="msg warn">Falta enviar: ${esc(u.falta.join(' e '))}. Mande por e-mail para a comissão.</div>`:''}
+    <div class="msg info">${ICONE.envelopeAz}<span>Uma cópia foi enviada para <b style="color:var(--ink)">${EMAIL_COPIA}</b></span></div>
+    <div class="acts"><button class="btn" onclick="irFila()">Ver a fila</button><button class="btn sec" onclick="irInicio()">Voltar ao início</button></div>
+  </div>`;
 }
 
 /* ================= Fila pública ================= */
-async function carregarFila(forcar){
-  if(PUB.length&&!forcar){renderFila();return;}
-  $('filaWrap').innerHTML='<div class="empty">Carregando…</div>';
-  try{const j=await api('fila');PUB=j.registros||[];renderFila();}
-  catch(e){$('filaWrap').innerHTML='<div class="notice n-bad">Não foi possível carregar a fila. '+esc(e.message)+'</div>';}
+async function irFila(){
+  if(precisaCodigo('fila')){mostrar('codigo',{depois:'fila'});return;}
+  mostrar('fila');
+  try{PUB=(await api('fila')).registros||[];}catch(e){PUB=[];S.erro=e.message;}
+  if(S.tela==='fila')render();
 }
-function renderFila(){
-  const q=($('fq').value||'').toLowerCase().trim(),ativos=$('fq_ativos').checked;
-  const regs=PUB.filter(r=>{
-    if(ativos&&(r.status==='desfavoravel'||r.status==='concluido'))return false;
-    if(!q)return true;
-    return [r.nome,r.area,r.periodo,r.periodoFim,r.tipo].some(v=>String(v||'').toLowerCase().includes(q));
-  });
-  const g={};regs.forEach(r=>{(g[r.periodo]=g[r.periodo]||{});(g[r.periodo][r.fila]=g[r.periodo][r.fila]||[]).push(r);});
-  const per=Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)),w=$('filaWrap');
-  if(!per.length){w.innerHTML='<div class="empty">Nenhuma manifestação registrada.</div>';return;}
-  w.innerHTML=per.map(p=>{
-    const blocos=Object.keys(g[p]).sort().map(fk=>{const list=ordenar(g[p][fk],'crono');
-      const rows=list.map((r,i)=>`<div class="lin">
-        <span class="pos ${i===0?'p1':''}">${i+1}</span>
-        <div><div class="nm">${esc(r.nome)}</div><div class="cel">${esc(r.area||'')}</div>${repTag(r)}</div>
-        <div class="cel">${esc(r.tipo)}${r.fila==='capac'?'<div class="cel">'+(r.recesso==='sim'?'no recesso, fora do limite':'fora do recesso, conta no limite')+'</div>':''}</div>
-        <div class="cel">${esc(perLabel(r))}<div class="cel">início ${esc(r.inicio||'a definir')} · ${esc(r.dur)} meses</div></div>
-        <div class="dir">${antedTag(r)}<div style="text-align:right"><span class="tag t-${r.status}">${STAT[r.status]}</span>${r.docOk?'':'<div class="cel" style="margin-top:5px">documentação pendente</div>'}</div></div>
-      </div>`).join('');
-      const extra=fk==='dout_pos'?'limite de 2 por período':(fk==='capac'?'fila separada':'fora do limite');
-      return `<div class="grupo"><div class="grupo-h"><b>${FILAS[fk]}</b><span>${list.length===1?'1 docente':list.length+' docentes'} · ${extra}</span></div>
-        <div class="lista">${rows}</div></div>`;}).join('');
-    const ocup=PUB.filter(r=>contaLimite(r)&&ocupa(r,p)&&r.periodo!==p&&(r.status==='favoravel'||r.status==='concluido'));
-    const nota=ocup.length?`<div class="mini" style="margin-top:6px">Ocupam também este período, por afastamento iniciado antes: ${ocup.map(r=>esc(r.nome)).join(', ')}.</div>`:'';
-    return `<div class="periodo-h"><b>Início em ${esc(p)}</b></div>${nota}${blocos}`;
-  }).join('');
+function vFila(){
+  depoisRender=()=>{};
+  const cab=`<div><h1 class="h1">Fila</h1><p class="lead">Por ordem de pedido, separada pelo período em que o afastamento começa.</p></div>`;
+  if(PUB===null)return `<div class="col">${cab}<div class="empty">Carregando…</div></div>`;
+  if(S.erro)return `<div class="col">${cab}<div class="msg bad">Não foi possível carregar a fila. ${esc(S.erro)}</div></div>`;
+  const regs=ativos(PUB),pers=[...new Set(regs.map(r=>r.periodo))].sort((a,b)=>perIdx(a)-perIdx(b));
+  if(!pers.length)return `<div class="col">${cab}<div class="empty">Nenhum pedido na fila.</div></div>`;
+  return `<div class="col" style="gap:26px">${cab}${pers.map(p=>{
+    const v=vagasDe(PUB,p),itens=regs.filter(r=>r.periodo===p).sort(ordemFila);
+    return `<div class="col" style="gap:12px">
+      <div class="ghead"><b>${esc(p)}</b><span style="color:${v.cor}">${v.txt}</span></div>
+      <div class="list">${itens.map((r,i)=>`<div class="item"><span class="pos">${i+1}</span>
+        <div class="who"><b>${esc(r.nome)}</b><span>${esc(r.area||'')} · ${esc(r.tipo)} · ${esc(perTexto(r))}</span></div>${tag(r)}</div>`).join('')}</div>
+    </div>`;}).join('')}</div>`;
 }
 
-/* ================= Limites ================= */
-function tetoConfig(){const c=DADOS.config||{};const q=+c.quadro||30,p=+c.pct||0;return{quadro:q,pct:p,teto:p>0?Math.floor(q*p/100):Infinity};}
-function ocupantesConfirmados(p){return DADOS.registros.filter(r=>contaLimite(r)&&ocupa(r,p)&&(r.status==='favoravel'||r.status==='concluido'));}
-function limiteEfetivo(){return Math.min(2,tetoConfig().teto);}
-function alertasPeriodo(p,filaMap){
-  const out=[],conc=[];
-  Object.keys(filaMap).forEach(fk=>filaMap[fk].forEach(r=>{if(contaLimite(r))conc.push(r);}));
-  const conf=ocupantesConfirmados(p),lim=limiteEfetivo();
-  if(conf.length>lim)out.push(['bad',`Limite excedido no período ${p}: ${conf.length} afastamentos confirmados, máximo de ${lim}.`]);
-  else if(conc.length>lim)out.push(['info',`${conc.length} manifestações concorrem ao período ${p}; apenas ${lim} podem se afastar.`]);
-  const atravessa=conf.filter(r=>r.periodo!==p);
-  if(atravessa.length)out.push(['info',`Ocupam o período por afastamento iniciado antes: ${atravessa.map(r=>r.nome).join(', ')}.`]);
-  const byArea={};conc.forEach(r=>{const a=(r.area||'(sem área)').toLowerCase();(byArea[a]=byArea[a]||[]).push(r);});
-  Object.keys(byArea).forEach(a=>{if(byArea[a].length>1){
-    const cob=byArea[a].filter(r=>['substituto','remanejamento','redistribuicao'].includes(r.cob)).length;
-    out.push([cob>=byArea[a].length?'info':'warnv',`Mesma área concorrendo em ${p}: "${byArea[a][0].area}" (${byArea[a].length} docentes). Dois da mesma área não se afastam juntos sem substituição dos dois ou remanejamento aderente. Cobertura indicada por ${cob} deles.`]);}});
-  return out;
+/* ================= Área da comissão: entrar ================= */
+function vEntrar(){
+  if(!ESTADO.configurado)return vSetup();
+  const google=!!ESTADO.googleClientId&&!S.senha;
+  depoisRender=google?montarGoogle:(()=>{const c=$('g_login');if(c)c.focus();});
+  return `<div class="card col center" style="max-width:480px;padding:44px;gap:20px">
+    <div class="lock-ic">${ICONE.cadeado}</div>
+    <h1 class="h1" style="font-size:28px;letter-spacing:-.5px">Área da comissão</h1>
+    ${google?`<p style="margin:0;color:var(--ink2)">Entre com o seu e-mail <b>@facc.ufrj.br</b>. Só integrantes da comissão têm acesso.</p>
+      <div id="gBtn" style="min-height:44px;display:flex;justify-content:center"></div>
+      ${S.erro?`<div class="msg bad">${esc(S.erro)}</div>`:''}
+      <button class="linkbtn" style="align-self:center;font-size:15px;color:var(--muted)" onclick="S.senha=true;S.erro='';render()">Entrar com senha</button>`
+    :`<p style="margin:0;color:var(--ink2)">Só integrantes da comissão têm acesso.</p>
+      <label class="fld"><span>E-mail</span><input id="g_login" type="email" autocomplete="username" placeholder="nome@facc.ufrj.br" onkeydown="if(event.key==='Enter')entrarSenha()"></label>
+      <label class="fld"><span>Senha</span><input id="g_senha" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')entrarSenha()"></label>
+      ${S.erro?`<div class="msg bad">${esc(S.erro)}</div>`:''}
+      <button class="btn" id="btLogin" onclick="entrarSenha()">Entrar</button>
+      ${ESTADO.googleClientId?`<button class="linkbtn" style="align-self:center;font-size:15px" onclick="S.senha=false;S.erro='';render()">Entrar com Google</button>`:''}`}
+  </div>`;
 }
-
-/* ================= Filtros ================= */
-function filtros(){return{periodo:$('ft_periodo').value,fila:$('ft_fila').value,status:$('ft_status').value,antec:$('ft_antec').value,tram:$('ft_tram').value,area:$('ft_area').value.toLowerCase().trim(),nome:$('ft_nome').value.toLowerCase().trim(),doc:$('ft_doc').checked};}
-function passa(r,F){
-  if(F.periodo&&!ocupa(r,F.periodo))return false;
-  if(F.fila&&r.fila!==F.fila)return false;
-  if(F.status&&r.status!==F.status)return false;
-  if(F.area&&!(r.area||'').toLowerCase().includes(F.area))return false;
-  if(F.nome&&!(r.nome||'').toLowerCase().includes(F.nome))return false;
-  if(F.doc&&!docCompleta(r))return false;
-  if(F.antec){const m=mesesAte(r.inicio);if(F.antec==='ok'&&!(m!=null&&m>=6))return false;if(F.antec==='fora'&&!(m!=null&&m<6))return false;}
-  if(F.tram){const pa=proximaAcao(r);
-    if(F.tram==='pend'&&!pa)return false;
-    if(F.tram==='compl'&&pa)return false;
-    if(F.tram==='portaria'&&(r.tram||{}).portaria)return false;}
-  return true;
+let gisPronto=null;
+function carregarGIS(){
+  if(gisPronto)return gisPronto;
+  gisPronto=new Promise((ok,falha)=>{const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=ok;s.onerror=()=>{gisPronto=null;falha(new Error('Não foi possível carregar o login do Google.'));};document.head.appendChild(s);});
+  return gisPronto;
 }
-function agruparF(F){const g={};DADOS.registros.filter(r=>passa(r,F)).forEach(r=>{(g[r.periodo]=g[r.periodo]||{});(g[r.periodo][r.fila]=g[r.periodo][r.fila]||[]).push(r);});return g;}
-function buildPeriodOpts(){
-  const s=new Set();DADOS.registros.forEach(r=>periodosDe(r).forEach(p=>s.add(p)));
-  const pers=[...s].sort((a,b)=>perIdx(a)-perIdx(b));
-  const f=$('ft_periodo'),cf=f.value;
-  f.innerHTML='<option value="">Todos os períodos</option>'+pers.map(p=>`<option ${p===cf?'selected':''}>${esc(p)}</option>`).join('');
-  const o=$('org_periodo'),co=o.value;
-  o.innerHTML='<option value="">— selecione o período —</option>'+pers.map(p=>`<option ${p===co?'selected':''}>${esc(p)}</option>`).join('');
-}
-function limparFiltros(){['ft_periodo','ft_fila','ft_status','ft_antec','ft_tram','ft_area','ft_nome'].forEach(i=>$(i).value='');$('ft_doc').checked=false;renderCom();}
-
-/* ================= Assistente ================= */
-function renderAssistente(periodo,modo){
-  const box=$('assistente');
-  if(!periodo){box.innerHTML='<h2>Assistente de organização da fila</h2><p class="sub" style="margin:0">Selecione um <b>período</b> no filtro acima para o sistema sugerir a organização respeitando o limite de 2, o conflito de área, a antecedência e os critérios de desempate.</p>';return;}
-  const regs=DADOS.registros.filter(r=>ocupa(r,periodo)&&r.status!=='concluido');
-  if(!regs.length){box.innerHTML='<h2>Assistente de organização, período'+esc(periodo)+'</h2><p class="sub" style="margin:0">Nenhuma manifestação para este período.</p>';return;}
-  const fora=regs.filter(r=>!contaLimite(r)),dentro=regs.filter(r=>contaLimite(r));
-  const{quadro,pct,teto}=tetoConfig(),lim=limiteEfetivo();
-  const jaConf=ordenar(dentro.filter(r=>r.status==='favoravel'),modo);
-  const disputa=ordenar(dentro.filter(r=>r.status!=='favoravel'&&r.status!=='desfavoravel'),modo);
-  const desfav=dentro.filter(r=>r.status==='desfavoravel');
-  const contempl=[],espera=[],areas={};
-  jaConf.forEach(r=>{const a=(r.area||'').toLowerCase();const obs=['parecer já favorável'];if(r.periodo!==periodo)obs.push('afastamento iniciado em '+r.periodo);contempl.push([r,obs]);areas[a]=(areas[a]||0)+1;});
-  disputa.forEach(r=>{
-    if(contempl.length>=lim){espera.push([r,contempl.length>=2?'limite de 2 afastamentos do período já preenchido':('teto de '+pct+'% do quadro ('+teto+') já comprometido')]);return;}
-    const a=(r.area||'').toLowerCase(),conf=areas[a],cob=['substituto','remanejamento','redistribuicao'].includes(r.cob);
-    if(conf&&!cob){espera.push([r,'mesma área já contemplada, sem substituição ou remanejamento indicado']);return;}
-    const obs=[],m=mesesAte(r.inicio);
-    if(conf&&cob)obs.push('mesma área já contemplada, confirmar a cobertura indicada ('+(COB[r.cob]||r.cob)+')');
-    if(m!=null&&m<6)obs.push('antecedência menor que 6 meses');
-    const falta=docsFaltando(r);if(falta.length)obs.push('documentação pendente: '+falta.join(', '));
-    if(r.tipo==='Pós-doutorado'&&r.jaPosdoc==='sim')obs.push('já realizou pós-doc'+(r.anoPosdoc?' ('+r.anoPosdoc+')':''));
-    if(+r.numaf>0)obs.push(r.numaf+' afastamento(s) anterior(es)');
-    if(r.periodoFim!==r.periodo)obs.push('ocupa também '+periodosDe(r).filter(x=>x!==periodo).join(', '));
-    contempl.push([r,obs]);areas[a]=(areas[a]||0)+1;
-  });
-  desfav.forEach(r=>espera.push([r,'parecer desfavorável']));
-  const li=(r,ex)=>`<li><b>${esc(r.nome)}</b> · ${FILAS[r.fila]} · ${esc(r.tipo)} · ${esc(r.dur)}m · ${esc(r.area||'')}${ex?' <span class="mini">('+esc(ex)+')</span>':''}</li>`;
-  let h=`<h2>Assistente de organização, período${esc(periodo)}</h2>`;
-  h+=`<p class="sub">Ordenação: <b>${modo==='desemp'?'critérios de desempate':'cronológica (fila oficial)'}</b>. Limite do período: <b>${lim}</b>${pct>0?` (menor entre 2 do departamento e o teto de ${pct}% do quadro, igual a ${teto} sobre ${quadro} docentes)`:' (limite de 2 do departamento; teto percentual desativado)'}. Capacitação no recesso e eventos ficam fora do limite.</p>`;
-  h+=`<div style="font-weight:700;color:var(--ok);margin-top:6px">Recomendados a contemplar (até ${lim})</div><ul>${contempl.length?contempl.map(([r,o])=>li(r,o.join('; '))).join(''):'<li class="mini">nenhum</li>'}</ul>`;
-  h+=`<div style="font-weight:700;color:var(--warn)">Em espera</div><ul>${espera.length?espera.map(([r,m])=>li(r,m)).join(''):'<li class="mini">nenhum</li>'}</ul>`;
-  if(fora.length)h+=`<div style="font-weight:700;color:var(--info)">Fora do limite</div><ul>${fora.map(r=>li(r,r.fila==='capac'?'capacitação no recesso':'evento, regras da universidade')).join('')}</ul>`;
-  h+=`<button class="btn sm" onclick="copiarParecer()">Copiar resumo para o parecer</button><textarea id="parecerTxt" style="margin-top:8px;min-height:110px">${esc(textoParecer(periodo,modo,contempl,espera,fora,lim))}</textarea>`;
-  box.innerHTML=h;
-}
-function textoParecer(periodo,modo,contempl,espera,fora,lim){
-  let t=`Comissão de Afastamentos\nDepartamento de Administração\nOrganização do período ${periodo}\n\n`;
-  t+=`Ordenação aplicada: ${modo==='desemp'?'critérios de desempate (menos afastamentos, mais tempo de casa, nível mais avançado)':'cronológica, conforme a fila oficial'}.\n`;
-  t+=`Limite do período: ${lim} docente(s), nos termos da regra de no máximo 2 professores afastados por período.\n\n`;
-  t+=`Recomendados a contemplar: `+(contempl.length?contempl.map(([r])=>r.nome+' ('+r.tipo+', '+r.area+')').join('; '):'nenhum')+'.\n\n';
-  t+=`Em espera: `+(espera.length?espera.map(([r,m])=>r.nome+': '+m).join('; '):'nenhum')+'.\n\n';
-  if(fora.length)t+=`Fora do limite: `+fora.map(r=>r.nome+' ('+(r.fila==='capac'?'capacitação no recesso':'evento')+')').join('; ')+'.\n\n';
-  t+=`Observação: a fila é manifestação de intenção para planejamento e não gera direito adquirido. A solicitação só tem validade com a documentação enviada à comissão com pelo menos 6 meses de antecedência.\n`;
-  return t;
-}
-function copiarParecer(){const t=$('parecerTxt');if(!t)return;t.select();if(navigator.clipboard)navigator.clipboard.writeText(t.value);}
-
-/* ================= Painel ================= */
-function renderKPI(){
-  const R=DADOS.registros,ativos=R.filter(r=>r.status!=='concluido'&&r.status!=='desfavoravel');
-  const pend=ativos.filter(r=>proximaAcao(r)).length;
-  const semDoc=ativos.filter(r=>!docCompleta(r)).length;
-  const criticos=ativos.filter(r=>{const m=mesesAte(r.inicio);return m!=null&&m<6&&!docCompleta(r);}).length;
-  const semPort=R.filter(r=>r.status==='favoravel'&&!(r.tram||{}).portaria).length;
-  $('kpiBox').innerHTML=
-    `<div><b>${R.length}</b><span>registros na fila</span></div>`+
-    `<div><b>${ativos.length}</b><span>em andamento</span></div>`+
-    `<div><b>${semDoc}</b><span>com documentação incompleta</span></div>`+
-    `<div><b>${criticos}</b><span>fora do prazo de 6 meses e sem documentação</span></div>`+
-    `<div><b>${semPort}</b><span>favoráveis sem portaria publicada</span></div>`+
-    `<div><b>${pend}</b><span>com pendência de trâmite</span></div>`;
-}
-function renderConfig(){
-  const c=DADOS.config||{};
-  $('cf_email').textContent=c.emailComissao||'não definido';
-  $('cf_areas').textContent=areasAtuais().join(' · ');
-  const{quadro,pct,teto}=tetoConfig();
-  $('cf_quadro').textContent=pct>0?(quadro+' docentes, teto de '+pct+'% igual a '+teto+' afastamentos simultâneos'):(quadro+' docentes, teto percentual desativado. Vale apenas o limite de 2 por período.');
-  $('cf_codigo').textContent=c.protegido
-    ? 'Código definido. A fila e o formulário só abrem para quem tem o código. Repasse-o apenas aos docentes do departamento.'
-    : 'Nenhum código definido. A fila está fechada para todos até que a comissão defina um.';
-  $('cf_usuarios').innerHTML=(DADOS.usuarios||[]).map(u=>
-    `<div class="confbox" style="margin-bottom:8px"><div><b>${esc(u.nome)}</b><p>${esc(u.login)}</p></div>${u.login===(EU&&EU.login)?'<span class="pill">você</span>':''}</div>`).join('')||'<p class="mini">nenhum acesso cadastrado</p>';
-}
-function renderPedidos(){
-  const R=ordenar(DADOS.registros.filter(r=>r.status!=='concluido'&&r.status!=='desfavoravel'),'crono');
-  const linhas=R.slice(0,10).map(r=>`<div class="ped-l">
-    <div><div class="nm">${esc(r.nome)}</div><div class="cel">${esc(r.area||'')}</div></div>
-    <div class="cel">${esc(r.tipo)}</div>
-    <div><span class="tag t-${r.status}">${STAT[r.status]}</span></div>
-    <div>${trilha(r)}<div class="cel" style="margin-top:6px">${esc(ETAPAS[etapaIdx(r)])}</div></div>
-  </div>`).join('');
-  $('pedidosBox').innerHTML=`<div class="ped"><h2>Pedidos em andamento</h2>
-    <div class="ped-h"><div>Docente</div><div>Tipo</div><div>Situação</div><div>Trâmite</div></div>
-    ${linhas||'<div class="empty">Nenhum pedido em andamento.</div>'}</div>`;
-}
-function renderAcoes(){
-  const itens=DADOS.registros.map(r=>[r,proximaAcao(r)]).filter(([,a])=>a);
-  const ord=itens.map(([r,a])=>{const m=mesesAte(r.inicio);return{r,a,m:m==null?999:m};}).sort((x,y)=>x.m-y.m).slice(0,8);
-  $('acoesBox').innerHTML=ord.length?
-    ord.map(({r,a,m})=>`<div style="display:flex;gap:16px;margin-bottom:16px">
-      <span style="width:8px;height:8px;border-radius:999px;background:var(--accent);margin-top:6px;flex:none"></span>
-      <div><div style="font-size:13.5px;font-weight:600;color:var(--ink)">${esc(a.t.charAt(0).toUpperCase()+a.t.slice(1))} · ${esc(r.nome)}</div>
-      <div class="mini" style="margin-top:2px">${esc(perLabel(r))} · ${m===999?'sem data de início':m+' meses para o início'} · responsável: ${esc(a.quem)}</div></div>
-    </div>`).join('')
-    :'<div class="notice n-ok" style="margin:0">Nenhuma pendência de trâmite no momento.</div>';
-}
-function renderCom(){
-  if(!EU)return;
-  $('userBar').innerHTML=`<div class="userbar">Conectada como <b>${esc(EU.login)}</b>. Toda alteração feita aqui fica registrada no histórico com seu nome.</div>`;
-  const novos=DADOS.registros.filter(r=>!r.visto).length;
-  $('notifBox').innerHTML=novos?`<div class="notice n-info"><b>${novos}</b> registro(s) novo(s) recebido(s) pela comissão. <button class="btn ghost" onclick="marcarVistos()">Marcar como lidos</button></div>`:'';
-  buildPeriodOpts();renderKPI();renderPedidos();renderAcoes();renderHist();renderConfig();
-  const F=filtros(),modo=$('ordCom').value,g=agruparF(F),per=Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)),w=$('comWrap');
-  renderAssistente($('org_periodo').value,$('org_modo').value);
-  const{quadro,pct,teto}=tetoConfig();
-  if(pct>0){
-    const pers=[...new Set(DADOS.registros.flatMap(periodosDe))];
-    const pior=pers.map(p=>({p,n:ocupantesConfirmados(p).length})).sort((a,b)=>b.n-a.n)[0]||{p:'—',n:0};
-    $('tetoBanner').innerHTML=`<div class="notice ${pior.n>teto?'n-bad':(pior.n>=teto?'n-info':'n-ok')}">Parâmetro interno: quadro efetivo <b>${quadro}</b>, teto de <b>${pct}%</b> igual a <b>${teto}</b> afastamentos simultâneos. Período mais carregado: <b>${esc(pior.p)}</b> com ${pior.n} confirmado(s)${pior.n>teto?', teto excedido':(pior.n>=teto?', teto atingido':'')}.</div>`;
-  }else $('tetoBanner').innerHTML='';
-  if(!per.length){w.innerHTML='<div class="empty">Nenhuma manifestação corresponde aos filtros.</div>';return;}
-  w.innerHTML=per.map(p=>{
-    const al=alertasPeriodo(p,g[p]).map(([t,m])=>`<div class="alertbox" style="color:${t==='bad'?'var(--bad)':(t==='warnv'?'var(--warn)':'var(--info)')}">${esc(m)}</div>`).join('');
-    const blocos=Object.keys(g[p]).sort().map(fk=>{const list=ordenar(g[p][fk],modo);
-      const rows=list.map((r,i)=>{const pa=proximaAcao(r);return `<tr>
-        <td><span class="pos ${i===0?'p1':''}">${i+1}</span></td>
-        <td><b>${esc(r.nome)}</b>${r.excecional?' <span class="pill">caso excepcional</span>':''}<div class="mini">${esc(r.email)} · ${esc(r.area)}</div>${repTag(r)}
-          <div class="mini">${esc(r.classe)} ${esc(r.nivel)} · ${esc(r.disc||'')}</div>
-          ${r.alteradoPor?`<div class="quem">última alteração por ${esc(r.alteradoPor)} em ${esc(quandoBR(r.alteradoEm))}</div>`:''}</td>
-        <td>${esc(r.tipo)}<div class="mini">${esc(perLabel(r))} · ${esc(r.inicio||'')} · ${esc(r.dur)}m ${antedTag(r)}</div>
-          <div class="mini">${contaLimite(r)?'conta no limite':'fora do limite'} · ${esc(COB[r.cob]||r.cob||'')}</div></td>
-        <td class="hide-m"><span class="pill">afast.: ${esc(r.numaf)}</span> <span class="pill">ingr.: ${esc(r.ingresso)}</span> <span class="pill">pós-doc: ${r.jaPosdoc==='sim'?('sim '+esc(r.anoPosdoc||'')):'não'}</span></td>
-        <td class="hide-m">${docCompleta(r)?'<span class="pill" style="background:var(--ok-bg);color:var(--ok)">documentação completa</span>':'<span class="pill" style="background:var(--bad-bg);color:var(--bad)">falta: '+esc(docsFaltando(r).join(', '))+'</span>'}${trilha(r)}<div class="mini" style="margin-top:6px">${esc(ETAPAS[etapaIdx(r)])}</div></td>
-        <td><span class="tag t-${r.status}">${STAT[r.status]}</span>${pa?'<div class="mini">'+esc(pa.t)+'</div>':'<div class="mini">sem pendência</div>'}${r.parecer?'<div class="mini">'+esc(r.parecer.slice(0,40))+(r.parecer.length>40?'…':'')+'</div>':''}</td>
-        <td><button class="btn sec sm" onclick="openDec('${r.id}')">Abrir</button></td></tr>`;}).join('');
-      const extra=fk==='dout_pos'?' · limite de 2 por período':(fk==='capac'?' · fila separada':' · fora do limite');
-      return `<div class="fila-h">${FILAS[fk]} · ${list.length} docente(s)${extra}</div>
-        <div style="overflow:auto"><table><thead><tr><th>#</th><th>Docente</th><th>Tipo e período</th><th class="hide-m">Desempate</th><th class="hide-m">Documentação e trâmite</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;}).join('');
-    return `<div class="periodo-h"><b>Período ${esc(p)}</b><span>limite de ${limiteEfetivo()} · ${ocupantesConfirmados(p).length} confirmado(s)</span></div>${al?'<div style="padding:8px 2px">'+al+'</div>':''}${blocos}`;
-  }).join('');
-}
-
-/* ================= Histórico ================= */
-function histFiltrado(){
-  const q=($('hq').value||'').toLowerCase().trim();
-  return (DADOS.auditoria||[]).filter(a=>!q||[a.quem,a.acao,a.alvo,a.detalhe].some(v=>String(v||'').toLowerCase().includes(q)));
-}
-function renderHist(){
-  const lista=histFiltrado();
-  $('histWrap').innerHTML=lista.length?
-    `<table><thead><tr><th>Quando</th><th>Quem</th><th>Ação</th><th>Registro</th><th>Detalhe</th></tr></thead><tbody>`+
-    lista.map(a=>`<tr><td class="mini" style="white-space:nowrap">${esc(quandoBR(a.ts))}</td><td><b>${esc(a.quem)}</b></td><td>${esc(a.acao)}</td><td>${esc(a.alvo||'—')}</td><td class="mini">${esc(a.detalhe||'')}</td></tr>`).join('')+
-    `</tbody></table>`:'<div class="empty">Nenhum registro no histórico.</div>';
-}
-function exportHist(){
-  const linhas=[['Quando','Quem','Acao','Registro','Detalhe'].join(';')];
-  histFiltrado().forEach(a=>linhas.push([quandoBR(a.ts),a.quem,a.acao,a.alvo,a.detalhe].map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')));
-  baixar('historico_afastamentos.csv',"﻿"+linhas.join('\n'),'text/csv;charset=utf-8');
-}
-
-/* ================= Modal de decisão ================= */
-function openDec(id){
-  const r=DADOS.registros.find(x=>x.id===id);if(!r)return;
-  $('dec_id').value=id;$('decTit').textContent='Registro de '+r.nome;
-  const pa=proximaAcao(r),m=mesesAte(r.inicio),tr=r.tram||{};
-  $('decResumo').innerHTML=`${esc(r.tipo)} · ${esc(perLabel(r))} · início ${esc(r.inicio||'—')} · ${esc(r.dur)} meses · ${m==null?'':m+' meses de antecedência'}<br>
-    Área: ${esc(r.area)} · cobertura: ${esc(COB[r.cob]||r.cob||'—')} · ${contaLimite(r)?'conta no limite de 2':'fora do limite de 2'}<br>
-    ${r.alteradoPor?'Última alteração por <b>'+esc(r.alteradoPor)+'</b> em '+esc(quandoBR(r.alteradoEm))+'<br>':''}
-    <b>${pa?'Próxima ação: '+esc(pa.t)+' ['+esc(pa.quem)+']':'Sem pendências de trâmite.'}</b>`;
-  $('dec_status').value=r.status;$('dec_parecer').value=r.parecer||'';$('dec_exc').checked=!!r.excecional;
-  const anx=r.anexos||{};
-  const linhas=[['plano','Plano de trabalho'],['carta','Carta-convite']].map(([k,rot])=>anx[k]&&anx[k].pathname
-    ? `<div class="row" style="gap:8px;margin-top:4px"><b style="font-size:12.5px;color:var(--ink)">${rot}:</b><button class="btn ghost" onclick="baixarAnexo('${r.id}','${k}')">${esc(anx[k].nome||'abrir')}</button> <span class="mini">${((anx[k].tamanho||0)/1024).toFixed(0)} KB</span></div>`
-    : `<div class="mini">${rot}: sem anexo</div>`).join('');
-  $('decAnexos').innerHTML='<div class="notice n-plain" style="margin:0"><b>Anexos do docente</b>'+linhas+'</div>';
-  DOCITENS.forEach(([k])=>$('d_'+k).checked=!!(r.docs&&r.docs[k]));
-  TRAMS.forEach(([k])=>$('t_'+k).value=tr[k]||'');
-  $('t_via').value=tr.via||'';
-  const y=new Date().getFullYear();let o='';for(let i=0;i<6;i++)o+=`<option>${y+i}</option>`;$('dec_rep_ano').innerHTML=o;$('dec_rep_motivo').value='';
-  $('mDec').classList.add('on');
-}
-async function saveDecisao(){
-  const r=DADOS.registros.find(x=>x.id===$('dec_id').value);if(!r)return;
-  const docs={};DOCITENS.forEach(([k])=>docs[k]=$('d_'+k).checked);
-  const faltam=DOCITENS.filter(([k])=>!docs[k]).map(([,n])=>n);
-  if($('dec_status').value==='favoravel'&&faltam.length&&!confirm('A documentação não está completa (falta '+faltam.join(', ')+'). Registrar parecer favorável mesmo assim?'))return;
-  const tram={};TRAMS.forEach(([k])=>tram[k]=$('t_'+k).value);tram.via=$('t_via').value;
-  const bt=$('btSalvarDec');bt.disabled=true;bt.textContent='Salvando…';
+async function montarGoogle(){
   try{
-    await api('salvar',{id:r.id,campos:{status:$('dec_status').value,parecer:$('dec_parecer').value,excecional:$('dec_exc').checked,docs,tram}});
-    closeModal('mDec');await recarregar();
-  }catch(e){erro(e);}finally{bt.disabled=false;bt.textContent='Salvar';}
+    await carregarGIS();
+    google.accounts.id.initialize({client_id:ESTADO.googleClientId,hd:'facc.ufrj.br',callback:r=>entrarGoogle(r.credential)});
+    const alvo=$('gBtn');if(alvo)google.accounts.id.renderButton(alvo,{theme:'outline',size:'large',text:'signin_with',locale:'pt-BR',width:300});
+  }catch(e){S.erro=e.message;S.senha=true;render();}
 }
-async function repactuar(){
-  const r=DADOS.registros.find(x=>x.id===$('dec_id').value);if(!r)return;
-  const mot=$('dec_rep_motivo').value;if(!mot){alert('Selecione o motivo da repactuação.');return;}
-  const novo=$('dec_rep_ano').value+'.'+$('dec_rep_sem').value;
-  const span=perIdx(r.periodoFim||r.periodo)-perIdx(r.periodo);
-  const txt={inst:'impedimento institucional',prazo:'perda de prazo ou documentação',voluntaria:'desistência ou adiamento voluntário'}[mot];
-  if(!confirm(`Repactuar de ${r.periodo} para ${novo}?\nMotivo: ${txt}.\n${mot==='voluntaria'?'Irá para o fim da fila com nova data.':'Mantém a prioridade, a data de manifestação é preservada.'}`))return;
-  try{await api('repactuar',{id:r.id,periodo:novo,periodoFim:perLabelDe(perIdx(novo)+span),motivo:mot});closeModal('mDec');await recarregar();}catch(e){erro(e);}
+function iniciarSessao(j){
+  TOKEN=j.token;EU=j.usuario;ESTADO.liberado=true;
+  localStorage.setItem('af:token',TOKEN);localStorage.setItem('af:usuario',JSON.stringify(EU));
+  mostrar('pedidos');recarregar();
 }
-async function excluir(){
-  const r=DADOS.registros.find(x=>x.id===$('dec_id').value);if(!r)return;
-  if(!confirm('Excluir o registro de '+r.nome+'? A ação fica gravada no histórico e não pode ser desfeita.'))return;
-  try{await api('excluir',{id:r.id});closeModal('mDec');await recarregar();}catch(e){erro(e);}
+async function entrarGoogle(credential){
+  try{iniciarSessao(await api('loginGoogle',{credential}));}catch(e){S.erro=e.message;render();}
 }
-async function marcarVistos(){try{await api('marcarVistos');await recarregar();}catch(e){erro(e);}}
-async function baixarAnexo(id,campo){
-  try{
-    const r=await fetch(ENDPOINT,{method:'POST',headers:cabecalhos(),body:JSON.stringify({acao:'baixar',id,campo})});
-    if(!r.ok){let j={};try{j=await r.json();}catch(e){}throw new Error(j.erro||('Erro '+r.status));}
-    const b=await r.blob(),u=URL.createObjectURL(b);
-    window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);
-  }catch(e){erro(e);}
+async function entrarSenha(){
+  const bt=$('btLogin');bt.disabled=true;bt.textContent='Entrando…';
+  try{iniciarSessao(await api('login',{login:$('g_login').value.trim(),senha:$('g_senha').value}));}
+  catch(e){S.erro=e.message;render();}
 }
+function sair(){sessaoExpirou();mostrar('inicio');}
 
-/* ================= Configuração ================= */
-async function salvarConfig(parcial){try{const j=await api('config',{config:parcial});DADOS.config=j.config;renderCom();return true;}catch(e){erro(e);return false;}}
-async function setEmailComissao(){const e=prompt('E-mail da comissão (destinatário da documentação):',(DADOS.config||{}).emailComissao||'');if(e===null)return;if(await salvarConfig({emailComissao:e.trim()}))alert('E-mail salvo.');}
-async function setAreas(){const v=prompt('Áreas do departamento (separadas por ; ):',areasAtuais().join('; '));if(v===null)return;const areas=v.split(';').map(s=>s.trim()).filter(Boolean);if(await salvarConfig({areas})){buildAreaOpts();alert('Áreas atualizadas.');}}
-async function setQuadro(){
-  const c=DADOS.config||{};
-  const q=prompt('Total de professores do quadro efetivo:',c.quadro||30);if(q===null)return;
-  const p=prompt('Percentual máximo de afastamentos simultâneos. Use 0 para desativar este parâmetro, que não consta da minuta:',c.pct||0);if(p===null)return;
-  if(await salvarConfig({quadro:+q,pct:+p})){const{teto,pct}=tetoConfig();alert('Quadro: '+DADOS.config.quadro+(pct>0?(' · teto: '+teto+' ('+pct+'%)'):' · teto percentual desativado, vale apenas o limite de 2 por período'));}
-}
-
-async function setCodigo(){
-  const c=prompt('Código de acesso do departamento (mínimo 6 caracteres).\nDeixe em branco e confirme para remover a proteção, o que reabre a fila para qualquer pessoa.','');
-  if(c===null)return;
-  if(c!==''&&c.length<6){alert('O código precisa de pelo menos 6 caracteres.');return;}
-  if(c===''&&!confirm('Remover o código deixa a fila aberta na internet para qualquer pessoa. Confirma?'))return;
-  try{
-    const j=await api('definirCodigo',{codigo:c});
-    ESTADO.protegido=j.protegido;
-    await recarregar();
-    alert(j.protegido?'Código definido. Repasse-o apenas aos docentes do departamento.':'Proteção removida.');
-  }catch(e){erro(e);}
-}
-
-/* ================= Usuários e senha ================= */
-function abrirUsuarios(){
-  $('usrLista').innerHTML=(DADOS.usuarios||[]).map(u=>
-    `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:7px 0">
-      <div><b>${esc(u.nome)}</b><div class="mini">${esc(u.login)}</div></div>
-      ${u.login===EU.login?'<span class="pill">você</span>':`<button class="btn ghost" style="color:var(--bad)" onclick="removerUsuario('${esc(u.login)}')">remover</button>`}
-    </div>`).join('')||'<div class="mini">nenhum usuário</div>';
-  ['u_nome','u_login','u_senha'].forEach(i=>$(i).value='');
-  $('mUsr').classList.add('on');
-}
-async function criarUsuario(){
-  const nome=$('u_nome').value.trim(),login=$('u_login').value.trim(),senha=$('u_senha').value;
-  if(!nome||!login||senha.length<8){alert('Preencha nome, e-mail e uma senha de pelo menos 8 caracteres.');return;}
-  try{await api('criarUsuario',{nome,login,senha});await recarregar();abrirUsuarios();alert('Usuário criado. Peça que ela troque a senha no primeiro acesso, em Minha senha.');}catch(e){erro(e);}
-}
-async function removerUsuario(login){
-  if(!confirm('Remover o acesso de '+login+'?'))return;
-  try{await api('removerUsuario',{login});await recarregar();abrirUsuarios();}catch(e){erro(e);}
-}
-function abrirSenha(){['s_atual','s_nova','s_nova2'].forEach(i=>$(i).value='');$('mSenha').classList.add('on');}
-async function salvarSenha(){
-  const a=$('s_atual').value,n=$('s_nova').value,n2=$('s_nova2').value;
-  if(n.length<8){alert('A nova senha precisa de pelo menos 8 caracteres.');return;}
-  if(n!==n2){alert('As senhas não conferem.');return;}
-  try{await api('trocarSenha',{atual:a,nova:n});closeModal('mSenha');alert('Senha alterada.');}catch(e){erro(e);}
-}
-
-/* ================= Exportação ================= */
-function baixar(nome,conteudo,tipo){const blob=new Blob([conteudo],{type:tipo});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nome;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
-function exportCSV(){
-  const h=['Periodo_inicio','Periodo_fim','Fila','Pos','Nome','Email','SIAPE','Area','Classe','Nivel','Ingresso','NumAfastamentos','Tipo','Recesso','ContaLimite','Inicio','Duracao_m','Antecedencia_m','TipoLicenca','DocCompleta','DocFaltando','Colegiado','SEI','Congregacao','Portaria','Substituto','ViaSubstituto','Disciplinas','Cobertura','Destino','Status','Excepcional','ProximaAcao','AlteradoPor','AlteradoEm','Parecer'];
-  const g=agruparF(filtros());let linhas=[h.join(';')];const modo=$('ordCom').value;
-  Object.keys(g).sort((a,b)=>perIdx(a)-perIdx(b)).forEach(p=>Object.keys(g[p]).sort().forEach(fk=>ordenar(g[p][fk],modo).forEach((r,i)=>{
-    const pa=proximaAcao(r),tr=r.tram||{};
-    linhas.push([p,r.periodoFim,FILAS[fk],i+1,r.nome,r.email,r.siape,r.area,r.classe,r.nivel,r.ingresso,r.numaf,r.tipo,r.recesso,contaLimite(r)?'sim':'nao',r.inicio,r.dur,mesesAte(r.inicio),r.lic,docCompleta(r)?'sim':'nao',docsFaltando(r).join(', '),tr.colegiado||'',tr.sei||'',tr.congregacao||'',tr.portaria||'',tr.substituto||'',tr.via||'',r.disc,(COB[r.cob]||r.cob),r.destino,STAT[r.status],r.excecional?'sim':'nao',pa?pa.t:'',r.alteradoPor||'',r.alteradoEm?quandoBR(r.alteradoEm):'',(r.parecer||'').replace(/[\n;]/g,' ')]
-      .map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';'));})));
-  baixar('fila_afastamentos.csv',"﻿"+linhas.join('\n'),'text/csv;charset=utf-8');
-}
-function backup(){baixar('backup_afastamentos_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({registros:DADOS.registros,config:DADOS.config,auditoria:DADOS.auditoria},null,2),'application/json');}
-function restaurar(){
-  const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
-  inp.onchange=()=>{const f=inp.files[0];if(!f)return;const fr=new FileReader();
-    fr.onload=async()=>{try{const d=JSON.parse(fr.result);
-      if(!d||!Array.isArray(d.registros))throw new Error('formato inválido');
-      if(!confirm('Restaurar '+d.registros.length+' registro(s)? Os '+DADOS.registros.length+' registros atuais no servidor serão substituídos para todas as usuárias.'))return;
-      await api('restaurar',{registros:d.registros,config:d.config});await recarregar();alert('Backup restaurado.');
-    }catch(e){erro(e);}};
-    fr.readAsText(f);};
-  inp.click();
-}
-
-/* ================= Acesso ================= */
-function openCom(){
-  if(TOKEN&&EU){$('comGate').style.display='none';$('comPanel').style.display='block';renderHeaderUser();if(!DADOS.registros.length)recarregar();else renderCom();}
-  else renderGate();
-}
-function renderGate(){
-  $('comPanel').style.display='none';$('comGate').style.display='block';
-  renderHeaderUser();
-  if(!ESTADO.configurado){
-    $('comGate').innerHTML=`<div class="card"><h2>Configuração inicial do sistema</h2>
-      <p class="sub">Nenhum acesso cadastrado ainda. Crie os acessos das integrantes da comissão. Cada uma entra com o e-mail institucional e a própria senha, e toda alteração passa a ficar registrada com o nome de quem fez.</p>
-      <div id="setupUsers">`+SUGESTOES.map((u,i)=>`
-        <div class="setup-user"><div class="grid" style="gap:10px">
-          <div><label>Nome</label><input id="su_nome${i}" value="${esc(u.nome)}"></div>
-          <div><label>E-mail institucional</label><input id="su_login${i}" value="${esc(u.login)}"></div>
-          <div><label>Senha inicial (mín. 8)</label><input id="su_senha${i}" type="password"></div>
-        </div></div>`).join('')+`</div>
-      <p class="mini">Defina uma senha provisória para cada uma e peça que troquem em <b>Minha senha</b> no primeiro acesso. As senhas são gravadas apenas como hash, não ficam legíveis no banco.</p>
-      <div class="row" style="margin-top:14px"><button class="btn" id="btSetup" onclick="fazerSetup()">Criar os acessos</button></div></div>`;
-  }else{
-    $('comGate').innerHTML=`<div class="gate">
-      <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-      <h2>Acesso da comissão</h2>
-      <p class="sub" style="margin-bottom:0">O painel é restrito às integrantes da comissão. Use suas credenciais institucionais.</p>
-      <div class="card" style="margin-top:28px;margin-bottom:0">
-        <label>E-mail institucional</label><input id="g_login" type="email" placeholder="nome@instituicao" onkeydown="if(event.key==='Enter')entrar()">
-        <label style="margin-top:18px">Senha</label><input id="g_senha" type="password" placeholder="Sua senha" onkeydown="if(event.key==='Enter')entrar()">
-        <div style="margin-top:18px"><button class="btn wide" id="btLogin" onclick="entrar()">Entrar no painel</button></div>
-        <div id="g_err" style="color:var(--bad);font-size:13px;margin-top:10px"></div>
-        <div class="gate-foot">
-          <span class="mini">Sem recuperação de senha por e-mail.</span>
-          <button class="btn sec sm" onclick="go('capa')">Voltar ao início</button>
-        </div>
-      </div>
-      <p class="mini" style="margin-top:18px">Docentes que desejam manifestar interesse não precisam de acesso restrito. Quem esquecer a senha precisa que outra integrante crie um novo acesso.</p>
-    </div>`;
-  }
-}
-function iniciais(nome){return String(nome||'').trim().split(/\s+/).slice(0,2).map(p=>p[0]||'').join('').toUpperCase();}
-function renderHeaderUser(){
-  const b=$('hdrUser');
-  if(!(TOKEN&&EU)){b.innerHTML='';b.className='';return;}
-  b.className='hdruser';
-  b.innerHTML=`<span class="avatar">${esc(iniciais(EU.nome))}</span><i>${esc(EU.nome)}</i><button onclick="sair()">Sair</button>`;
+/* ---- primeira configuração: só aparece enquanto não há nenhum acesso ---- */
+function vSetup(){
+  depoisRender=()=>{};
+  return `<div class="card col center" style="max-width:760px;gap:20px">
+    <h1 class="h1" style="font-size:28px">Configuração inicial</h1>
+    <p style="margin:0;color:var(--ink2)">Nenhum acesso cadastrado ainda. Crie os acessos das integrantes da comissão. A senha serve para entrar enquanto o login com Google não estiver ativo.</p>
+    ${SUGESTOES.map((u,i)=>`<div class="grid" style="gap:12px;padding:16px;border:1px solid var(--line);border-radius:14px">
+      <label class="fld"><span>Nome</span><input id="su_nome${i}" value="${esc(u.nome)}"></label>
+      <label class="fld"><span>E-mail</span><input id="su_login${i}" value="${esc(u.login)}"></label>
+      <label class="fld"><span>Senha inicial (mín. 8)</span><input id="su_senha${i}" type="password"></label></div>`).join('')}
+    <div class="acts"><button class="btn" id="btSetup" onclick="fazerSetup()">Criar os acessos</button></div>
+  </div>`;
 }
 async function fazerSetup(){
   const usuarios=[];
@@ -1434,37 +621,279 @@ async function fazerSetup(){
     usuarios.push({nome,login,senha});
   }
   if(!usuarios.length){alert('Preencha ao menos um acesso.');return;}
-  const bt=$('btSetup');bt.disabled=true;bt.textContent='Criando…';
-  try{await api('setup',{usuarios});ESTADO.configurado=true;alert('Acessos criados. Entre com o seu e-mail e senha.');renderGate();}
-  catch(e){erro(e);}finally{bt.disabled=false;bt.textContent='Criar os acessos';}
+  try{await api('setup',{usuarios});ESTADO.configurado=true;alert('Acessos criados. Agora entre.');mostrar('entrar');}catch(e){erro(e);}
 }
-async function entrar(){
-  const bt=$('btLogin');bt.disabled=true;bt.textContent='Entrando…';
-  try{
-    const j=await api('login',{login:$('g_login').value.trim(),senha:$('g_senha').value});
-    TOKEN=j.token;EU=j.usuario;ESTADO.liberado=true;
-    localStorage.setItem('af:token',TOKEN);localStorage.setItem('af:usuario',JSON.stringify(EU));
-    openCom();
-  }catch(e){$('g_err').textContent=e.message;}finally{bt.disabled=false;bt.textContent='Entrar';}
-}
-function sair(){sessaoExpirou();goCom('visao');go('capa');}
+
+/* ================= Pedidos ================= */
 async function recarregar(){
   try{
     const j=await api('dados');
     DADOS={registros:j.registros||[],config:j.config||{},auditoria:j.auditoria||[],usuarios:j.usuarios||[]};
     if(j.eu){EU=j.eu;localStorage.setItem('af:usuario',JSON.stringify(EU));}
-    PUB=[];buildAreaOpts();renderCom();
+    PUB=null;
+    if(COMISSAO.includes(S.tela))render();
   }catch(e){if(TOKEN)erro(e);}
 }
+function vPedidos(){
+  depoisRender=()=>{};
+  const regs=DADOS.registros,fim=r=>ENCERRADOS.includes(situacao(r));
+  const nAnd=regs.filter(r=>!fim(r)).length;
+  const lista=regs.filter(r=>S.filtro==='and'?!fim(r):fim(r)).sort(ordemFila);
+  const filtro=(k,t)=>`<button class="chip" aria-pressed="${S.filtro===k}" onclick="S.filtro='${k}';render()">${t}</button>`;
+  return `<div class="col">
+    <div class="topline"><h1 class="h1">Pedidos</h1>
+      <div class="filters">${filtro('and','Em andamento ('+nAnd+')')}${filtro('fim','Encerrados ('+(regs.length-nAnd)+')')}</div></div>
+    <div class="col" style="gap:12px">${lista.length?lista.map(r=>`<div class="pcard">
+      <div class="who"><b>${esc(r.nome)}</b><span>${esc(r.area||'')} · ${esc(r.tipo)} · ${esc(perTexto(r))}</span></div>
+      ${tag(r)}<button class="btn sm" onclick="abrir('${esc(r.id)}')">${SIT[situacao(r)].botao}</button></div>`).join('')
+      :'<div class="empty">Nenhum pedido aqui.</div>'}</div>
+  </div>`;
+}
+function abrir(id){mostrar('detalhe',{selId:id});}
+
+/* ================= Detalhe do pedido ================= */
+function vDetalhe(){
+  depoisRender=()=>{};
+  const r=DADOS.registros.find(x=>x.id===S.selId);
+  if(!r)return `<div class="col"><button class="linkbtn" onclick="mostrar('pedidos')">← Pedidos</button><div class="empty">Pedido não encontrado.</div></div>`;
+  const sit=situacao(r),et=SIT[sit].etapa,neg=sit==='negado';
+  const passos=ETAPAS.map((t,k)=>{const on=neg?k<2:k<et;return `<div><i class="${on?'on':''}"></i><b class="${on?'on':''}">${t}</b></div>`;}).join('');
+  const b=(t,fn,sec)=>`<button class="btn${sec?' sec':''}" onclick="${fn}">${t}</button>`;
+  const perg={
+    docs:['Os documentos chegaram?',b('Sim, recebi tudo',`decidir('docs')`)+b('Cobrar por e-mail',`cobrar()`,1)],
+    analise:['Qual é o parecer da comissão?',b('Favorável',`decidir('favoravel')`)+b('Desfavorável',`decidir('desfavoravel')`,1),true],
+    reuniao:['A reunião de professores aprovou?',b('Sim, aprovou',`decidir('aprovado_reuniao')`)+b('Não aprovou',`decidir('negado_reuniao')`,1)],
+    aprovado:['O docente já se afastou?',b('Sim, ficou afastado',`decidir('concluido')`)]
+  }[sit];
+  const dados=[['E-mail',r.email],['Instituição',r.destino||'Não informada'],['Duração',r.dur?r.dur+' meses':'Não informada'],
+    ['Posição na fila',posicao(DADOS.registros,r)?posicao(DADOS.registros,r)+'º em '+r.periodo:'Fora da fila'],
+    ['Plano de trabalho',r.docs&&r.docs.plano?'Recebido':'Falta',!(r.docs&&r.docs.plano)],
+    ['Carta-convite',r.docs&&r.docs.carta?'Recebida':'Falta',!(r.docs&&r.docs.carta)]];
+  const anx=r.anexos||{};
+  const anexos=[['plano','Plano de trabalho'],['carta','Carta-convite']].filter(([k])=>anx[k]&&anx[k].pathname)
+    .map(([k,t])=>`<button class="btn sec sm" onclick="baixarAnexo('${esc(r.id)}','${k}')">Abrir ${t.toLowerCase()}</button>`).join('');
+  return `<div class="col narrow" style="max-width:820px">
+    <button class="linkbtn" onclick="mostrar('pedidos')">← Pedidos</button>
+    <div class="topline" style="align-items:flex-start">
+      <div style="flex:1;min-width:0"><h1 class="h1">${esc(r.nome)}</h1><p class="lead" style="font-size:17px">${esc(r.area||'')} · ${esc(r.tipo)} · ${esc(perTexto(r))}</p></div>
+      ${tag(r)}</div>
+    <div class="card col">
+      <div class="bars" style="grid-template-columns:repeat(5,1fr)">${passos}</div>
+      ${perg?`<div class="ask"><b>${perg[0]}</b>
+        ${perg[2]?`<textarea id="dec_parecer" rows="3" placeholder="Parecer da comissão (opcional)">${esc(r.parecer||'')}</textarea>`:''}
+        <div class="acts">${perg[1]}</div></div>`:''}
+    </div>
+    <div class="card data">${dados.map(([k,v,ruim])=>`<div><em>${k}</em><span class="${ruim?'falta':''}">${esc(v)}</span></div>`).join('')}</div>
+    ${r.parecer?`<div class="card col" style="gap:6px;padding:24px 32px"><em style="font-style:normal;font-size:14px;font-weight:600;color:var(--muted)">Parecer da comissão</em><span style="line-height:1.55">${esc(r.parecer)}</span></div>`:''}
+    <details class="more"><summary>Mais opções</summary>
+      <div class="col" style="gap:16px;margin-top:16px">
+        ${anexos?`<div class="acts">${anexos}</div>`:'<span class="small muted">O docente não anexou arquivos pelo site.</span>'}
+        <label class="chip" style="display:flex;gap:10px;align-items:center;align-self:flex-start"><input type="checkbox" style="width:auto" ${r.excecional?'checked':''} onchange="marcarExcecional(this.checked)"> Caso excepcional</label>
+        <div class="acts"><button class="btn sec sm" onclick="repactuar()">Mudar o período</button><button class="btn sec sm" style="color:var(--bad)" onclick="excluir()">Excluir pedido</button></div>
+        ${r.alteradoPor?`<span class="small muted">Última alteração por ${esc(r.alteradoPor)} em ${esc(quandoBR(r.alteradoEm))}.</span>`:''}
+      </div>
+    </details>
+  </div>`;
+}
+function selecionado(){return DADOS.registros.find(x=>x.id===S.selId);}
+async function salvarCampos(campos){
+  const r=selecionado();if(!r)return;
+  try{await api('salvar',{id:r.id,campos});await recarregar();}catch(e){erro(e);}
+}
+async function decidir(acao){
+  const r=selecionado();if(!r)return;
+  const txt=($('dec_parecer')||{}).value;
+  if(acao==='docs')return salvarCampos({status:'em_analise',docs:{periodo:true,duracao:true,licenca:true,plano:true,carta:true}});
+  const campos={status:acao};
+  if(typeof txt==='string')campos.parecer=txt.trim()||(acao==='favoravel'?'Favorável.':'Desfavorável.');
+  if(acao==='favoravel'&&!temDocs(r)&&!confirm('Ainda falta documento. Dar parecer favorável assim mesmo?'))return;
+  return salvarCampos(campos);
+}
+function cobrar(){
+  const r=selecionado();if(!r)return;
+  const corpo='Olá, '+r.nome.split(' ')[0]+'.\n\nPara a comissão analisar o seu pedido de afastamento ('+r.tipo+', '+perTexto(r)+'), ainda precisamos do plano de trabalho e da carta-convite.\n\nPode responder a este e-mail com os documentos.\n\nComissão de Afastamentos';
+  location.href='mailto:'+encodeURIComponent(r.email)+'?cc='+encodeURIComponent(EMAIL_COPIA)+'&subject='+encodeURIComponent('Documentos do pedido de afastamento')+'&body='+encodeURIComponent(corpo);
+}
+function marcarExcecional(v){salvarCampos({excecional:v});}
+async function repactuar(){
+  const r=selecionado();if(!r)return;
+  const novo=prompt('Novo período de início (ex.: 2028.1):',r.periodo);if(novo===null)return;
+  if(!/^\d{4}\.[12]$/.test(novo.trim())){alert('Use o formato ano.semestre, por exemplo 2028.1.');return;}
+  const mot=prompt('Motivo da mudança. Digite o número:\n1. Impedimento da universidade (mantém o lugar na fila)\n2. Perdeu prazo ou documento (mantém o lugar na fila)\n3. Desistiu ou adiou por vontade própria (vai para o fim da fila)','');
+  const motivo={'1':'inst','2':'prazo','3':'voluntaria'}[String(mot||'').trim()];
+  if(!motivo){if(mot!==null)alert('Digite 1, 2 ou 3.');return;}
+  const span=perIdx(r.periodoFim||r.periodo)-perIdx(r.periodo);
+  try{await api('repactuar',{id:r.id,periodo:novo.trim(),periodoFim:perLabelDe(perIdx(novo.trim())+span),motivo});await recarregar();}catch(e){erro(e);}
+}
+async function excluir(){
+  const r=selecionado();if(!r)return;
+  if(!confirm('Excluir o pedido de '+r.nome+'? Fica registrado no histórico e não dá para desfazer.'))return;
+  try{await api('excluir',{id:r.id});mostrar('pedidos');await recarregar();}catch(e){erro(e);}
+}
+async function baixarAnexo(id,campo){
+  try{
+    const r=await fetch(ENDPOINT,{method:'POST',headers:cabecalhos(),body:JSON.stringify({acao:'baixar',id,campo})});
+    if(!r.ok){let j={};try{j=await r.json();}catch(e){}throw new Error(j.erro||('Erro '+r.status));}
+    const b=await r.blob(),u=URL.createObjectURL(b);
+    window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);
+  }catch(e){erro(e);}
+}
+function quandoBR(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+
+/* ================= Vagas ================= */
+function vVagas(){
+  depoisRender=()=>{};
+  const lim=limite();
+  return `<div class="col">
+    <div><h1 class="h1">Vagas por período</h1><p class="lead">No máximo ${lim} docentes por período. Quem fica dois períodos ocupa vaga nos dois.</p></div>
+    <div class="vgrid">${proximos(4,periodoAtual()).map(p=>{
+      const v=vagasDe(DADOS.registros,p),areas=v.ocup.map(r=>r.area),dup=areas.find((a,i)=>a&&areas.indexOf(a)!==i);
+      return `<div class="vcard">
+        <div class="top"><b>${esc(p)}</b><span class="small" style="font-weight:600;color:${v.cor}">${v.txt}</span></div>
+        <div class="vbars">${Array.from({length:Math.max(lim,v.ocup.length)},(_,i)=>`<i class="${i<v.ocup.length?'on':''}"></i>`).join('')}</div>
+        <div class="col" style="gap:4px">${v.ocup.length?v.ocup.map(r=>`<span style="font-size:16px;color:var(--ink2)">${esc(r.nome)} · ${esc(r.area||'')}</span>`).join(''):'<span style="font-size:16px;color:var(--ink2)">Ninguém ainda</span>'}</div>
+        ${dup?`<span class="msg warn" style="font-size:15px;padding:8px 12px">Duas pessoas de ${esc(dup)}</span>`:''}
+      </div>`;}).join('')}</div>
+  </div>`;
+}
+
+/* ================= Afastados ================= */
+function afastados(){return DADOS.registros.filter(r=>situacao(r)==='afastado').sort((a,b)=>perIdx(b.periodo)-perIdx(a.periodo));}
+function vAfastados(){
+  depoisRender=()=>{};
+  const l=afastados();
+  return `<div class="col">
+    <div class="topline"><div><h1 class="h1">Docentes afastados</h1><p class="lead">Registro de quem já se afastou pelo departamento.</p></div>
+      <button class="btn sec sm" onclick="baixarAfastados()">Baixar planilha</button></div>
+    ${l.length?`<div class="list">${l.map(r=>`<div class="item"><div class="who"><b>${esc(r.nome)}</b><span>${esc(r.area||'')} · ${esc(r.tipo)}</span></div><span style="color:var(--ink2)">${esc(perTexto(r))}</span></div>`).join('')}</div>`
+      :'<div class="empty">Ninguém registrado como afastado ainda.</div>'}
+  </div>`;
+}
+function csv(linhas){return '\ufeff'+linhas.map(l=>l.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\n');}
+function baixar(nome,conteudo,tipo){const blob=new Blob([conteudo],{type:tipo});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nome;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+function baixarAfastados(){
+  baixar('docentes-afastados.csv',csv([['Docente','E-mail','Área','Tipo','Período']].concat(afastados().map(r=>[r.nome,r.email,r.area,r.tipo,perTexto(r)]))),'text/csv;charset=utf-8');
+}
+
+/* ================= Configurações ================= */
+function vConfig(){
+  depoisRender=()=>{};
+  const c=DADOS.config||{},t=tetoConfig();
+  const linha=(tit,txt,botoes)=>`<div class="item" style="padding:20px 24px"><div class="who"><b>${tit}</b><span>${txt}</span></div><div class="acts">${botoes}</div></div>`;
+  const hist=(DADOS.auditoria||[]).slice(0,60);
+  return `<div class="col">
+    <div><h1 class="h1">Configurações</h1><p class="lead">Ajustes da comissão. Nada aqui aparece para os docentes.</p></div>
+    <div class="list">
+      ${linha('Áreas do departamento',esc(areasAtuais().join(', ')),`<button class="btn sec sm" onclick="setAreas()">Mudar</button>`)}
+      ${linha('Código do departamento',ESTADO.protegido?'Definido. A fila só abre com o código.':'Não definido. A fila está fechada para os docentes.',`<button class="btn sec sm" onclick="setCodigo()">${ESTADO.protegido?'Trocar':'Definir'}</button>`)}
+      ${linha('Teto do quadro',t.pct>0?`${t.pct}% de ${t.quadro} docentes, o que dá ${t.teto} por período.`:'Desligado. Vale só o limite de 2 por período.',`<button class="btn sec sm" onclick="setQuadro()">Mudar</button>`)}
+      ${linha('Integrantes da comissão',esc((DADOS.usuarios||[]).map(u=>u.nome).join(', ')||'—'),`<button class="btn sec sm" onclick="criarUsuario()">Adicionar</button><button class="btn sec sm" onclick="removerUsuario()">Remover</button>`)}
+      ${linha('Minha senha','Para entrar sem Google.',`<button class="btn sec sm" onclick="trocarSenha()">Trocar</button>`)}
+      ${linha('Backup','O banco não garante os dados para sempre. Baixe um backup com frequência.',`<button class="btn sec sm" onclick="backup()">Baixar</button><button class="btn sec sm" onclick="restaurar()">Restaurar</button>`)}
+      ${linha('Todos os pedidos','Planilha com todos os campos de todos os pedidos.',`<button class="btn sec sm" onclick="exportarTudo()">Baixar planilha</button>`)}
+    </div>
+    <div class="topline"><b style="font-size:22px;font-weight:620">Histórico de alterações</b><button class="btn sec sm" onclick="exportHist()">Baixar histórico</button></div>
+    ${hist.length?`<div class="list scroll"><table class="tbl"><thead><tr><th>Quando</th><th>Quem</th><th>O quê</th><th>Pedido</th><th>Detalhe</th></tr></thead><tbody>
+      ${hist.map(a=>`<tr><td style="white-space:nowrap">${esc(quandoBR(a.ts))}</td><td><b>${esc(a.quem)}</b></td><td>${esc(a.acao)}</td><td>${esc(a.alvo||'—')}</td><td class="muted">${esc(a.detalhe||'')}</td></tr>`).join('')}
+      </tbody></table></div>`:'<div class="empty">Nenhum registro no histórico.</div>'}
+  </div>`;
+}
+async function salvarConfig(parcial){try{const j=await api('config',{config:parcial});DADOS.config=j.config;render();return true;}catch(e){erro(e);return false;}}
+async function setAreas(){
+  const v=prompt('Áreas do departamento, separadas por ponto e vírgula:',areasAtuais().filter(a=>a!=='Outra').join('; '));if(v===null)return;
+  const areas=v.split(';').map(s=>s.trim()).filter(Boolean);
+  if(await salvarConfig({areas})){ESTADO.areas=areas;alert('Áreas atualizadas.');}
+}
+async function setQuadro(){
+  const c=DADOS.config||{};
+  const q=prompt('Total de professores do quadro:',c.quadro||30);if(q===null)return;
+  const p=prompt('Percentual máximo de afastados ao mesmo tempo. Use 0 para desligar:',c.pct||0);if(p===null)return;
+  await salvarConfig({quadro:+q,pct:+p});
+}
+async function setCodigo(){
+  const c=prompt('Código do departamento (mínimo 6 caracteres).\nDeixe em branco para remover. Sem código, a fila fica fechada.','');
+  if(c===null)return;
+  if(c!==''&&c.length<6){alert('O código precisa de pelo menos 6 caracteres.');return;}
+  try{const j=await api('definirCodigo',{codigo:c});ESTADO.protegido=j.protegido;await recarregar();
+    alert(j.protegido?'Código definido. Passe o código só para os docentes do departamento.':'Código removido.');}catch(e){erro(e);}
+}
+async function criarUsuario(){
+  const nome=prompt('Nome da nova integrante:');if(!nome)return;
+  const login=prompt('E-mail @facc.ufrj.br dela:');if(!login)return;
+  const senha=prompt('Senha provisória (mínimo 8 caracteres). Ela pode entrar com Google e ignorar a senha:');if(senha===null)return;
+  try{await api('criarUsuario',{nome:nome.trim(),login:login.trim(),senha});await recarregar();alert('Acesso criado.');}catch(e){erro(e);}
+}
+async function removerUsuario(){
+  const outros=(DADOS.usuarios||[]).filter(u=>!EU||u.login!==EU.login);
+  if(!outros.length){alert('Não há outras integrantes para remover.');return;}
+  const l=prompt('E-mail de quem vai sair da comissão:\n'+outros.map(u=>u.login).join('\n'));if(!l)return;
+  if(!confirm('Remover o acesso de '+l.trim()+'?'))return;
+  try{await api('removerUsuario',{login:l.trim()});await recarregar();}catch(e){erro(e);}
+}
+async function trocarSenha(){
+  const a=prompt('Senha atual:');if(a===null)return;
+  const n=prompt('Nova senha (mínimo 8 caracteres):');if(n===null)return;
+  if(n.length<8){alert('A nova senha precisa de pelo menos 8 caracteres.');return;}
+  try{await api('trocarSenha',{atual:a,nova:n});alert('Senha alterada.');}catch(e){erro(e);}
+}
+function backup(){baixar('backup_afastamentos_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({registros:DADOS.registros,config:DADOS.config,auditoria:DADOS.auditoria},null,2),'application/json');}
+function restaurar(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
+  inp.onchange=()=>{const f=inp.files[0];if(!f)return;const fr=new FileReader();
+    fr.onload=async()=>{try{const d=JSON.parse(fr.result);
+      if(!d||!Array.isArray(d.registros))throw new Error('Arquivo de backup inválido.');
+      if(!confirm('Restaurar '+d.registros.length+' pedido(s)? Os '+DADOS.registros.length+' pedidos atuais serão substituídos para todas as integrantes.'))return;
+      await api('restaurar',{registros:d.registros,config:d.config});await recarregar();alert('Backup restaurado.');
+    }catch(e){erro(e);}};
+    fr.readAsText(f);};
+  inp.click();
+}
+function exportarTudo(){
+  const h=['Período início','Período fim','Situação','Posição','Nome','E-mail','Área','Classe','Ingresso','Afastamentos anteriores','Tipo','Recesso','Início','Duração (meses)','Plano','Carta','Destino','Resumo do plano','Parecer','Pedido em','Alterado por','Alterado em'];
+  const linhas=DADOS.registros.slice().sort((a,b)=>perIdx(a.periodo)-perIdx(b.periodo)||ordemFila(a,b)).map(r=>[r.periodo,r.periodoFim,SIT[situacao(r)].t,posicao(DADOS.registros,r)||'',r.nome,r.email,r.area,r.classe,r.ingresso,r.numaf,r.tipo,r.recesso,r.inicio,r.dur,
+    r.docs&&r.docs.plano?'sim':'não',r.docs&&r.docs.carta?'sim':'não',r.destino,r.just,r.parecer,quandoBR(r.ts),r.alteradoPor||'',quandoBR(r.alteradoEm)]);
+  baixar('pedidos_afastamento.csv',csv([h].concat(linhas)),'text/csv;charset=utf-8');
+}
+function exportHist(){
+  baixar('historico_afastamentos.csv',csv([['Quando','Quem','O quê','Pedido','Detalhe']].concat((DADOS.auditoria||[]).map(a=>[quandoBR(a.ts),a.quem,a.acao,a.alvo,a.detalhe]))),'text/csv;charset=utf-8');
+}
+
+/* ================= Regras ================= */
+const REGRAS=[
+  ['No máximo 2 docentes afastados por período','Para o curso funcionar, não se afastam mais de 2 professores no mesmo período.'],
+  ['Dois da mesma área não se afastam juntos','Só é possível se houver como cobrir as disciplinas dos dois, com colegas da mesma área ou de área próxima.'],
+  ['Pedido com 1 ano de antecedência','O pedido entra na fila em ordem de chegada. A fila é para planejamento: não é a solicitação formal e não gera direito adquirido.'],
+  ['Documentos com 6 meses de antecedência','O pedido só vale depois que a comissão recebe o plano de trabalho e a carta-convite, com pelo menos 6 meses de antecedência.'],
+  ['Desempate','Em caso de empate, tem prioridade quem teve menos afastamentos; depois, quem está há mais tempo no departamento; depois, quem está em classe mais avançada na carreira.'],
+  ['Pós-doutorado','Dura de 6 meses a 1 ano e conta no limite de 2 docentes por período.'],
+  ['Capacitação','Tem fila separada. No recesso universitário, não conta no limite de 2 docentes por período. Fora do recesso, conta.'],
+  ['Parecer e reunião de professores','A comissão dá o parecer e o pedido vai para a reunião de professores, que faz a aprovação final do departamento.'],
+  ['Casos excepcionais','Situações que as regras não preveem são avaliadas pela comissão.']
+];
+function vRegras(){
+  depoisRender=()=>{};
+  return `<div class="col narrow">
+    <div><h1 class="h1">Regras da comissão</h1><p class="lead">Resumo da minuta do departamento.</p></div>
+    <div class="card" style="padding:12px 32px">${REGRAS.map(([t,x],i)=>`<div class="rule"><span class="num">${i+1}</span><div><b>${t}</b><p>${x}</p></div></div>`).join('')}</div>
+    <div class="acts"><button class="btn sec" onclick="irInicio()">Voltar ao início</button></div>
+  </div>`;
+}
+
+/* ================= Ícones ================= */
+const ICONE={
+  cadeado:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+  check:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>',
+  doc:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>',
+  envelope:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  envelopeAz:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>'
+};
 
 /* ================= Início ================= */
 (async()=>{
-  buildAnos();avisoTipo();renderRegras();
-  try{ESTADO=await api('estado');}catch(e){
-    $('okMsg').innerHTML='<b>Sistema indisponível no momento.</b> '+esc(e.message);
-    $('okMsg').style.display='block';$('okMsg').className='notice n-bad';
-  }
-  buildAreaOpts();go('capa');
+  render();
+  try{ESTADO=Object.assign(ESTADO,await api('estado'));}
+  catch(e){S.indisponivel=e.message;}
+  if(logado()){mostrar('pedidos');recarregar();}else render();
 })();
 </script>
 </body>
